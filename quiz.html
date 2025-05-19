@@ -1,160 +1,148 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NGL-Inspired Form</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NGL Form</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f4f4f4;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
-      background: #f5f5f5;
     }
     .form-container {
       background: white;
-      padding: 20px;
+      padding: 2rem;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       width: 90%;
-      max-width: 500px;
+      max-width: 400px;
     }
-    .step {
+    .question {
       display: none;
     }
-    .step.active {
+    .question.active {
       display: block;
-    }
-    .options label {
-      display: block;
-      margin: 10px 0;
-    }
-    textarea {
-      width: 100%;
-      height: 80px;
     }
     button {
-      display: block;
-      margin-top: 20px;
-      padding: 10px 15px;
-      background: #007bff;
+      background: #007BFF;
       color: white;
+      padding: 0.5rem 1rem;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-top: 1rem;
     }
-    button:hover {
-      background: #0056b3;
+    .option {
+      display: block;
+      margin: 0.5rem 0;
     }
   </style>
 </head>
 <body>
-  <form class="form-container" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
-    <input type="hidden" name="name" value="anonymous" /><div class="step active">
-  <label>Why did you click this?! Do you like me? 😳</label>
-  <div class="options">
-    <label><input type="radio" name="like_me" value="Yes" required /> Yes</label>
-    <label><input type="radio" name="like_me" value="Yes 🙈" required /> Yes 🙈</label>
+  <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" id="ngl-form">
+    <input type="hidden" name="name" id="user-name"><div class="form-container">
+  <div class="question active" id="q1">
+    <label>Why did you click this?! Do you like me? 😳</label>
+    <label class="option"><input type="radio" name="q1" value="Yes" required> Yes</label>
+    <label class="option"><input type="radio" name="q1" value="Yes 🙈"> Yes 🙈</label>
+    <button type="button" onclick="nextQuestion(1)">Next</button>
   </div>
-  <button type="button" onclick="nextStep()">Next</button>
-</div>
 
-<div class="step">
-  <label>Enough of that, What kind of habits do you have 👀</label>
-  <div class="options">
-    <label><input type="radio" name="habit" value="Chyess ♟️" required /> Chyess ♟️</label>
-    <label><input type="radio" name="habit" value="Guitaring?! 🎸" required /> Guitaring?! 🎸</label>
-    <label><input type="text" name="habit_custom" placeholder="Type your habit here" /></label>
+  <div class="question" id="q2">
+    <label>Enough of that, What kind of habits do you have 👀</label>
+    <label class="option"><input type="radio" name="q2" value="Chyess ♟️" required> Chyess ♟️</label>
+    <label class="option"><input type="radio" name="q2" value="Guitaring?! 🎸"> Guitaring?! 🎸</label>
+    <input type="text" name="q2-custom" placeholder="Type your habit...">
+    <button type="button" onclick="nextQuestion(2)">Next</button>
   </div>
-  <button type="button" onclick="nextStep()">Next</button>
-</div>
 
-<div class="step">
-  <label>Are you Studious or Tumultuous? 🫵</label>
-  <div class="options">
-    <label><input type="radio" name="student_type" value="Studious 📚" required /> Studious 📚</label>
-    <label><input type="radio" name="student_type" value="Tumultuous 🗣️" required /> Tumultuous 🗣️</label>
+  <div class="question" id="q3">
+    <label>Are you Studious or Tumultuous? 🫵</label>
+    <label class="option"><input type="radio" name="q3" value="Studious 📚" required> Studious 📚</label>
+    <label class="option"><input type="radio" name="q3" value="Tumultuous 🗣️"> Tumultuous 🗣️</label>
+    <button type="button" onclick="nextQuestion(3)">Next</button>
   </div>
-  <button type="button" onclick="nextStep()">Next</button>
-</div>
 
-<div class="step">
-  <label>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</label>
-  <div class="options">
-    <label><input type="radio" name="color" value="black" required /> black</label>
-    <label><input type="radio" name="color" value="white" required /> white</label>
-    <label><input type="text" name="color_custom" placeholder="Type your color here" /></label>
+  <div class="question" id="q4">
+    <label>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</label>
+    <label class="option"><input type="radio" name="q4" value="black" required> black</label>
+    <label class="option"><input type="radio" name="q4" value="white"> white</label>
+    <input type="text" name="q4-custom" placeholder="Type your color...">
+    <button type="button" onclick="nextQuestion(4)">Next</button>
   </div>
-  <button type="button" onclick="nextStep()">Next</button>
-</div>
 
-<div class="step">
-  <label>What sex are you 🤔🙃</label>
-  <div class="options">
-    <label><input type="radio" name="sex" value="Men ♂️" required /> Men ♂️</label>
-    <label><input type="radio" name="sex" value="Girl ♀️" required /> Girl ♀️</label>
+  <div class="question" id="q5">
+    <label>What sex are you 🤔🙃</label>
+    <label class="option"><input type="radio" name="q5" value="Men ♂️" required> Men ♂️</label>
+    <label class="option"><input type="radio" name="q5" value="Girl ♀️"> Girl ♀️</label>
+    <button type="button" onclick="nextQuestion(5)">Next</button>
   </div>
-  <button type="button" onclick="nextStep()">Next</button>
-</div>
 
-<div class="step">
-  <label>and how old are you? 1️⃣0️⃣ 😱</label>
-  <div class="options">
-    <label><input type="radio" name="age" value="9 to 12 🫷" required /> 9 to 12 🫷</label>
-    <label><input type="radio" name="age" value="15? 😭" required /> 15? 😭</label>
-    <label><input type="text" name="age_custom" placeholder="Enter your age" /></label>
+  <div class="question" id="q6">
+    <label>and how old are you? 1️⃣0️⃣ 😱</label>
+    <label class="option"><input type="radio" name="q6" value="9 to 12 🫷" required> 9 to 12 🫷</label>
+    <label class="option"><input type="radio" name="q6" value="15? 😭"> 15? 😭</label>
+    <input type="text" name="q6-custom" placeholder="Type your age...">
+    <button type="button" onclick="nextQuestion(6)">Next</button>
   </div>
-  <button type="button" onclick="nextStep()">Next</button>
-</div>
 
-<div class="step">
-  <label>Tell me something only the REAL ones know about you 😏🍠</label>
-  <textarea name="real_fact" required></textarea>
-  <button type="button" onclick="nextStep()">Next</button>
-</div>
+  <div class="question" id="q7">
+    <label>Tell me something only the REAL ones know about you 😏🍠</label>
+    <textarea name="q7" required></textarea>
+    <button type="button" onclick="nextQuestion(7)">Next</button>
+  </div>
 
-<div class="step">
-  <label>What's a random fact about you that sounds fake but isn't? 🫣</label>
-  <textarea name="random_fact" required></textarea>
-  <button type="button" onclick="nextStep()">Next</button>
-</div>
+  <div class="question" id="q8">
+    <label>What's a random fact about you that sounds fake but isn't? 🫣</label>
+    <textarea name="q8" required></textarea>
+    <button type="button" onclick="nextQuestion(8)">Next</button>
+  </div>
 
-<div class="step">
-  <label>If I met you in a dream, how would you introduce yourself?🚪😜</label>
-  <textarea name="dream_intro" required></textarea>
-  <button type="button" onclick="nextStep()">Next</button>
-</div>
+  <div class="question" id="q9">
+    <label>If I met you in a dream, how would you introduce yourself?🚪😜</label>
+    <textarea name="q9" required></textarea>
+    <button type="button" onclick="nextQuestion(9)">Next</button>
+  </div>
 
-<div class="step">
-  <label>Last question! What's one thing you wish people knew about you? 🔥</label>
-  <textarea name="wish_known" required></textarea>
-  <button type="submit">Submit</button>
+  <div class="question" id="q10">
+    <label>Last question! What's one thing you wish people knew about you? 🔥</label>
+    <textarea name="q10" required></textarea>
+    <button type="submit">Submit</button>
+  </div>
 </div>
 
   </form>  <script>
-    let currentStep = 0;
-    const steps = document.querySelectorAll('.step');
+    const questions = document.querySelectorAll('.question');
 
-    function nextStep() {
-      const current = steps[currentStep];
-      const inputs = current.querySelectorAll('input, textarea');
-      let valid = false;
+    function nextQuestion(current) {
+      const currentQ = document.getElementById(`q${current}`);
+      const inputs = currentQ.querySelectorAll('input, textarea');
+      let isValid = false;
 
       inputs.forEach(input => {
-        if ((input.type === 'radio' && input.checked) || (input.type !== 'radio' && input.value.trim() !== '')) {
-          valid = true;
+        if ((input.type === 'radio' && input.checked) || (input.type === 'text' && input.value.trim() !== '') || (input.tagName === 'TEXTAREA' && input.value.trim() !== '')) {
+          isValid = true;
         }
       });
 
-      if (valid) {
-        steps[currentStep].classList.remove('active');
-        currentStep++;
-        if (steps[currentStep]) steps[currentStep].classList.add('active');
-      } else {
-        alert('Please fill out or select an answer before continuing.');
+      if (!isValid) {
+        alert("Please answer before continuing.");
+        return;
       }
+
+      currentQ.classList.remove('active');
+      const nextQ = document.getElementById(`q${current + 1}`);
+      if (nextQ) nextQ.classList.add('active');
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const userName = urlParams.get('name');
+    if (userName) {
+      document.getElementById('user-name').value = userName;
     }
   </script></body>
 </html>
