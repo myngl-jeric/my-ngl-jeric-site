@@ -43,7 +43,7 @@
     }
     .lock-container {
       position: absolute;
-      top: 38px;  /* vertically center on 60px circle */
+      top: 38px;
       left: 50%;
       transform: translateX(-50%);
       width: 60px;
@@ -56,11 +56,8 @@
       z-index: 2;
       user-select: none;
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-    .lock-container svg {
-      width: 28px;
-      height: 28px;
-      fill: #f43f5e;
+      font-size: 28px;
+      line-height: 1;
     }
     .username {
       font-weight: 700;
@@ -103,7 +100,7 @@
       width: 80%;
       max-width: 300px;
       height: 100px;
-      padding: 10px 45px 10px 15px; /* padding-right for dice */
+      padding: 10px 45px 10px 15px;
       border-radius: 10px;
       border: none;
       resize: none;
@@ -113,7 +110,7 @@
     .dice-button {
       position: absolute;
       right: 40px;
-      bottom: 73px; /* aligns with textarea bottom */
+      bottom: 73px;
       width: 38px;
       height: 38px;
       border-radius: 50%;
@@ -126,14 +123,8 @@
       transition: transform 0.6s ease;
       user-select: none;
       box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
-    }
-    .dice-button:active {
-      transform: rotate(360deg);
-    }
-    .dice-button svg {
-      width: 22px;
-      height: 22px;
-      fill: white;
+      font-size: 22px;
+      line-height: 1;
     }
     .send-button {
       margin: 20px auto 0;
@@ -150,8 +141,8 @@
       user-select: none;
       box-sizing: border-box;
     }
-    .black-box {
-      margin: 15px auto 0;
+    .extra-box {
+      margin: 20px auto 0;
       padding: 15px 20px;
       font-size: 18px;
       border-radius: 30px;
@@ -159,17 +150,42 @@
       max-width: 300px;
       background: #000;
       color: #fff;
+      font-weight: 600;
       user-select: none;
       box-sizing: border-box;
+    }
+    @keyframes rollBounceShake {
+      0% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+      }
+      20% {
+        transform: translateX(-15px) translateY(-20px) rotate(90deg);
+      }
+      40% {
+        transform: translateX(15px) translateY(-20px) rotate(180deg);
+      }
+      60% {
+        transform: translateX(-10px) translateY(-10px) rotate(270deg);
+      }
+      80% {
+        transform: translateX(10px) translateY(-10px) rotate(360deg);
+      }
+      90% {
+        transform: translateX(5px) translateY(-5px) rotate(370deg);
+      }
+      95% {
+        transform: translateX(-5px) translateY(-15px) rotate(380deg);
+      }
+      100% {
+        transform: translateX(0) translateY(0) rotate(360deg);
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="profile">
-      <div class="lock-container" aria-label="Locked profile">
-        🔒
-      </div>
+      <div class="lock-container" aria-label="Locked profile">🔒</div>
       <div class="username">@JericAus</div>
       <div class="description">
         Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
@@ -200,7 +216,7 @@
       </button>
       <button type="submit" class="send-button">Send!</button>
     </form>
-    <div class="black-box">Do you want to know me even further?</div>
+    <div class="extra-box">Do you want to know me even further?</div>
   </div>
 
 <script>
@@ -228,17 +244,15 @@
     diceSound.currentTime = 0;
     diceSound.play();
 
-    // Animate dice roll bounce + roll + shake
-    diceButton.style.animation = 'bounceRollShake 1s ease';
-    diceButton.addEventListener('animationend', () => {
-      diceButton.style.animation = '';
-    }, { once: true });
+    // Animate dice roll with bounce and shake
+    diceButton.style.animation = 'rollBounceShake 0.8s ease forwards';
 
-    // Set a random phrase after animation
     setTimeout(() => {
+      diceButton.style.animation = '';
+      // Set a random phrase
       const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
       messageField.value = randomPhrase;
-    }, 1000);
+    }, 800);
   });
 
   // Dual submit to formsubmit and getform.io
@@ -254,24 +268,3 @@
       headers: { 'Accept': 'application/json' }
     }).then(response => {
       if (response.ok) {
-        alert('Message sent successfully!');
-        form.reset();
-      } else {
-        alert('Oops! There was a problem sending your message.');
-      }
-    }).catch(() => alert('Oops! Network error.'));
-
-    // Also send to getform.io
-    fetch('https://getform.io/f/aronlglb', {
-      method: 'POST',
-      body: data
-    });
-
-    return false; // prevent default submit
-  }
-</script>
-
-<style>
-@keyframes bounceRollShake {
-  0% { transform: translateY(0) rotate(0deg) translateX(0); }
-  20% { transform: translateY(-15px) rotate(
