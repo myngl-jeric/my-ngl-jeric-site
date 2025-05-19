@@ -56,7 +56,8 @@
       z-index: 2;
       user-select: none;
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      font-size: 32px; /* make emoji bigger */
+      font-size: 28px;
+      line-height: 1;
     }
     .username {
       font-weight: 700;
@@ -122,14 +123,8 @@
       transition: transform 0.6s ease;
       user-select: none;
       box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
-    }
-    .dice-button:active {
-      transform: rotate(360deg);
-    }
-    .dice-button svg {
-      width: 22px;
-      height: 22px;
-      fill: white;
+      font-size: 20px;
+      line-height: 1;
     }
     .send-button {
       margin: 20px auto 0;
@@ -145,6 +140,27 @@
       font-weight: 600;
       user-select: none;
       box-sizing: border-box;
+    }
+
+    @keyframes bounceRollShake {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      30% {
+        transform: translateY(-10px) rotate(180deg);
+      }
+      50% {
+        transform: translateY(0) rotate(360deg);
+      }
+      65% {
+        transform: translateX(-5px) rotate(400deg);
+      }
+      80% {
+        transform: translateX(5px) rotate(340deg);
+      }
+      100% {
+        transform: translateX(0) rotate(360deg);
+      }
     }
   </style>
 </head>
@@ -211,14 +227,15 @@
     diceSound.currentTime = 0;
     diceSound.play();
 
-    // Animate dice roll flip
-    diceButton.style.transform = 'rotateY(360deg)';
+    // Animate bounce, roll and shake
+    diceButton.style.animation = 'bounceRollShake 1s ease forwards';
+
     setTimeout(() => {
-      diceButton.style.transform = '';
+      diceButton.style.animation = '';
       // Set a random phrase
       const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
       messageField.value = randomPhrase;
-    }, 600);
+    }, 1000);
   });
 
   // Dual submit to formsubmit and getform.io
