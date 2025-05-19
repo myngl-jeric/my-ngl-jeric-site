@@ -3,90 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Anonymous Message</title>
+  <title>Send me anonymous messages</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      margin: 0;
-      padding: 20px;
+      font-family: sans-serif;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      background: #f8f8f8;
     }
 
-    .container {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      position: relative;
-    }
-
-    h2 {
-      text-align: center;
+    h1 {
       margin-bottom: 20px;
     }
 
-    textarea {
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       width: 100%;
-      height: 150px;
+      max-width: 400px;
+      position: relative;
+    }
+
+    input, textarea {
+      width: 100%;
       padding: 10px;
-      border-radius: 10px;
+      margin: 10px 0;
       border: 1px solid #ccc;
-      resize: none;
-      font-size: 14px;
-    }
-
-    #dice {
-      position: absolute;
-      right: 20px;
-      bottom: 90px;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-    }
-
-    button[type="submit"] {
-      margin-top: 15px;
-      width: 100%;
-      padding: 10px;
-      background: #ff66c4;
-      border: none;
-      color: white;
+      border-radius: 8px;
       font-size: 16px;
-      border-radius: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #ff5b5b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
     }
 
-    .error {
-      color: red;
-      font-size: 13px;
-      margin-top: 5px;
+    #dice-btn {
+      position: absolute;
+      bottom: 75px;
+      right: 10px;
+      background: #eee;
+      border: none;
+      padding: 5px 10px;
+      font-size: 20px;
+      border-radius: 50%;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Send me anonymous messages</h2>
-    <form id="messageForm" action="https://getform.io/f/aronlglb" method="POST">
-      <textarea id="message" name="message" placeholder="Type something..." required></textarea>
-      <button id="dice" type="button">🎲</button>
-      <input type="text" name="name" id="nameInput" placeholder="Enter your name (4-20 chars)" required />
-      <div id="nameError" class="error"></div>
-      <button type="submit">Send</button>
-    </form>
-  </div>
+  <h1>Send me anonymous messages</h1>
+  <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" onsubmit="return validateForm()">
+    <input type="text" id="name" name="name" placeholder="Your name (4-20 chars)" required>
+    <textarea id="message" name="message" placeholder="Write something..." rows="6" required></textarea>
+    <button type="submit">Send</button>
+    <button type="button" id="dice-btn" onclick="insertRandomPhrase()">🎲</button>
+  </form>
 
   <script>
     const phrases = [
@@ -102,26 +83,16 @@
       "ur aesthetic >"
     ];
 
-    const dice = document.getElementById("dice");
-    const textarea = document.getElementById("message");
-    const form = document.getElementById("messageForm");
-    const nameInput = document.getElementById("nameInput");
-    const nameError = document.getElementById("nameError");
-
-    dice.addEventListener("click", () => {
+    function insertRandomPhrase() {
+      const messageBox = document.getElementById("message");
       const random = phrases[Math.floor(Math.random() * phrases.length)];
-      textarea.value = random;
-    });
+      messageBox.value = random;
+    }
 
-    form.addEventListener("submit", (e) => {
-      const name = nameInput.value.trim();
-      if (name.length < 4 || name.length > 20) {
-        e.preventDefault();
-        nameError.textContent = "Name must be 4–20 characters.";
-      } else {
-        nameError.textContent = "";
-      }
-    });
+    function validateForm() {
+      const name = document.getElementById("name").value.trim();
+      return name.length >= 4 && name.length <= 20;
+    }
   </script>
 </body>
 </html>
