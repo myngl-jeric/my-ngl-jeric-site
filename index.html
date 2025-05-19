@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -11,124 +10,122 @@
       background: linear-gradient(to bottom right, #f43f5e, #f97316);
       color: #fff;
       text-align: center;
-    }
+    }.container {
+  padding: 30px 15px;
+}
 
-    .container {
-      padding: 30px 15px;
-    }
+.profile {
+  background: #fff;
+  border-radius: 15px;
+  padding: 20px 15px 10px;
+  color: #000;
+  max-width: 400px;
+  margin: 20px auto 0;
+  position: relative;
+}
 
-    .profile {
-      background: #fff;
-      border-radius: 15px;
-      padding: 20px 15px 10px;
-      color: #000;
-      max-width: 400px;
-      margin: 20px auto 10px;
-      position: relative;
-    }
+.profile-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(204, 204, 204, 0.3);
+  backdrop-filter: blur(4px);
+  margin: 0 auto 10px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    .profile-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: rgba(204, 204, 204, 0.3);
-      backdrop-filter: blur(4px);
-      margin: 0 auto 10px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+.lock-icon {
+  font-size: 28px;
+  background: #fff;
+  border-radius: 50%;
+  padding: 2px 6px;
+}
 
-    .lock-icon {
-      font-size: 28px;
-      background: #fff;
-      border-radius: 50%;
-      padding: 2px 6px;
-    }
+.username {
+  font-weight: bold;
+  font-size: 17px;
+  margin: 5px 0 2px;
+}
 
-    .username {
-      font-weight: bold;
-      font-size: 17px;
-      margin: 5px 0 2px;
-    }
+.description {
+  font-size: 14px;
+  line-height: 1.3;
+  margin: 5px auto 0;
+  max-width: 350px;
+  padding: 0 10px 5px;
+}
 
-    .description {
-      font-size: 14px;
-      line-height: 1.3;
-      margin: 5px auto 10px;
-      max-width: 350px;
-      padding: 0 10px;
-    }
+.prompt {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 10px;
+  border-radius: 15px;
+  margin-top: 10px;
+  font-size: 16px;
+}
 
-    .prompt {
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 20px;
-      border-radius: 15px;
-      margin-top: 10px;
-      font-size: 16px;
-    }
+form {
+  margin-top: 20px;
+  position: relative;
+}
 
-    form {
-      margin-top: 20px;
-      position: relative;
-    }
+.input-group {
+  position: relative;
+  display: inline-block;
+}
 
-    .input-group {
-      position: relative;
-      display: inline-block;
-    }
+textarea, input[type="text"] {
+  width: 80%;
+  max-width: 300px;
+  height: 100px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  resize: none;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
 
-    textarea, input[type="text"] {
-      width: 80%;
-      max-width: 300px;
-      height: 100px;
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      resize: none;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
+input[type="text"] {
+  height: 40px;
+  margin-bottom: 10px;
+}
 
-    input[type="text"] {
-      height: 40px;
-      margin-bottom: 10px;
-    }
+.dice-button {
+  position: absolute;
+  right: 12%;
+  bottom: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  animation: roll 0.5s ease-in-out;
+}
 
-    .dice-button {
-      position: absolute;
-      right: 12%;
-      bottom: 20px;
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      animation: shake 0.3s;
-    }
+@keyframes roll {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(180deg); }
+  50% { transform: rotate(360deg); }
+  100% { transform: rotate(540deg); }
+}
 
-    @keyframes shake {
-      0% { transform: rotate(0deg); }
-      25% { transform: rotate(10deg); }
-      50% { transform: rotate(-10deg); }
-      75% { transform: rotate(10deg); }
-      100% { transform: rotate(0deg); }
-    }
+.send-button {
+  display: block;
+  margin: 10px auto 0;
+  padding: 15px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 30px;
+  width: 80%;
+  max-width: 300px;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+}
 
-    .send-button {
-      display: block;
-      margin: 10px auto 0;
-      padding: 15px 20px;
-      font-size: 18px;
-      border: none;
-      border-radius: 30px;
-      width: 80%;
-      max-width: 300px;
-      background: #000;
-      color: #fff;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -142,19 +139,16 @@
         Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
       </div>
       <div class="prompt">send me anonymous messages...</div>
-    </div>
-
-    <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" onsubmit="dualSubmit(event)">
-      <input type="text" name="name" placeholder="Your name (optional)" minlength="4" maxlength="20"/>
-      <div class="input-group">
-        <textarea name="message" id="message" placeholder="Type your message here..." required></textarea>
-        <button type="button" class="dice-button" onclick="rollDice()">🎲</button>
-      </div>
-      <button type="submit" class="send-button">Send!</button>
-    </form>
+    </div><form action="https://formsubmit.co/notjery05@gmail.com" method="POST" onsubmit="dualSubmit(event)">
+  <input type="text" name="name" placeholder="Your name ( 4-20 characters )" minlength="4" maxlength="20"/>
+  <div class="input-group">
+    <textarea name="message" id="message" placeholder="Type your message here..." required></textarea>
+    <button type="button" class="dice-button" onclick="rollDice()">🎲</button>
   </div>
+  <button type="submit" class="send-button">Send!</button>
+</form>
 
-  <script>
+  </div>  <script>
     const phrases = [
       "I like u, do u like me too?",
       "I'm still not over u",
@@ -174,7 +168,7 @@
       const dice = document.querySelector('.dice-button');
       dice.style.animation = 'none';
       void dice.offsetWidth;
-      dice.style.animation = 'shake 0.3s';
+      dice.style.animation = 'roll 0.5s ease-in-out';
       new Audio('https://www.myinstants.com/media/sounds/dice-roll.mp3').play().catch(() => {});
     }
 
@@ -183,15 +177,12 @@
       const form = e.target;
       const formData = new FormData(form);
 
-      // Submit to Getform
       fetch("https://getform.io/f/aronlglb", {
         method: "POST",
         body: formData
       });
 
-      // Submit to Formsubmit
       form.submit();
     }
-  </script>
-</body>
+  </script></body>
 </html>
