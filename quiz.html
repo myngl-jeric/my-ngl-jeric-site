@@ -1,222 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sequential Form with Validation and Formsubmit</title>
-<style>
-  body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; }
-  .question { display: none; margin-bottom: 20px; }
-  .question.active { display: block; }
-  .options label { display: block; margin: 5px 0; cursor: pointer; }
-  textarea, input[type="text"] { width: 100%; padding: 8px; margin-top: 5px; }
-  button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NGL Inspired Anonymous Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #f9c5d1, #fbc2eb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .question {
+      display: none;
+      flex-direction: column;
+    }
+    .question.active {
+      display: flex;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+    button, .submit-btn {
+      padding: 10px;
+      background-color: #ff6ec4;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover, .submit-btn:hover {
+      background-color: #f42a8f;
+    }
+    input[type="text"] {
+      padding: 8px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    .send-icon {
+      font-size: 20px;
+      margin-left: 5px;
+    }
+  </style>
 </head>
 <body>
-
-<form id="multiStepForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank">
-
-  <!-- Hidden input for name -->
-  <input type="hidden" name="name" id="hiddenName" value="" />
-
-  <div class="question active" data-index="0">
-    <p>Why did you click this?! Do you like me? 😳</p>
-    <div class="options">
-      <label><input type="radio" name="Q1" value="Yes" /> Yes</label>
-      <label><input type="radio" name="Q1" value="Yes 🙈" /> Yes 🙈</label>
+  <form id="nglForm" class="form-container" method="POST">
+    <div id="questions">
+      <!-- Questions will be injected by JS -->
     </div>
-  </div>
+    <button type="submit" class="submit-btn" style="display: none;">Send <span class="send-icon">✈️</span></button>
+  </form>
 
-  <div class="question" data-index="1">
-    <p>Enough of that, What kind of habits do you have 👀</p>
-    <div class="options">
-      <label><input type="radio" name="Q2" value="Chyess ♟️" /> Chyess ♟️</label>
-      <label><input type="radio" name="Q2" value="Guitaring?! 🎸" /> Guitaring?! 🎸</label>
-    </div>
-    <textarea name="Q2_Typed" placeholder="Type your habit here (min 5 chars)"></textarea>
-  </div>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const userName = urlParams.get('name') || 'Anonymous';
+    const form = document.getElementById("nglForm");
 
-  <div class="question" data-index="2">
-    <p>Are you Studious or Tumultuous? 🫵</p>
-    <div class="options">
-      <label><input type="radio" name="Q3" value="Studious 📚" /> Studious 📚</label>
-      <label><input type="radio" name="Q3" value="Tumultuous 🗣️" /> Tumultuous 🗣️</label>
-    </div>
-  </div>
-
-  <div class="question" data-index="3">
-    <p>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</p>
-    <div class="options">
-      <label><input type="radio" name="Q4" value="black" /> black</label>
-      <label><input type="radio" name="Q4" value="white" /> white</label>
-    </div>
-    <textarea name="Q4_Typed" placeholder="Type your colour here (min 3 chars)"></textarea>
-  </div>
-
-  <div class="question" data-index="4">
-    <p>What sex are you 🤔🙃</p>
-    <div class="options">
-      <label><input type="radio" name="Q5" value="Men ♂️" /> Men ♂️</label>
-      <label><input type="radio" name="Q5" value="Girl ♀️" /> Girl ♀️</label>
-    </div>
-  </div>
-
-  <div class="question" data-index="5">
-    <p>And how old are you? 1️⃣0️⃣ 😱</p>
-    <div class="options">
-      <label><input type="radio" name="Q6" value="9 below 📉🥀" /> 9 below 📉🥀</label>
-      <label><input type="radio" name="Q6" value="15? 😭" /> 15? 😭</label>
-    </div>
-    <input type="text" name="Q6_Typed" placeholder="Type your age here (2-3 chars)" maxlength="3" />
-  </div>
-
-  <div class="question" data-index="6">
-    <p>Tell me something only the REAL ones know about you 😏🍠</p>
-    <textarea name="Q7" placeholder="At least 10 characters"></textarea>
-  </div>
-
-  <div class="question" data-index="7">
-    <p>What's a random fact about you that sounds fake but isn't? 🫣</p>
-    <textarea name="Q8" placeholder="At least 10 characters"></textarea>
-  </div>
-
-  <div class="question" data-index="8">
-    <p>If I met you in a dream, how would you introduce yourself?🚪😜</p>
-    <textarea name="Q9" placeholder="At least 10 characters"></textarea>
-  </div>
-
-  <div class="question" data-index="9">
-    <p>Last question! What's one thing you wish people knew about you? 🔥</p>
-    <textarea name="Q10" placeholder="At least 10 characters"></textarea>
-  </div>
-
-  <button type="button" id="nextBtn">Next</button>
-  <button type="submit" id="submitBtn" style="display:none;">Submit</button>
-</form>
-
-<script>
-  const form = document.getElementById('multiStepForm');
-  const questions = form.querySelectorAll('.question');
-  const nextBtn = document.getElementById('nextBtn');
-  const submitBtn = document.getElementById('submitBtn');
-  let currentIndex = 0;
-
-  // Get name from URL and put it into hidden input
-  function setNameFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get('name') || '';
-    document.getElementById('hiddenName').value = name;
-  }
-  setNameFromURL();
-
-  function validLength(value, index) {
-    const len = value.trim().length;
-    if (index === 1) { // Q2: 5+ chars
-      return len >= 5;
-    } else if (index === 3) { // Q4: 3+ chars
-      return len >= 3;
-    } else if (index === 5) { // Q6: 2-3 chars
-      return len >= 2 && len <= 3;
-    } else {
-      return len >= 10;
-    }
-  }
-
-  function validateQuestion(index) {
-    const q = questions[index];
-    const radios = q.querySelectorAll('input[type="radio"]');
-    const textareas = q.querySelectorAll('textarea');
-    const textInputs = q.querySelectorAll('input[type="text"]');
-
-    // If radios present, check if one checked
-    if (radios.length > 0) {
-      const oneChecked = Array.from(radios).some(r => r.checked);
-      if (!oneChecked) {
-        // If textareas or inputs present, check typed answer validity instead
-        if (textareas.length > 0 || textInputs.length > 0) {
-          let typedValid = false;
-          for (const ta of textareas) {
-            if (validLength(ta.value, index)) typedValid = true;
-          }
-          for (const ti of textInputs) {
-            if (validLength(ti.value, index)) typedValid = true;
-          }
-          if (!typedValid) {
-            if (index === 1) {
-              alert('Please select an option or enter at least 5 characters in the text box.');
-            } else if (index === 3) {
-              alert('Please select an option or enter at least 3 characters in the text box.');
-            } else if (index === 5) {
-              alert('Please select an option or enter between 2 to 3 characters in the text box.');
-            } else {
-              alert('Please select an option or enter at least 10 characters in the text box.');
-            }
-            return false;
-          }
-        } else {
-          alert('Please select an option before proceeding.');
-          return false;
-        }
+    const questions = [
+      {
+        q: "Why did you click this?! Do you like me? 😳",
+        options: ["Yes", "Yes 🙈"]
+      },
+      {
+        q: "Enough of that, What kind of habits do you have 👀",
+        options: ["Chyess ♟️", "Guitaring?! 🎸"],
+        textInput: true,
+        minChars: 5
+      },
+      {
+        q: "Are you Studious or Tumultuous? 🫵",
+        options: ["Studious 📚", "Tumultuous 🗣️"]
+      },
+      {
+        q: "What's YOUR Favourite kulay?! 🏳️‍🌈🥶",
+        options: ["black", "white"],
+        textInput: true,
+        minChars: 3
+      },
+      {
+        q: "What sex are you 🤔🙃",
+        options: ["Men ♂️", "Girl ♀️"]
+      },
+      {
+        q: "and how old are you? 1️⃣0️⃣ 😱",
+        options: ["9 below 📉🥀", "15? 😭"],
+        textInput: true,
+        minChars: 2,
+        maxChars: 3
+      },
+      {
+        q: "Tell me something only the REAL ones know about you 😏🍠",
+        textInput: true,
+        minChars: 10
+      },
+      {
+        q: "What's a random fact about you that sounds fake but isn't? 🫣",
+        textInput: true,
+        minChars: 10
+      },
+      {
+        q: "If I met you in a dream, how would you introduce yourself?🚪😜",
+        textInput: true,
+        minChars: 10
+      },
+      {
+        q: "Last question! What's one thing you wish people knew about you? 🔥",
+        textInput: true,
+        minChars: 10
       }
-    }
+    ];
 
-    // Validate typed answers length if filled
-    for (const ta of textareas) {
-      if (ta.value.trim().length > 0 && !validLength(ta.value, index)) {
-        if (index === 1) {
-          alert('Please enter at least 5 characters for your typed answer.');
-        } else if (index === 3) {
-          alert('Please enter at least 3 characters for your typed answer.');
-        } else if (index === 5) {
-          alert('Please enter between 2 to 3 characters for your typed answer.');
-        } else {
-          alert('Please enter at least 10 characters for your typed answer.');
-        }
-        return false;
+    const container = document.getElementById("questions");
+    let currentIndex = 0;
+
+    function renderQuestion(index) {
+      const qData = questions[index];
+      const div = document.createElement("div");
+      div.classList.add("question", "active");
+
+      const label = document.createElement("label");
+      label.textContent = qData.q;
+      div.appendChild(label);
+
+      const optionsDiv = document.createElement("div");
+      optionsDiv.classList.add("options");
+
+      if (qData.options) {
+        qData.options.forEach((opt, i) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = opt;
+          btn.onclick = () => {
+            addHiddenInput(`q${index + 1}`, opt);
+            goToNext();
+          };
+          optionsDiv.appendChild(btn);
+        });
       }
-    }
-    for (const ti of textInputs) {
-      if (ti.value.trim().length > 0 && !validLength(ti.value, index)) {
-        if (index === 1) {
-          alert('Please enter at least 5 characters for your typed answer.');
-        } else if (index === 3) {
-          alert('Please enter at least 3 characters for your typed answer.');
-        } else if (index === 5) {
-          alert('Please enter between 2 to 3 characters for your typed answer.');
-        } else {
-          alert('Please enter at least 10 characters for your typed answer.');
-        }
-        return false;
+
+      if (qData.textInput) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "Type here...";
+        optionsDiv.appendChild(input);
+
+        const nextBtn = document.createElement("button");
+        nextBtn.type = "button";
+        nextBtn.textContent = "Next";
+        nextBtn.onclick = () => {
+          const val = input.value.trim();
+          if (
+            (!qData.minChars || val.length >= qData.minChars) &&
+            (!qData.maxChars || val.length <= qData.maxChars)
+          ) {
+            addHiddenInput(`q${index + 1}`, val);
+            goToNext();
+          } else {
+            alert(`Answer must be ${qData.minChars || 0}${qData.maxChars ? ' to ' + qData.maxChars : '+'} characters long.`);
+          }
+        };
+        optionsDiv.appendChild(nextBtn);
       }
+
+      div.appendChild(optionsDiv);
+      container.innerHTML = '';
+      container.appendChild(div);
     }
 
-    return true;
-  }
-
-  function showQuestion(index) {
-    questions.forEach((q, i) => {
-      q.classList.toggle('active', i === index);
-    });
-    if (index === questions.length - 1) {
-      nextBtn.style.display = 'none';
-      submitBtn.style.display = 'inline-block';
-    } else {
-      nextBtn.style.display = 'inline-block';
-      submitBtn.style.display = 'none';
+    function addHiddenInput(name, value) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
     }
-  }
 
-  nextBtn.addEventListener('click', () => {
-    if (validateQuestion(currentIndex)) {
+    function goToNext() {
       currentIndex++;
-      showQuestion(currentIndex);
+      if (currentIndex < questions.length) {
+        renderQuestion(currentIndex);
+      } else {
+        form.action = `https://formsubmit.co/${encodeURIComponent("notjery05@gmail.com")}?name=${encodeURIComponent(userName)}`;
+        document.querySelector('.submit-btn').style.display = "block";
+        container.innerHTML = "<p>You're done! Ready to submit?</p>";
+      }
     }
-  });
 
-  // Show first question
-  showQuestion(currentIndex);
-</script>
-
+    renderQuestion(currentIndex);
+  </script>
 </body>
 </html>
