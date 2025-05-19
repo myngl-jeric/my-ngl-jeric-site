@@ -1,50 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Send Me a Message</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anonymous Message</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
+      background: #f0f0f0;
       margin: 0;
-      background-color: #f0f0f0;
+      padding: 20px;
     }
 
     .container {
       max-width: 500px;
       margin: auto;
-      background-color: white;
+      background: #fff;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     h2 {
       text-align: center;
-      color: #333;
+      margin-bottom: 20px;
     }
 
-    input, textarea, button {
+    input, textarea {
       width: 100%;
-      padding: 12px;
-      margin-top: 10px;
+      padding: 10px;
+      margin: 10px 0;
       font-size: 1rem;
-      border-radius: 5px;
+      border-radius: 6px;
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
 
     button {
-      background-color: #007BFF;
+      width: 100%;
+      padding: 12px;
+      background: #007bff;
       color: white;
+      border: none;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .dice {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      font-size: 20px;
+      background: none;
       border: none;
       cursor: pointer;
     }
 
-    button:hover {
-      background-color: #0056b3;
+    .textarea-wrapper {
+      position: relative;
     }
 
     footer {
@@ -59,13 +78,56 @@
   <div class="container">
     <h2>Send Me an Anonymous Message</h2>
     <form action="https://getform.io/f/aronlglb" method="POST">
-      <input type="text" name="name" placeholder="Enter your name (only you can see this)">
-      <textarea name="message" rows="5" placeholder="Type your message here..." required></textarea>
-      <button type="submit">Send Message</button>
+      <input 
+        type="text" 
+        id="nameInput" 
+        name="name" 
+        placeholder="Enter your name (4–20 chars)" 
+        required 
+        oninput="validateName()"
+      />
+      <div class="textarea-wrapper">
+        <textarea 
+          name="message" 
+          id="messageArea" 
+          rows="5" 
+          placeholder="Type your message here..." 
+          required
+        ></textarea>
+        <button type="button" class="dice" onclick="insertRandomPhrase()">🎲</button>
+      </div>
+      <button id="submitBtn" type="submit" disabled>Send Message</button>
     </form>
   </div>
-  <footer>
-    Powered by Getform.io
-  </footer>
+  <footer>Powered by Getform.io</footer>
+
+  <script>
+    const nameInput = document.getElementById('nameInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const messageArea = document.getElementById('messageArea');
+
+    function validateName() {
+      const value = nameInput.value.trim();
+      submitBtn.disabled = value.length < 4 || value.length > 20;
+    }
+
+    const phrases = [
+      "I like u, do u like me too?",
+      "I'm still not over u",
+      "I'll make u mine :p",
+      "u look gud w/out trying",
+      "how does it feel being everyones crush",
+      "would u go on a date with me?",
+      "you want to make new friends?",
+      "would u say yes if someone asked today?",
+      "how many kids do you want to have",
+      "ur aesthetic >"
+    ];
+
+    function insertRandomPhrase() {
+      const random = phrases[Math.floor(Math.random() * phrases.length)];
+      messageArea.value = random;
+    }
+  </script>
 </body>
 </html>
