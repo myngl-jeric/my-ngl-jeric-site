@@ -1,128 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>My NGL Form</title>
 <style>
-  body { font-family: Arial, sans-serif; max-width: 400px; margin: 40px auto; padding: 0 15px; }
-  form { position: relative; }
-  textarea { width: 100%; height: 100px; padding: 10px; font-size: 16px; box-sizing: border-box; }
-  input[type="text"] { width: 100%; padding: 8px; margin-bottom: 10px; font-size: 16px; box-sizing: border-box; }
-  button[type="submit"] { padding: 10px 20px; font-size: 16px; cursor: pointer; }
-  #diceBtn {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 18px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #f0f0f0;
-    user-select: none;
+  form {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 350px;
+    margin: auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
-  #loadingMessage, #successMessage, #errorMessage {
-    margin-top: 10px;
+
+  input[type="text"] {
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+  }
+
+  button {
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #ff4da6;
+  }
+
+  #statusMessage {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
     font-weight: bold;
+    transition: opacity 0.3s ease;
   }
-  #loadingMessage { color: #555; }
-  #successMessage { color: green; }
-  #errorMessage { color: red; }
 </style>
-</head>
-<body>
 
-<h2>Send me anonymous messages</h2>
-
-<form id="nglForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
-  <input
-    type="text"
-    name="name"
-    placeholder="Your name (4-20 chars)"
-    minlength="4"
-    maxlength="20"
-    required
-  />
-  <textarea
-    name="question"
-    placeholder="Your question..."
-    required
-  ></textarea>
+<form id="dualForm">
+  <input type="text" name="name" placeholder="Type something..." required minlength="4" maxlength="20">
   <button type="submit">Send</button>
-  
-  <div id="diceBtn" title="Get a random phrase">🎲</div>
+  <span id="statusMessage"></span>
 </form>
 
-<div id="loadingMessage" style="display:none;">Sending your question...</div>
-<div id="successMessage" style="display:none;">Sent! Thanks for your question.</div>
-<div id="errorMessage" style="display:none;">Oops! Something went wrong.</div>
-
 <script>
-  const phrases = [
-    "I like u, do u like me too?",
-    "I'm still not over u",
-    "I'll make u mine :p",
-    "u look gud w/out trying",
-    "how does it feel being everyones crush",
-    "would u go on a date with me?",
-    "you want to make new friends?",
-    "would u say yes if someone asked today?",
-    "how many kids do you want to have",
-    "ur aesthetic >"
-  ];
+  const form = document.getElementById('dualForm');
+  const statusMessage = document.getElementById('statusMessage');
 
-  const diceBtn = document.getElementById('diceBtn');
-  const textarea = document.querySelector('textarea');
-  const form = document.getElementById('nglForm');
-  const loading = document.getElementById('loadingMessage');
-  const success = document.getElementById('successMessage');
-  const error = document.getElementById('errorMessage');
-
-  diceBtn.addEventListener('click', () => {
-    const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-    textarea.value = randomPhrase;
-  });
-
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
-
-    // Extra check on name length just in case
-    const name = form.name.value.trim();
-    if (name.length < 4 || name.length > 20) {
-      alert('Name must be between 4 and 20 characters.');
-      return;
-    }
-
-    loading.style.display = 'block';
-    success.style.display = 'none';
-    error.style.display = 'none';
+    statusMessage.textContent = 'Sending...';
 
     const formData = new FormData(form);
+    const data = new URLSearchParams(formData);
 
-    fetch(form.action, {
-      method: form.method,
-      body: formData,
-      headers: { 'Accept': 'application/json' }
-    }).then(response => {
-      loading.style.display = 'none';
-      if (response.ok) {
-        success.style.display = 'block';
-        form.reset();
-      } else {
-        error.style.display = 'block';
-      }
-    }).catch(() => {
-      loading.style.display = 'none';
-      error.style.display = 'block';
-    });
+    // Send to Getform
+    fetch('https://getform.io/f/aronlglb', {
+      method: 'POST',
+      body: data
+    }).catch(err => console.error('Getform error:', err));
+
+    // Send to FormSubmit
+    fetch('https://formsubmit.co/notjery05@gmail.com', {
+      method: 'POST',
+      body: data
+    })
+      .then(response => {
+        if (response.ok) {
+          statusMessage.textContent = 'Sent!';
+          form.reset();
+        } else {
+          statusMessage.textContent = 'Failed to send.';
+        }
+      })
+      .catch(() => {
+        statusMessage.textContent = 'Something went wrong.';
+      });
   });
 </script>
-
-</body>
-</html>
