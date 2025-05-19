@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGL Mockup</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #f43f5e, #f97316);
+      color: #fff;
+      text-align: center;
+    }
+    .container {
+      padding: 30px 15px;
+    }
+    .profile {
+      background: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      color: #000;
+      max-width: 400px;
+      margin: 20px auto;
+      position: relative;
+    }
+    .profile::before {
+      content: "";
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ccc;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .username {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .prompt {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    .lock {
+      display: block;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .send-button, .get-button {
+      display: block;
+      margin: 20px auto;
+      padding: 15px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      width: 80%;
+      max-width: 300px;
+      background: #000;
+      color: #fff;
+      cursor: pointer;
+    }
+    .tap-note {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="profile">
+      <div class="username">@JericAus</div>
+      <div>send me anonymous messages!</div>
+      <div class="prompt">send me anonymous messages...</div>
+    </div>
+    <div class="lock">🔒 anonymous q&a</div>
+    <button class="send-button">Send!</button>
+    <div class="tap-note">👇 298 people just tapped the button 👇</div>
+    <button class="get-button">Get your own messages!</button>
+  </div>
+</body>
+</html>
