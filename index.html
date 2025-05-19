@@ -225,8 +225,8 @@
     </form>
     <div class="people-tap-count">👇 0 people just tapped this button 😢🥀</div>
     <div class="extra-box">
-  <a href="quiz.html" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
-</div>
+      <a href="quiz.html" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
+    </div>
   </div>
 
 <script>
@@ -260,6 +260,18 @@
       messageField.value = randomPhrase;
       diceButton.classList.remove('rolling');
     }, 800);
+  });
+
+  // Added: Validate name before allowing quiz.html access
+  document.querySelector('.extra-box a').addEventListener('click', function(event) {
+    const nameInput = document.getElementById('name');
+    const nameValue = nameInput.value.trim();
+
+    if (nameValue.length < 4 || nameValue.length > 20) {
+      event.preventDefault();
+      alert('Please enter your name (4-20 characters) before proceeding.');
+      nameInput.focus();
+    }
   });
 </script>
 </body>
