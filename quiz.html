@@ -43,69 +43,72 @@
       <!-- Hidden input to carry username -->
       <input type="hidden" id="userNameInput" name="username" />
 
-      <!-- Q1: Radio example -->
+      <!-- Q1: Why did you click this?! Do you like me? -->
       <div>
-        <label>1. Question 1:</label><br />
-        <label><input type="radio" name="q1" value="a" /> Option A</label><br />
-        <label><input type="radio" name="q1" value="b" /> Option B</label><br />
+        <label>1. Why did you click this?! Do you like me? 😳</label><br />
+        <label><input type="radio" name="q1" value="Yes" /> Yes</label><br />
+        <label><input type="radio" name="q1" value="Yes 🙈" /> Yes 🙈</label><br />
       </div>
 
-      <!-- Q2: Radio + text -->
+      <!-- Q2: What kind of habits do you have -->
       <div>
-        <label>2. Question 2:</label><br />
-        <label><input type="radio" name="q2" value="a" /> Option A</label><br />
-        <label><input type="radio" name="q2" value="b" /> Option B</label><br />
-        <textarea id="q2a3" name="q2text" placeholder="Or write your answer (min 10 chars)"></textarea>
+        <label>2. What kind of habits do you have 👀</label><br />
+        <label><input type="radio" name="q2" value="Chyess ♟️" /> Chyess ♟️</label><br />
+        <label><input type="radio" name="q2" value="Guitaring?! 🎸" /> Guitaring?! 🎸</label><br />
+        <textarea id="q2a3" name="q2text" placeholder="Or type your habit here (min 10 chars)"></textarea>
       </div>
 
-      <!-- Q3: Radio -->
+      <!-- Q3: Are you Studious or Tumultuous? -->
       <div>
-        <label>3. Question 3:</label><br />
-        <label><input type="radio" name="q3" value="a" /> Option A</label><br />
-        <label><input type="radio" name="q3" value="b" /> Option B</label><br />
+        <label>3. Are you Studious or Tumultuous? 🫵</label><br />
+        <label><input type="radio" name="q3" value="Studious 📚" /> Studious 📚</label><br />
+        <label><input type="radio" name="q3" value="Tumultuous 🗣️" /> Tumultuous 🗣️</label><br />
       </div>
 
-      <!-- Q4: Radio + text -->
+      <!-- Q4: What's YOUR Favourite kulay?! -->
       <div>
-        <label>4. Question 4:</label><br />
-        <label><input type="radio" name="q4" value="a" /> Option A</label><br />
-        <label><input type="radio" name="q4" value="b" /> Option B</label><br />
-        <textarea id="q4a3" name="q4text" placeholder="Or write your answer (min 10 chars)"></textarea>
+        <label>4. What's YOUR Favourite kulay?! 🏳️‍🌈🥶</label><br />
+        <label><input type="radio" name="q4" value="black" /> black</label><br />
+        <label><input type="radio" name="q4" value="white" /> white</label><br />
+        <textarea id="q4a3" name="q4text" placeholder="Or type your colour here (min 10 chars)"></textarea>
       </div>
 
-      <!-- Q5: Radio -->
+      <!-- Q5: What sex are you -->
       <div>
-        <label>5. Question 5:</label><br />
-        <label><input type="radio" name="q5" value="a" /> Option A</label><br />
-        <label><input type="radio" name="q5" value="b" /> Option B</label><br />
+        <label>5. What sex are you 🤔🙃</label><br />
+        <label><input type="radio" name="q5" value="Men ♂️" /> Men ♂️</label><br />
+        <label><input type="radio" name="q5" value="Girl ♀️" /> Girl ♀️</label><br />
       </div>
 
-      <!-- Q6: Radio + text (2-3 chars) -->
+      <!-- Q6: and how old are you? -->
       <div>
-        <label>6. Question 6:</label><br />
-        <label><input type="radio" name="q6" value="a" /> Option A</label><br />
-        <label><input type="radio" name="q6" value="b" /> Option B</label><br />
-        <input type="text" id="q6a3" name="q6text" placeholder="Or write 2-3 chars answer" maxlength="3" />
+        <label>6. and how old are you? 1️⃣0️⃣ 😱</label><br />
+        <label><input type="radio" name="q6" value="9 to 12 🫷" /> 9 to 12 🫷</label><br />
+        <label><input type="radio" name="q6" value="15? 😭" /> 15? 😭</label><br />
+        <input type="text" id="q6a3" name="q6text" placeholder="Or type your age here (2-3 chars max)" maxlength="3" />
       </div>
 
-      <!-- Q7-Q10: Text inputs (min 10 chars) -->
+      <!-- Q7: Tell me something only the REAL ones know about you -->
       <div>
-        <label>7. Question 7:</label><br />
+        <label>7. Tell me something only the REAL ones know about you 😏🍠</label><br />
         <textarea id="q7" name="q7" placeholder="At least 10 characters"></textarea>
       </div>
 
+      <!-- Q8: What's a random fact about you that sounds fake but isn't? -->
       <div>
-        <label>8. Question 8:</label><br />
+        <label>8. What's a random fact about you that sounds fake but isn't? 🫣</label><br />
         <textarea id="q8" name="q8" placeholder="At least 10 characters"></textarea>
       </div>
 
+      <!-- Q9: If I met you in a dream, how would you introduce yourself? -->
       <div>
-        <label>9. Question 9:</label><br />
+        <label>9. If I met you in a dream, how would you introduce yourself?🚪😜</label><br />
         <textarea id="q9" name="q9" placeholder="At least 10 characters"></textarea>
       </div>
 
+      <!-- Q10: Last question! What's one thing you wish people knew about you? -->
       <div>
-        <label>10. Question 10:</label><br />
+        <label>10. Last question! What's one thing you wish people knew about you? 🔥</label><br />
         <textarea id="q10" name="q10" placeholder="At least 10 characters"></textarea>
       </div>
 
@@ -114,8 +117,6 @@
   </div>
 
   <script>
-    // Your provided JavaScript, inserted here:
-
     // Get 'name' from URL query parameter
     function getQueryParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
