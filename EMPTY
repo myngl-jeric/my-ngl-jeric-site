@@ -13,12 +13,13 @@
   .options { margin-bottom: 15px; }
   button { background: #007BFF; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
   button:disabled { background: #aaa; cursor: not-allowed; }
+  .troll-message { text-align: center; font-size: 1.5em; padding: 30px; }
 </style>
 </head>
 <body>
   <div class="container">
     <h1>Get to Know Me Quiz</h1>
-    <form id="quizForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
+    <form id="quizForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST" novalidate>
       
       <!-- Hidden input for the userName -->
       <input type="hidden" name="userName" id="userNameInput" value="" />
@@ -35,7 +36,7 @@
       <!-- Question 2 -->
       <label>2. Enough of that, What kind of habits do you have 👀</label>
       <div class="options">
-        <input type="radio" id="q2a1" name="q2" value="Chyess ♟️" required />
+        <input type="radio" id="q2a1" name="q2" value="Chyess ♟️" />
         <label for="q2a1">Chyess ♟️</label><br/>
         <input type="radio" id="q2a2" name="q2" value="Guitaring?! 🎸" />
         <label for="q2a2">Guitaring?! 🎸</label><br/>
@@ -55,7 +56,7 @@
       <!-- Question 4 -->
       <label>4. What's YOUR Favourite kulay?! 🏳️‍🌈🥶</label>
       <div class="options">
-        <input type="radio" id="q4a1" name="q4" value="black" required />
+        <input type="radio" id="q4a1" name="q4" value="black" />
         <label for="q4a1">black</label><br/>
         <input type="radio" id="q4a2" name="q4" value="white" />
         <label for="q4a2">white</label><br/>
@@ -75,12 +76,12 @@
       <!-- Question 6 -->
       <label>6. and how old are you? 1️⃣0️⃣ 😱</label>
       <div class="options">
-        <input type="radio" id="q6a1" name="q6" value="9 to 12 🫷" required />
+        <input type="radio" id="q6a1" name="q6" value="9 to 12 🫷" />
         <label for="q6a1">9 to 12 🫷</label><br/>
         <input type="radio" id="q6a2" name="q6" value="15? 😭" />
         <label for="q6a2">15? 😭</label><br/>
         <label for="q6a3">Other age (type below):</label>
-        <input type="text" id="q6a3" name="q6text" minlength="2" maxlength="3" placeholder="Type your age here (min 2 digits)" />
+        <input type="text" id="q6a3" name="q6text" minlength="2" maxlength="3" placeholder="Type your age here (2 or 3 digits)" />
       </div>
 
       <!-- Question 7 -->
@@ -105,44 +106,42 @@
   </div>
 
   <script>
-    // Load username from localStorage and redirect if missing
     const userName = localStorage.getItem('userName');
+    const userNameInput = document.getElementById('userNameInput');
+    const form = document.getElementById('quizForm');
+    const submitBtn = document.getElementById('submitBtn');
+
     if (!userName) {
       alert('You must enter your name first!');
       window.location.href = 'index.html';
     } else {
-      document.getElementById('userNameInput').value = userName;
+      userNameInput.value = userName;
     }
 
-    const form = document.getElementById('quizForm');
-    const submitBtn = document.getElementById('submitBtn');
-
-    // Function to check if at least one of question 2's inputs is filled or selected
     function validateQ2() {
-      const radios = document.querySelectorAll('input[name="q2"]:checked');
+      const radioChecked = document.querySelector('input[name="q2"]:checked');
       const text = document.getElementById('q2a3').value.trim();
-      return radios.length > 0 || text.length >= 10;
+      return radioChecked !== null || text.length >= 10;
     }
 
-    // Same for question 4 and 6 which have options + text input
     function validateQ4() {
-      const radios = document.querySelectorAll('input[name="q4"]:checked');
+      const radioChecked = document.querySelector('input[name="q4"]:checked');
       const text = document.getElementById('q4a3').value.trim();
-      return radios.length > 0 || text.length >= 10;
-    }
-    function validateQ6() {
-      const radios = document.querySelectorAll('input[name="q6"]:checked');
-      const text = document.getElementById('q6a3').value.trim();
-      return radios.length > 0 || (text.length >= 2 && text.length <= 3);
+      return radioChecked !== null || text.length >= 10;
     }
 
-    // Check all validations and enable/disable submit
+    function validateQ6() {
+      const radioChecked = document.querySelector('input[name="q6"]:checked');
+      const text = document.getElementById('q6a3').value.trim();
+      return radioChecked !== null || (text.length >= 2 && text.length <= 3);
+    }
+
     function checkFormValidity() {
-      const q1 = document.querySelector('input[name="q1"]:checked');
+      const q1 = document.querySelector('input[name="q1"]:checked') !== null;
       const q2 = validateQ2();
-      const q3 = document.querySelector('input[name="q3"]:checked');
+      const q3 = document.querySelector('input[name="q3"]:checked') !== null;
       const q4 = validateQ4();
-      const q5 = document.querySelector('input[name="q5"]:checked');
+      const q5 = document.querySelector('input[name="q5"]:checked') !== null;
       const q6 = validateQ6();
 
       const q7 = document.getElementById('q7').value.trim().length >= 10;
@@ -150,27 +149,18 @@
       const q9 = document.getElementById('q9').value.trim().length >= 10;
       const q10 = document.getElementById('q10').value.trim().length >= 10;
 
-      if(q1 && q2 && q3 && q4 && q5 && q6 && q7 && q8 && q9 && q10) {
-        submitBtn.disabled = false;
-      } else {
-        submitBtn.disabled = true;
-      }
+      submitBtn.disabled = !(q1 && q2 && q3 && q4 && q5 && q6 && q7 && q8 && q9 && q10);
     }
 
-    // Add event listeners to inputs to validate on the fly
     form.addEventListener('input', checkFormValidity);
 
-    // When submitting, add a troll message and redirect after 5 seconds
     form.addEventListener('submit', function(e) {
-      e.preventDefault(); // prevent default submit to show troll page first
+      e.preventDefault();
 
-      // Hide form, show troll message
       form.style.display = 'none';
 
       const trollDiv = document.createElement('div');
-      trollDiv.style.textAlign = 'center';
-      trollDiv.style.fontSize = '1.5em';
-      trollDiv.style.padding = '30px';
+      trollDiv.classList.add('troll-message');
       trollDiv.innerHTML = `
         <p>get scammed lel, I got info from you hehaheuh! 😂🤭</p>
         <p>Redirecting to my info page...</p>
@@ -178,10 +168,12 @@
       document.querySelector('.container').appendChild(trollDiv);
 
       setTimeout(() => {
-        // After 5 seconds, submit the form normally
         form.submit();
       }, 5000);
     });
+
+    // Initial validation on page load in case inputs are autofilled
+    checkFormValidity();
   </script>
 </body>
 </html>
