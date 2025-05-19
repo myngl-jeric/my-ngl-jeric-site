@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,112 +10,110 @@
       background: linear-gradient(to bottom right, #f43f5e, #f97316);
       color: #fff;
       text-align: center;
-    }
+    }.container {
+  padding: 20px 10px;
+}
 
-    .container {
-      padding: 30px 15px;
-    }
+.profile {
+  background: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  color: #000;
+  max-width: 350px;
+  margin: 10px auto;
+  position: relative;
+}
 
-    .profile {
-      background: #fff;
-      border-radius: 15px;
-      padding: 20px;
-      color: #000;
-      max-width: 400px;
-      margin: 20px auto;
-      position: relative;
-    }
+.circle-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #ccc;
+  margin: 0 auto 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    .circle-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #ccc;
-      margin: 0 auto 10px;
-      position: relative;
-    }
+.lock {
+  font-size: 28px;
+}
 
-    .lock {
-      font-size: 24px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
+.username {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
 
-    .username {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
+.description {
+  font-size: 13px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
 
-    .description {
-      font-size: 14px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
+.prompt {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 5px;
+  font-size: 16px;
+}
 
-    .prompt {
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 20px;
-      border-radius: 15px;
-      margin-top: 10px;
-      font-size: 18px;
-    }
+form {
+  margin-top: 10px;
+}
 
-    form {
-      margin-top: 20px;
-    }
+textarea {
+  width: 80%;
+  max-width: 280px;
+  height: 100px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  resize: none;
+  font-size: 15px;
+}
 
-    textarea {
-      width: 80%;
-      max-width: 300px;
-      height: 100px;
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      resize: none;
-      font-size: 16px;
-    }
+input[type="text"] {
+  width: 80%;
+  max-width: 280px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+}
 
-    input[type="text"] {
-      width: 80%;
-      max-width: 300px;
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-    }
+.send-button {
+  display: block;
+  margin: 15px auto 0;
+  padding: 12px 18px;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  width: 80%;
+  max-width: 280px;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+}
 
-    .send-button {
-      display: block;
-      margin: 20px auto;
-      padding: 15px 20px;
-      font-size: 18px;
-      border: none;
-      border-radius: 30px;
-      width: 80%;
-      max-width: 300px;
-      background: #000;
-      color: #fff;
-      cursor: pointer;
-    }
+.dice-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.5s ease-in-out;
+}
 
-    .dice-button {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background: transparent;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      transition: transform 0.4s ease;
-    }
+.dice-button.roll {
+  transform: rotate(360deg);
+}
 
-    .dice-button.flip {
-      transform: rotateY(180deg);
-    }
   </style>
 </head>
 <body>
@@ -130,34 +127,31 @@
         Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
       </div>
       <div class="prompt">send me anonymous messages...</div>
-    </div>
-
-    <form 
-      action="https://formsubmit.co/notjery05@gmail.com" 
-      method="POST"
-      onsubmit="submitDual(event)"
-    >
-      <input 
-        type="text" 
-        name="name" 
-        placeholder="Your name ( 4-20 characters )"
-        minlength="4" 
-        maxlength="20"
-      />
-      <div style="position: relative; display: inline-block; width: 80%; max-width: 300px;">
-        <textarea id="messageBox" name="message" placeholder="Type your message here..." required></textarea>
-        <button 
-          type="button" 
-          class="dice-button" 
-          onclick="rollDice(this)"
-          title="Roll a message"
-        >🎲</button>
-      </div>
-      <button type="submit" class="send-button">Send!</button>
-    </form>
+    </div><form 
+  action="https://formsubmit.co/notjery05@gmail.com" 
+  method="POST"
+  onsubmit="submitDual(event)"
+>
+  <input 
+    type="text" 
+    name="name" 
+    placeholder="Your name ( 4-20 characters )"
+    minlength="4" 
+    maxlength="20"
+  />
+  <div style="position: relative; display: inline-block; width: 80%; max-width: 280px;">
+    <textarea id="messageBox" name="message" placeholder="Type your message here..." required></textarea>
+    <button 
+      type="button" 
+      class="dice-button" 
+      onclick="rollDice(this)"
+      title="Roll a message"
+    >🎲</button>
   </div>
+  <button type="submit" class="send-button">Send!</button>
+</form>
 
-  <script>
+  </div>  <script>
     const phrases = [
       "I like u, do u like me too?",
       "I'm still not over u",
@@ -175,12 +169,8 @@
       const messageBox = document.getElementById("messageBox");
       const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
       messageBox.value = randomPhrase;
-
-      // Flip animation
-      btn.classList.add("flip");
-      setTimeout(() => btn.classList.remove("flip"), 400);
-
-      // Optional: Sound (only works with user interaction)
+      btn.classList.add("roll");
+      setTimeout(() => btn.classList.remove("roll"), 500);
       const audio = new Audio("https://www.myinstants.com/media/sounds/dice-roll.mp3");
       audio.play().catch(() => {});
     }
@@ -189,13 +179,11 @@
       event.preventDefault();
       const form = event.target;
 
-      // Submit to Formsubmit
       fetch(form.action, {
         method: "POST",
         body: new FormData(form)
       });
 
-      // Submit to Getform
       fetch("https://getform.io/f/aronlglb", {
         method: "POST",
         body: new FormData(form)
@@ -204,6 +192,5 @@
         form.reset();
       });
     }
-  </script>
-</body>
+  </script></body>
 </html>
