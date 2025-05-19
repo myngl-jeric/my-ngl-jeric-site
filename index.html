@@ -3,114 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NGL Inspired</title>
+  <title>Anonymous Message</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
       padding: 20px;
-      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
     }
 
-    .form-container {
-      position: relative;
-      max-width: 400px;
-      margin: auto;
+    .container {
       background: white;
       padding: 20px;
       border-radius: 10px;
-    }
-
-    input[type="text"], textarea {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
+      max-width: 400px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      position: relative;
     }
 
-    .textarea-wrapper {
-      position: relative;
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-size: 14px;
     }
 
     #dice {
       position: absolute;
-      bottom: 10px;
-      left: 10px;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      text-align: center;
-      line-height: 30px;
-      font-size: 16px;
+      right: 20px;
+      bottom: 90px;
+      background: none;
+      border: none;
+      font-size: 20px;
       cursor: pointer;
-      user-select: none;
     }
 
-    button {
+    input[type="text"] {
       width: 100%;
       padding: 10px;
-      font-size: 16px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    button[type="submit"] {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background: #ff66c4;
       border: none;
-      background-color: #4CAF50;
       color: white;
-      border-radius: 5px;
+      font-size: 16px;
+      border-radius: 10px;
       cursor: pointer;
     }
 
-    button:disabled {
-      background-color: #ccc;
+    .error {
+      color: red;
+      font-size: 13px;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Send me anonymous messages</h2>
+    <form id="messageForm" action="https://getform.io/f/aronlglb" method="POST">
+      <textarea id="message" name="message" placeholder="Type something..." required></textarea>
+      <button id="dice" type="button">🎲</button>
+      <input type="text" name="name" id="nameInput" placeholder="Enter your name (4-20 chars)" required />
+      <div id="nameError" class="error"></div>
+      <button type="submit">Send</button>
+    </form>
+  </div>
 
-<div class="form-container">
-  <form id="messageForm">
-    <input type="text" id="name" placeholder="Your name (4-20 characters)" required>
-    
-    <div class="textarea-wrapper">
-      <textarea id="message" placeholder="Type your message here..." rows="5" required></textarea>
-      <div id="dice">🎲</div>
-    </div>
+  <script>
+    const phrases = [
+      "I like u, do u like me too?",
+      "I'm still not over u",
+      "I'll make u mine :p",
+      "u look gud w/out trying",
+      "how does it feel being everyones crush",
+      "would u go on a date with me?",
+      "you want to make new friends?",
+      "would u say yes if someone asked today?",
+      "how many kids do you want to have",
+      "ur aesthetic >"
+    ];
 
-    <button type="submit">Send</button>
-  </form>
-</div>
+    const dice = document.getElementById("dice");
+    const textarea = document.getElementById("message");
+    const form = document.getElementById("messageForm");
+    const nameInput = document.getElementById("nameInput");
+    const nameError = document.getElementById("nameError");
 
-<script>
-  const form = document.getElementById('messageForm');
-  const nameInput = document.getElementById('name');
-  const messageInput = document.getElementById('message');
-  const dice = document.getElementById('dice');
+    dice.addEventListener("click", () => {
+      const random = phrases[Math.floor(Math.random() * phrases.length)];
+      textarea.value = random;
+    });
 
-  const phrases = [
-    "I like u, do u like me too?",
-    "I'm still not over u",
-    "I'll make u mine :p",
-    "u look gud w/out trying",
-    "how does it feel being everyones crush",
-    "would u go on a date with me?",
-    "you want to make new friends?",
-    "would u say yes if someone asked today?",
-    "how many kids do you want to have",
-    "ur aesthetic >"
-  ];
-
-  dice.addEventListener('click', () => {
-    const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-    messageInput.value = randomPhrase;
-  });
-
-  form.addEventListener('submit', function(event) {
-    if (nameInput.value.length < 4 || nameInput.value.length > 20) {
-      alert("Name must be between 4 and 20 characters.");
-      event.preventDefault();
-    }
-  });
-</script>
-
+    form.addEventListener("submit", (e) => {
+      const name = nameInput.value.trim();
+      if (name.length < 4 || name.length > 20) {
+        e.preventDefault();
+        nameError.textContent = "Name must be 4–20 characters.";
+      } else {
+        nameError.textContent = "";
+      }
+    });
+  </script>
 </body>
 </html>
