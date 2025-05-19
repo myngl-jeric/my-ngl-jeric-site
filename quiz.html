@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Quiz</title>
+  <title>Anonymous Quiz</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,191 +10,150 @@
       max-width: 600px;
       margin: auto;
     }
-    .question {
+    .container {
+      position: relative;
+    }
+    form > div {
+      margin-bottom: 15px;
       display: none;
-    }
-    .question.active {
-      display: block;
-    }
-    .next-btn {
-      margin-top: 15px;
     }
     input[type="text"], textarea {
       width: 100%;
       padding: 8px;
       box-sizing: border-box;
     }
+    .show {
+      display: block !important;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
-  <h1>Welcome to the Quiz</h1>
-  <form id="quizForm" method="POST" action="https://formsubmit.co/notjery05@gmail.com">
-    <!-- Hidden input for user name from URL -->
-    <input type="hidden" name="username" id="userNameInput" />
+  <div class="container">
+    <h1>Send Me Anonymous Messages</h1>
+    <form id="quizForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
+      <input type="hidden" id="userNameInput" name="username" />
+      <input type="hidden" name="_next" value="thankyou.html"><div class="q" id="q1div">
+    <label>1. Why did you click this?! Do you like me? 😳</label><br />
+    <label><input type="radio" name="q1" value="Yes" /> Yes</label><br />
+    <label><input type="radio" name="q1" value="Yes 🙈" /> Yes 🙈</label><br />
+  </div>
 
-    <!-- Q1 -->
-    <div class="question active" data-question="1">
-      <label>1. Question 1:</label><br />
-      <label><input type="radio" name="q1" value="a" /> Option A</label><br />
-      <label><input type="radio" name="q1" value="b" /> Option B</label><br />
-      <button type="button" class="next-btn">Next</button>
-    </div>
+  <div class="q" id="q2div">
+    <label>2. What kind of habits do you have 👀</label><br />
+    <label><input type="radio" name="q2" value="Chyess ♟️" /> Chyess ♟️</label><br />
+    <label><input type="radio" name="q2" value="Guitaring?! 🎸" /> Guitaring?! 🎸</label><br />
+    <input type="text" name="q2text" placeholder="Or type your habit" />
+  </div>
 
-    <!-- Q2 -->
-    <div class="question" data-question="2">
-      <label>2. Question 2:</label><br />
-      <label><input type="radio" name="q2" value="a" /> Option A</label><br />
-      <label><input type="radio" name="q2" value="b" /> Option B</label><br />
-      <textarea name="q2text" placeholder="Or write your answer (min 10 chars)"></textarea>
-      <button type="button" class="next-btn">Next</button>
-    </div>
+  <div class="q" id="q3div">
+    <label>3. Are you Studious or Tumultuous? 🫵</label><br />
+    <label><input type="radio" name="q3" value="Studious 📚" /> Studious 📚</label><br />
+    <label><input type="radio" name="q3" value="Tumultuous 🗣️" /> Tumultuous 🗣️</label><br />
+  </div>
 
-    <!-- Q3 -->
-    <div class="question" data-question="3">
-      <label>3. Question 3:</label><br />
-      <label><input type="radio" name="q3" value="a" /> Option A</label><br />
-      <label><input type="radio" name="q3" value="b" /> Option B</label><br />
-      <button type="button" class="next-btn">Next</button>
-    </div>
+  <div class="q" id="q4div">
+    <label>4. What's YOUR Favourite kulay?! 🏳️‍🌈🥶</label><br />
+    <label><input type="radio" name="q4" value="black" /> black</label><br />
+    <label><input type="radio" name="q4" value="white" /> white</label><br />
+    <input type="text" name="q4text" placeholder="Or type your color" />
+  </div>
 
-    <!-- Q4 -->
-    <div class="question" data-question="4">
-      <label>4. Question 4:</label><br />
-      <label><input type="radio" name="q4" value="a" /> Option A</label><br />
-      <label><input type="radio" name="q4" value="b" /> Option B</label><br />
-      <textarea name="q4text" placeholder="Or write your answer (min 10 chars)"></textarea>
-      <button type="button" class="next-btn">Next</button>
-    </div>
+  <div class="q" id="q5div">
+    <label>5. What sex are you 🤔🙃</label><br />
+    <label><input type="radio" name="q5" value="Men ♂️" /> Men ♂️</label><br />
+    <label><input type="radio" name="q5" value="Girl ♀️" /> Girl ♀️</label><br />
+  </div>
 
-    <!-- Q5 -->
-    <div class="question" data-question="5">
-      <label>5. Question 5:</label><br />
-      <label><input type="radio" name="q5" value="a" /> Option A</label><br />
-      <label><input type="radio" name="q5" value="b" /> Option B</label><br />
-      <button type="button" class="next-btn">Next</button>
-    </div>
+  <div class="q" id="q6div">
+    <label>6. and how old are you? 1️⃣0️⃣ 😱</label><br />
+    <label><input type="radio" name="q6" value="9 to 12 🫷" /> 9 to 12 🫷</label><br />
+    <label><input type="radio" name="q6" value="15? 😭" /> 15? 😭</label><br />
+    <input type="text" name="q6text" placeholder="Or type your age" maxlength="3" />
+  </div>
 
-    <!-- Q6 -->
-    <div class="question" data-question="6">
-      <label>6. Question 6:</label><br />
-      <label><input type="radio" name="q6" value="a" /> Option A</label><br />
-      <label><input type="radio" name="q6" value="b" /> Option B</label><br />
-      <input type="text" name="q6text" maxlength="3" placeholder="Or write 2-3 chars" />
-      <button type="button" class="next-btn">Next</button>
-    </div>
+  <div class="q" id="q7div">
+    <label>7. Tell me something only the REAL ones know about you 😏🍠</label><br />
+    <textarea name="q7" placeholder="At least 10 characters"></textarea>
+  </div>
 
-    <!-- Q7 -->
-    <div class="question" data-question="7">
-      <label>7. Question 7:</label><br />
-      <textarea name="q7" placeholder="At least 10 characters"></textarea>
-      <button type="button" class="next-btn">Next</button>
-    </div>
+  <div class="q" id="q8div">
+    <label>8. What's a random fact about you that sounds fake but isn't? 🫣</label><br />
+    <textarea name="q8" placeholder="At least 10 characters"></textarea>
+  </div>
 
-    <!-- Q8 -->
-    <div class="question" data-question="8">
-      <label>8. Question 8:</label><br />
-      <textarea name="q8" placeholder="At least 10 characters"></textarea>
-      <button type="button" class="next-btn">Next</button>
-    </div>
+  <div class="q" id="q9div">
+    <label>9. If I met you in a dream, how would you introduce yourself?🚪😜</label><br />
+    <textarea name="q9" placeholder="At least 10 characters"></textarea>
+  </div>
 
-    <!-- Q9 -->
-    <div class="question" data-question="9">
-      <label>9. Question 9:</label><br />
-      <textarea name="q9" placeholder="At least 10 characters"></textarea>
-      <button type="button" class="next-btn">Next</button>
-    </div>
+  <div class="q" id="q10div">
+    <label>10. What's one thing you wish people knew about you? 🔥</label><br />
+    <textarea name="q10" placeholder="At least 10 characters"></textarea>
+  </div>
 
-    <!-- Q10 -->
-    <div class="question" data-question="10">
-      <label>10. Question 10:</label><br />
-      <textarea name="q10" placeholder="At least 10 characters"></textarea>
-      <button type="submit">Submit</button>
-    </div>
-  </form>
+  <button type="submit" id="submitBtn" disabled>Submit Quiz</button>
+</form>
 
-  <script>
-    // Get "name" from URL
-    const params = new URLSearchParams(window.location.search);
-    const userName = params.get("name");
-    const userNameInput = document.getElementById("userNameInput");
+  </div>  <script>
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    const userName = getQueryParam('name');
+    const userNameInput = document.getElementById('userNameInput');
+    const form = document.getElementById('quizForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const questions = Array.from(document.querySelectorAll('.q'));
 
     if (!userName || userName.length < 4 || userName.length > 20) {
-      alert("Invalid or missing name.");
-      window.location.href = "index.html";
+      alert('You must enter your name first!');
+      window.location.href = 'index.html';
     } else {
       userNameInput.value = userName;
     }
 
-    // Navigation
-    const questions = document.querySelectorAll(".question");
-    const nextBtns = document.querySelectorAll(".next-btn");
+    let current = 0;
+    questions[current].classList.add('show');
 
-    nextBtns.forEach((btn, index) => {
-      btn.addEventListener("click", () => {
-        if (validateQuestion(index + 1)) {
-          questions[index].classList.remove("active");
-          questions[index + 1].classList.add("active");
+    function validateCurrentQuestion(index) {
+      const div = questions[index];
+      const radios = div.querySelectorAll('input[type="radio"]');
+      const textarea = div.querySelector('textarea, input[type="text"]');
+
+      let isValid = false;
+
+      if (radios.length > 0) {
+        const checked = Array.from(radios).some(r => r.checked);
+        const textVal = textarea ? textarea.value.trim() : '';
+        if (textarea && textarea.maxLength === 3) {
+          isValid = checked || (textVal.length >= 2 && textVal.length <= 3);
+        } else if (textarea) {
+          isValid = checked || textVal.length >= 3;
         } else {
-          alert("Please answer this question before proceeding.");
+          isValid = checked;
         }
-      });
-    });
-
-    // Exclusive input: disable text if radio is checked, and vice versa
-    function setupMutualExclusion() {
-      const pairs = [
-        { radios: 'q2', text: 'q2text', min: 10 },
-        { radios: 'q4', text: 'q4text', min: 10 },
-        { radios: 'q6', text: 'q6text', min: 2, max: 3 },
-      ];
-
-      pairs.forEach(({ radios, text }) => {
-        const radiosList = document.querySelectorAll(`input[name="${radios}"]`);
-        const textInput = document.querySelector(`[name="${text}"]`);
-
-        radiosList.forEach(radio => {
-          radio.addEventListener('change', () => {
-            if (radio.checked) textInput.value = '';
-          });
-        });
-
-        textInput.addEventListener('input', () => {
-          if (textInput.value.trim() !== '') {
-            radiosList.forEach(r => r.checked = false);
-          }
-        });
-      });
-    }
-
-    // Validate each question
-    function validateQuestion(number) {
-      switch (number) {
-        case 1: return document.querySelector('input[name="q1"]:checked');
-        case 2:
-          const q2Radio = document.querySelector('input[name="q2"]:checked');
-          const q2Text = document.querySelector('textarea[name="q2text"]').value.trim();
-          return q2Radio || q2Text.length >= 10;
-        case 3: return document.querySelector('input[name="q3"]:checked');
-        case 4:
-          const q4Radio = document.querySelector('input[name="q4"]:checked');
-          const q4Text = document.querySelector('textarea[name="q4text"]').value.trim();
-          return q4Radio || q4Text.length >= 10;
-        case 5: return document.querySelector('input[name="q5"]:checked');
-        case 6:
-          const q6Radio = document.querySelector('input[name="q6"]:checked');
-          const q6Text = document.querySelector('input[name="q6text"]').value.trim();
-          return q6Radio || (q6Text.length >= 2 && q6Text.length <= 3);
-        case 7:
-        case 8:
-        case 9:
-        case 10:
-          const qText = document.querySelector(`textarea[name="q${number}"]`).value.trim();
-          return qText.length >= 10;
-        default: return false;
+      } else if (textarea) {
+        isValid = textarea.value.trim().length >= 10;
       }
+
+      return isValid;
     }
 
-    setupMutualExclusion();
-  </script>
-</body>
+    form.addEventListener('input', () => {
+      if (validateCurrentQuestion(current)) {
+        questions[current].classList.remove('show');
+        current++;
+        if (current < questions.length) {
+          questions[current].classList.add('show');
+        } else {
+          submitBtn.disabled = false;
+        }
+      }
+    });
+  </script></body>
 </html>
