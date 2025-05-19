@@ -262,7 +262,35 @@
     }, 800);
   });
 
-  // Added: Validate name before allowing quiz.html access
+  // Dual submission function: sends to Getform, then submits normally to Formsubmit
+  async function dualSubmit(event) {
+    event.preventDefault(); // Prevent normal submit
+    
+    const form = event.target;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('https://getform.io/f/aronlglb', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        alert('Error submitting to Getform. Please try again.');
+        return false;
+      }
+
+      // Submit normally to Formsubmit if Getform succeeded
+      form.submit();
+    } catch (error) {
+      alert('Network error during submission. Please try again.');
+      return false;
+    }
+
+    return false;
+  }
+
+  // Validate name before allowing quiz.html access
   document.querySelector('.extra-box a').addEventListener('click', function(event) {
     const nameInput = document.getElementById('name');
     const nameValue = nameInput.value.trim();
