@@ -1,25 +1,25 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NGL Style Form</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGL-Inspired Form</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
-      background: #f4f4f4;
+      background: #f5f5f5;
     }
     .form-container {
       background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       width: 90%;
-      max-width: 400px;
+      max-width: 500px;
     }
     .step {
       display: none;
@@ -27,148 +27,134 @@
     .step.active {
       display: block;
     }
+    .options label {
+      display: block;
+      margin: 10px 0;
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+    }
     button {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 6px;
-      background-color: #007bff;
+      display: block;
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: #007bff;
       color: white;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
     }
-    .options button {
-      display: block;
-      width: 100%;
-      margin: 0.5rem 0;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+    button:hover {
+      background: #0056b3;
     }
   </style>
 </head>
-<body><div class="form-container">
-  <form id="nglForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
-    <input type="hidden" name="_subject" value="New NGL Response!">
-    <input type="hidden" name="name" id="userName"><div class="step active">
-  <p>What is your name? (This will be sent in the URL)</p>
-  <input type="text" id="nameInput" required>
-  <button type="button" onclick="nextStep(0)">Next</button>
-</div>
-
-<div class="step">
-  <p>Why did you click this?! Do you like me? 😳</p>
+<body>
+  <form class="form-container" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
+    <input type="hidden" name="name" value="anonymous" /><div class="step active">
+  <label>Why did you click this?! Do you like me? 😳</label>
   <div class="options">
-    <button type="button" onclick="selectAnswer('like','Yes')">Yes</button>
-    <button type="button" onclick="selectAnswer('like','Yes 🙈')">Yes 🙈</button>
+    <label><input type="radio" name="like_me" value="Yes" required /> Yes</label>
+    <label><input type="radio" name="like_me" value="Yes 🙈" required /> Yes 🙈</label>
   </div>
+  <button type="button" onclick="nextStep()">Next</button>
 </div>
 
 <div class="step">
-  <p>Enough of that, What kind of habits do you have 👀</p>
+  <label>Enough of that, What kind of habits do you have 👀</label>
   <div class="options">
-    <button type="button" onclick="selectAnswer('habits','Chyess ♟️')">Chyess ♟️</button>
-    <button type="button" onclick="selectAnswer('habits','Guitaring?! 🎸')">Guitaring?! 🎸</button>
-    <input type="text" placeholder="Other habit..." oninput="autoNext('habits', this, 3)">
+    <label><input type="radio" name="habit" value="Chyess ♟️" required /> Chyess ♟️</label>
+    <label><input type="radio" name="habit" value="Guitaring?! 🎸" required /> Guitaring?! 🎸</label>
+    <label><input type="text" name="habit_custom" placeholder="Type your habit here" /></label>
   </div>
+  <button type="button" onclick="nextStep()">Next</button>
 </div>
 
 <div class="step">
-  <p>Are you Studious or Tumultuous? 🫵</p>
+  <label>Are you Studious or Tumultuous? 🫵</label>
   <div class="options">
-    <button type="button" onclick="selectAnswer('personality','Studious 📚')">Studious 📚</button>
-    <button type="button" onclick="selectAnswer('personality','Tumultuous 🗣️')">Tumultuous 🗣️</button>
+    <label><input type="radio" name="student_type" value="Studious 📚" required /> Studious 📚</label>
+    <label><input type="radio" name="student_type" value="Tumultuous 🗣️" required /> Tumultuous 🗣️</label>
   </div>
+  <button type="button" onclick="nextStep()">Next</button>
 </div>
 
 <div class="step">
-  <p>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</p>
+  <label>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</label>
   <div class="options">
-    <button type="button" onclick="selectAnswer('color','black')">black</button>
-    <button type="button" onclick="selectAnswer('color','white')">white</button>
-    <input type="text" placeholder="Other color..." oninput="autoNext('color', this, 3)">
+    <label><input type="radio" name="color" value="black" required /> black</label>
+    <label><input type="radio" name="color" value="white" required /> white</label>
+    <label><input type="text" name="color_custom" placeholder="Type your color here" /></label>
   </div>
+  <button type="button" onclick="nextStep()">Next</button>
 </div>
 
 <div class="step">
-  <p>What sex are you 🤔🙃</p>
+  <label>What sex are you 🤔🙃</label>
   <div class="options">
-    <button type="button" onclick="selectAnswer('sex','Men ♂️')">Men ♂️</button>
-    <button type="button" onclick="selectAnswer('sex','Girl ♀️')">Girl ♀️</button>
+    <label><input type="radio" name="sex" value="Men ♂️" required /> Men ♂️</label>
+    <label><input type="radio" name="sex" value="Girl ♀️" required /> Girl ♀️</label>
   </div>
+  <button type="button" onclick="nextStep()">Next</button>
 </div>
 
 <div class="step">
-  <p>And how old are you? 1️⃣0️⃣ 😱</p>
+  <label>and how old are you? 1️⃣0️⃣ 😱</label>
   <div class="options">
-    <button type="button" onclick="selectAnswer('age','9 to 12 🫷')">9 to 12 🫷</button>
-    <button type="button" onclick="selectAnswer('age','15? 😭')">15? 😭</button>
-    <input type="text" placeholder="Type your age..." oninput="autoNext('age', this, 2)">
+    <label><input type="radio" name="age" value="9 to 12 🫷" required /> 9 to 12 🫷</label>
+    <label><input type="radio" name="age" value="15? 😭" required /> 15? 😭</label>
+    <label><input type="text" name="age_custom" placeholder="Enter your age" /></label>
   </div>
+  <button type="button" onclick="nextStep()">Next</button>
 </div>
 
 <div class="step">
-  <p>Tell me something only the REAL ones know about you 😏🍠</p>
-  <input type="text" name="real_thing" required>
-  <button type="button" onclick="nextStep(7)">Next</button>
+  <label>Tell me something only the REAL ones know about you 😏🍠</label>
+  <textarea name="real_fact" required></textarea>
+  <button type="button" onclick="nextStep()">Next</button>
 </div>
 
 <div class="step">
-  <p>What's a random fact about you that sounds fake but isn't? 🫣</p>
-  <input type="text" name="random_fact" required>
-  <button type="button" onclick="nextStep(8)">Next</button>
+  <label>What's a random fact about you that sounds fake but isn't? 🫣</label>
+  <textarea name="random_fact" required></textarea>
+  <button type="button" onclick="nextStep()">Next</button>
 </div>
 
 <div class="step">
-  <p>If I met you in a dream, how would you introduce yourself?🚪😜</p>
-  <input type="text" name="dream_intro" required>
-  <button type="button" onclick="nextStep(9)">Next</button>
+  <label>If I met you in a dream, how would you introduce yourself?🚪😜</label>
+  <textarea name="dream_intro" required></textarea>
+  <button type="button" onclick="nextStep()">Next</button>
 </div>
 
 <div class="step">
-  <p>Last question! What's one thing you wish people knew about you? 🔥</p>
-  <input type="text" name="wish_known" required>
+  <label>Last question! What's one thing you wish people knew about you? 🔥</label>
+  <textarea name="wish_known" required></textarea>
   <button type="submit">Submit</button>
 </div>
 
-<input type="hidden" name="like">
-<input type="hidden" name="habits">
-<input type="hidden" name="personality">
-<input type="hidden" name="color">
-<input type="hidden" name="sex">
-<input type="hidden" name="age">
-
-  </form>
-</div><script>
-  let currentStep = 0;
-
-  function nextStep(index) {
+  </form>  <script>
+    let currentStep = 0;
     const steps = document.querySelectorAll('.step');
-    steps[index].classList.remove('active');
-    steps[index + 1].classList.add('active');
-  }
 
-  function selectAnswer(field, value) {
-    document.querySelector(`[name="${field}"]`).value = value;
-    nextStep(currentStep);
-    currentStep++;
-  }
+    function nextStep() {
+      const current = steps[currentStep];
+      const inputs = current.querySelectorAll('input, textarea');
+      let valid = false;
 
-  function autoNext(field, input, minLength) {
-    if (input.value.length >= minLength) {
-      document.querySelector(`[name="${field}"]`).value = input.value;
-      nextStep(currentStep);
-      currentStep++;
+      inputs.forEach(input => {
+        if ((input.type === 'radio' && input.checked) || (input.type !== 'radio' && input.value.trim() !== '')) {
+          valid = true;
+        }
+      });
+
+      if (valid) {
+        steps[currentStep].classList.remove('active');
+        currentStep++;
+        if (steps[currentStep]) steps[currentStep].classList.add('active');
+      } else {
+        alert('Please fill out or select an answer before continuing.');
+      }
     }
-  }
-
-  document.getElementById("nglForm").addEventListener("submit", function () {
-    const nameValue = document.getElementById("nameInput").value;
-    document.getElementById("userName").value = nameValue;
-  });
-</script></body>
+  </script></body>
 </html>
