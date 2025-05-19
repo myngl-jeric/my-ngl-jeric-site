@@ -56,8 +56,11 @@
       z-index: 2;
       user-select: none;
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      font-size: 28px;
-      line-height: 1;
+    }
+    .lock-container svg {
+      width: 28px;
+      height: 28px;
+      fill: #f43f5e;
     }
     .username {
       font-weight: 700;
@@ -123,8 +126,14 @@
       transition: transform 0.6s ease;
       user-select: none;
       box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
-      font-size: 20px;
-      line-height: 1;
+    }
+    .dice-button:active {
+      transform: rotate(360deg);
+    }
+    .dice-button svg {
+      width: 22px;
+      height: 22px;
+      fill: white;
     }
     .send-button {
       margin: 20px auto 0;
@@ -141,26 +150,17 @@
       user-select: none;
       box-sizing: border-box;
     }
-
-    @keyframes bounceRollShake {
-      0% {
-        transform: translateY(0) rotate(0deg);
-      }
-      30% {
-        transform: translateY(-10px) rotate(180deg);
-      }
-      50% {
-        transform: translateY(0) rotate(360deg);
-      }
-      65% {
-        transform: translateX(-5px) rotate(400deg);
-      }
-      80% {
-        transform: translateX(5px) rotate(340deg);
-      }
-      100% {
-        transform: translateX(0) rotate(360deg);
-      }
+    .black-box {
+      margin: 15px auto 0;
+      padding: 15px 20px;
+      font-size: 18px;
+      border-radius: 30px;
+      width: 80%;
+      max-width: 300px;
+      background: #000;
+      color: #fff;
+      user-select: none;
+      box-sizing: border-box;
     }
   </style>
 </head>
@@ -200,6 +200,7 @@
       </button>
       <button type="submit" class="send-button">Send!</button>
     </form>
+    <div class="black-box">Do you want to know me even further?</div>
   </div>
 
 <script>
@@ -227,12 +228,14 @@
     diceSound.currentTime = 0;
     diceSound.play();
 
-    // Animate bounce, roll and shake
-    diceButton.style.animation = 'bounceRollShake 1s ease forwards';
-
-    setTimeout(() => {
+    // Animate dice roll bounce + roll + shake
+    diceButton.style.animation = 'bounceRollShake 1s ease';
+    diceButton.addEventListener('animationend', () => {
       diceButton.style.animation = '';
-      // Set a random phrase
+    }, { once: true });
+
+    // Set a random phrase after animation
+    setTimeout(() => {
       const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
       messageField.value = randomPhrase;
     }, 1000);
@@ -267,5 +270,8 @@
     return false; // prevent default submit
   }
 </script>
-</body>
-</html>
+
+<style>
+@keyframes bounceRollShake {
+  0% { transform: translateY(0) rotate(0deg) translateX(0); }
+  20% { transform: translateY(-15px) rotate(
