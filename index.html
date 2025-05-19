@@ -5,139 +5,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NGL Clone</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
     body {
       margin: 0;
-      font-family: 'Montserrat', Arial, sans-serif;
+      font-family: 'Poppins', Arial, sans-serif;
       background: linear-gradient(to bottom right, #f43f5e, #f97316);
       color: #fff;
       text-align: center;
     }
     .container {
       padding: 30px 15px;
-      max-width: 420px;
-      margin: auto;
+      max-width: 400px;
+      margin: 0 auto;
     }
     .profile {
       background: #fff;
       border-radius: 15px;
       padding: 20px;
       color: #000;
-      max-width: 400px;
-      margin: 20px auto 10px;
       position: relative;
-      font-weight: 600;
+      margin: 20px 0 15px;
       user-select: none;
     }
     .profile::before {
-      content: "";
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #ccc;
-      display: block;
-      margin: 0 auto 15px;
-      filter: blur(3px);
-      position: relative;
-      z-index: 1;
-    }
-    .lock-container {
+      content: "🔒";
       position: absolute;
-      top: 38px;  /* vertically center on 60px circle */
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 60px;
+      transform: translate(-50%, -50%);
+      width: 56px;
+      height: 56px;
+      background: #fff;
       border-radius: 50%;
-      background: white;
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 2;
-      user-select: none;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-    .lock-container svg {
-      width: 28px;
-      height: 28px;
-      fill: #f43f5e;
+      font-size: 28px;
+      color: #f43f5e;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.3;
     }
     .username {
-      font-weight: 700;
-      margin-bottom: 6px;
-      font-size: 1.3rem;
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 2;
     }
     .description {
       font-weight: 400;
-      color: #444;
       font-size: 0.95rem;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
       line-height: 1.3;
-      user-select: none;
+      color: #333;
+      position: relative;
+      z-index: 2;
     }
     .prompt {
-      background: rgba(255, 255, 255, 0.15);
-      color: #000;
-      padding: 22px 25px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 20px;
       border-radius: 15px;
-      margin-top: 10px;
-      font-size: 18px;
-      font-weight: 600;
+      font-size: 1rem;
+      margin-top: 5px;
+      position: relative;
       user-select: none;
     }
     form {
-      margin-top: 20px;
+      margin-top: 15px;
       position: relative;
     }
-    input[type="text"] {
-      width: 80%;
-      max-width: 300px;
-      padding: 10px 15px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-      margin-bottom: 12px;
-      box-sizing: border-box;
-    }
+    input[type="text"],
     textarea {
       width: 80%;
       max-width: 300px;
-      height: 100px;
-      padding: 10px 45px 10px 15px; /* padding-right for dice */
+      font-family: 'Poppins', Arial, sans-serif;
       border-radius: 10px;
       border: none;
-      resize: none;
-      font-size: 16px;
+      padding: 10px 12px;
+      font-size: 1rem;
+      margin-bottom: 12px;
       box-sizing: border-box;
+      outline: none;
+      resize: none;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .dice-button {
-      position: absolute;
-      right: 40px;
-      bottom: 73px; /* aligns with textarea bottom */
-      width: 38px;
+    input[type="text"] {
       height: 38px;
-      border-radius: 50%;
-      background: #f43f5e;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: transform 0.6s ease;
-      user-select: none;
-      box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
     }
-    .dice-button:active {
-      transform: rotate(360deg);
+    input[type="text"]::placeholder {
+      color: #aaa;
     }
-    .dice-button svg {
-      width: 22px;
-      height: 22px;
-      fill: white;
+    textarea::placeholder {
+      color: #ddd;
     }
     .send-button {
+      display: block;
       margin: 20px auto 0;
-      padding: 15px 20px;
+      padding: 14px 0;
       font-size: 18px;
       border: none;
       border-radius: 30px;
@@ -146,116 +114,181 @@
       background: #000;
       color: #fff;
       cursor: pointer;
-      font-weight: 600;
       user-select: none;
-      box-sizing: border-box;
+      transition: background-color 0.3s ease;
+    }
+    .send-button:hover {
+      background: #222;
+    }
+    /* Dice circle container */
+    .dice-circle {
+      width: 60px;
+      height: 60px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      bottom: 10px;
+      right: calc(10% + 20px);
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: box-shadow 0.3s ease;
+      z-index: 10;
+    }
+    .dice-circle:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    }
+    /* Dice icon */
+    .dice {
+      font-size: 30px;
+      animation: none;
+      transform-style: preserve-3d;
+      user-select: none;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Dice roll animation */
+    @keyframes dice-roll {
+      0% {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+      }
+      25% {
+        transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg);
+      }
+      50% {
+        transform: rotateX(720deg) rotateY(360deg) rotateZ(180deg);
+      }
+      75% {
+        transform: rotateX(1080deg) rotateY(540deg) rotateZ(270deg);
+      }
+      100% {
+        transform: rotateX(1440deg) rotateY(720deg) rotateZ(360deg);
+      }
+    }
+    .dice.rolling {
+      animation: dice-roll 1s ease-in-out forwards;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="profile">
-      <div class="lock-container" aria-label="Locked profile">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 17a2 2 0 0 0 2-2v-3a2 2 0 0 0-4 0v3a2 2 0 0 0 2 2z"></path>
-          <path d="M18 8h-1V6a5 5 0 0 0-10 0v2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM8 6a4 4 0 0 1 8 0v2H8V6z"></path>
-        </svg>
-      </div>
       <div class="username">@JericAus</div>
       <div class="description">
         Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
       </div>
       <div class="prompt">send me anonymous messages...</div>
     </div>
-    <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank" onsubmit="return dualSubmit(event)">
+
+    <form action="https://getform.io/f/aronlglb" method="POST" target="_blank" onsubmit="dualSubmit(event)">
       <input
         type="text"
         name="name"
-        id="name"
         placeholder="Your name (4-20 characters)"
         minlength="4"
         maxlength="20"
         pattern=".{4,20}"
-        title="Name must be between 4 and 20 characters."
+        title="Name must be 4-20 characters"
         autocomplete="off"
+        required
       />
       <textarea
         name="message"
-        id="message"
-        placeholder="Send me anonymous messages..."
+        placeholder="I like u, do u like me too?"
         required
-        spellcheck="false"
+        maxlength="500"
       ></textarea>
-      <button type="button" class="dice-button" id="dice" aria-label="Roll dice">
-        🎲
-      </button>
       <button type="submit" class="send-button">Send!</button>
+      <div class="dice-circle" title="Roll Dice">
+        <div class="dice" aria-label="Dice">🎲</div>
+      </div>
     </form>
   </div>
 
-<script>
-  const phrases = [
-    "I like u, do u like me too?",
-    "I'm still not over u",
-    "I'll make u mine :p",
-    "u look gud w/out trying",
-    "how does it feel being everyones crush",
-    "would u go on a date with me?",
-    "you want to make new friends?",
-    "would u say yes if someone asked today?",
-    "how many kids do you want to have",
-    "ur aesthetic >"
-  ];
+  <script>
+    const dice = document.querySelector('.dice');
+    const messageField = document.querySelector('textarea');
 
-  const diceButton = document.getElementById('dice');
-  const messageField = document.getElementById('message');
+    const dicePhrases = [
+      "I like u, do u like me too?",
+      "I'm still not over u",
+      "I'll make u mine :p",
+      "u look gud w/out trying",
+      "how does it feel being everyones crush",
+      "would u go on a date with me?",
+      "you want to make new friends?",
+      "would u say yes if someone asked today?",
+      "how many kids do you want to have",
+      "ur aesthetic >"
+    ];
 
-  // Load dice roll sound
-  const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
+    dice.addEventListener('click', () => {
+      if (dice.classList.contains('rolling')) return; // prevent multiple rolls at once
 
-  diceButton.addEventListener('click', () => {
-    // Play dice roll sound
-    diceSound.currentTime = 0;
-    diceSound.play();
+      dice.classList.add('rolling');
+      // Play dice roll sound
+      playDiceSound();
 
-    // Animate dice roll flip
-    diceButton.style.transform = 'rotateY(360deg)';
-    setTimeout(() => {
-      diceButton.style.transform = '';
-      // Set a random phrase
-      const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-      messageField.value = randomPhrase;
-    }, 600);
-  });
-
-  // Dual submit to formsubmit and getform.io
-  function dualSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const data = new FormData(form);
-
-    // Send to formsubmit
-    fetch('https://formsubmit.co/ajax/notjery05@gmail.com', {
-      method: 'POST',
-      body: data,
-      headers: { 'Accept': 'application/json' }
-    }).then(response => {
-      if (response.ok) {
-        alert('Message sent successfully!');
-        form.reset();
-      } else {
-        alert('Oops! There was a problem sending your message.');
-      }
-    }).catch(() => alert('Oops! Network error.'));
-
-    // Also send to getform.io
-    fetch('https://getform.io/f/aronlglb', {
-      method: 'POST',
-      body: data
+      setTimeout(() => {
+        dice.classList.remove('rolling');
+        // Set random dice phrase inside textarea
+        const randomPhrase = dicePhrases[Math.floor(Math.random() * dicePhrases.length)];
+        messageField.value = randomPhrase;
+        messageField.focus();
+      }, 1000);
     });
 
-    return false; // prevent default submit
-  }
-</script>
+    // Dice rolling sound effect (simple short dice roll)
+    function playDiceSound() {
+      const context = new (window.AudioContext || window.webkitAudioContext)();
+      const o = context.createOscillator();
+      const g = context.createGain();
+      o.type = 'square';
+      o.frequency.setValueAtTime(1000, context.currentTime);
+      o.frequency.exponentialRampToValueAtTime(400, context.currentTime + 0.15);
+      g.gain.setValueAtTime(0.1, context.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.15);
+      o.connect(g);
+      g.connect(context.destination);
+      o.start();
+      o.stop(context.currentTime + 0.15);
+    }
+
+    // Dual submit: send form to Getform and also to FormSubmit (or your Gmail)
+    function dualSubmit(event) {
+      event.preventDefault();
+
+      const form = event.target;
+      const formData = new FormData(form);
+
+      // Submit to Getform (original action)
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+      }).then(() => {
+        // After successful Getform submit, submit to FormSubmit for Gmail
+        const formsubmitURL = 'https://formsubmit.co/notjery05@gmail.com';
+
+        fetch(formsubmitURL, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        }).then(() => {
+          alert('Message sent! Thank you.');
+          form.reset();
+        }).catch(() => {
+          alert('Message sent to Getform but failed to send to Gmail.');
+          form.reset();
+        });
+      }).catch(() => {
+        alert('Failed to send message. Please try again.');
+      });
+    }
+  </script>
 </body>
 </html>
