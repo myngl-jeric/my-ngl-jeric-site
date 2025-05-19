@@ -3,131 +3,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Anonymous Message</title>
+  <title>NGL Inspired</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      padding: 20px;
       background: #f0f0f0;
-      margin: 0;
-      padding: 20px;
     }
 
-    .container {
-      max-width: 500px;
+    .form-container {
+      position: relative;
+      max-width: 400px;
       margin: auto;
-      background: #fff;
+      background: white;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
     }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    input, textarea {
+    input[type="text"], textarea {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
-      font-size: 1rem;
-      border-radius: 6px;
       border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #007bff;
-      color: white;
-      border: none;
-      font-size: 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-    .dice {
-      position: absolute;
-      left: 10px;
-      bottom: 10px;
-      font-size: 20px;
-      background: none;
-      border: none;
-      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
     }
 
     .textarea-wrapper {
       position: relative;
     }
 
-    footer {
+    #dice {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
       text-align: center;
-      margin-top: 20px;
-      font-size: 0.9rem;
-      color: #777;
+      line-height: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Send Me an Anonymous Message</h2>
-    <form action="https://getform.io/f/aronlglb" method="POST">
-      <input 
-        type="text" 
-        id="nameInput" 
-        name="name" 
-        placeholder="Enter your name (4–20 chars)" 
-        required 
-        oninput="validateName()"
-      />
-      <div class="textarea-wrapper">
-        <textarea 
-          name="message" 
-          id="messageArea" 
-          rows="5" 
-          placeholder="Type your message here..." 
-          required
-        ></textarea>
-        <button type="button" class="dice" onclick="insertRandomPhrase()">🎲</button>
-      </div>
-      <button id="submitBtn" type="submit" disabled>Send Message</button>
-    </form>
-  </div>
-  <footer>Powered by Getform.io</footer>
 
-  <script>
-    const nameInput = document.getElementById('nameInput');
-    const submitBtn = document.getElementById('submitBtn');
-    const messageArea = document.getElementById('messageArea');
+<div class="form-container">
+  <form id="messageForm">
+    <input type="text" id="name" placeholder="Your name (4-20 characters)" required>
+    
+    <div class="textarea-wrapper">
+      <textarea id="message" placeholder="Type your message here..." rows="5" required></textarea>
+      <div id="dice">🎲</div>
+    </div>
 
-    function validateName() {
-      const value = nameInput.value.trim();
-      submitBtn.disabled = value.length < 4 || value.length > 20;
+    <button type="submit">Send</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('messageForm');
+  const nameInput = document.getElementById('name');
+  const messageInput = document.getElementById('message');
+  const dice = document.getElementById('dice');
+
+  const phrases = [
+    "I like u, do u like me too?",
+    "I'm still not over u",
+    "I'll make u mine :p",
+    "u look gud w/out trying",
+    "how does it feel being everyones crush",
+    "would u go on a date with me?",
+    "you want to make new friends?",
+    "would u say yes if someone asked today?",
+    "how many kids do you want to have",
+    "ur aesthetic >"
+  ];
+
+  dice.addEventListener('click', () => {
+    const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+    messageInput.value = randomPhrase;
+  });
+
+  form.addEventListener('submit', function(event) {
+    if (nameInput.value.length < 4 || nameInput.value.length > 20) {
+      alert("Name must be between 4 and 20 characters.");
+      event.preventDefault();
     }
+  });
+</script>
 
-    const phrases = [
-      "I like u, do u like me too?",
-      "I'm still not over u",
-      "I'll make u mine :p",
-      "u look gud w/out trying",
-      "how does it feel being everyones crush",
-      "would u go on a date with me?",
-      "you want to make new friends?",
-      "would u say yes if someone asked today?",
-      "how many kids do you want to have",
-      "ur aesthetic >"
-    ];
-
-    function insertRandomPhrase() {
-      const random = phrases[Math.floor(Math.random() * phrases.length)];
-      messageArea.value = random;
-    }
-  </script>
 </body>
 </html>
