@@ -1,159 +1,174 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Anonymous Quiz</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NGL Style Form</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #f4f4f4;
     }
-    .container {
-      position: relative;
+    .form-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
     }
-    form > div {
-      margin-bottom: 15px;
+    .step {
       display: none;
     }
-    input[type="text"], textarea {
+    .step.active {
+      display: block;
+    }
+    button {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    .options button {
+      display: block;
       width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
+      margin: 0.5rem 0;
     }
-    .show {
-      display: block !important;
-    }
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h1>Send Me Anonymous Messages</h1>
-    <form id="quizForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
-      <input type="hidden" id="userNameInput" name="username" />
-      <input type="hidden" name="_next" value="thankyou.html"><div class="q" id="q1div">
-    <label>1. Why did you click this?! Do you like me? 😳</label><br />
-    <label><input type="radio" name="q1" value="Yes" /> Yes</label><br />
-    <label><input type="radio" name="q1" value="Yes 🙈" /> Yes 🙈</label><br />
+<body><div class="form-container">
+  <form id="nglForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
+    <input type="hidden" name="_subject" value="New NGL Response!">
+    <input type="hidden" name="name" id="userName"><div class="step active">
+  <p>What is your name? (This will be sent in the URL)</p>
+  <input type="text" id="nameInput" required>
+  <button type="button" onclick="nextStep(0)">Next</button>
+</div>
+
+<div class="step">
+  <p>Why did you click this?! Do you like me? 😳</p>
+  <div class="options">
+    <button type="button" onclick="selectAnswer('like','Yes')">Yes</button>
+    <button type="button" onclick="selectAnswer('like','Yes 🙈')">Yes 🙈</button>
   </div>
+</div>
 
-  <div class="q" id="q2div">
-    <label>2. What kind of habits do you have 👀</label><br />
-    <label><input type="radio" name="q2" value="Chyess ♟️" /> Chyess ♟️</label><br />
-    <label><input type="radio" name="q2" value="Guitaring?! 🎸" /> Guitaring?! 🎸</label><br />
-    <input type="text" name="q2text" placeholder="Or type your habit" />
+<div class="step">
+  <p>Enough of that, What kind of habits do you have 👀</p>
+  <div class="options">
+    <button type="button" onclick="selectAnswer('habits','Chyess ♟️')">Chyess ♟️</button>
+    <button type="button" onclick="selectAnswer('habits','Guitaring?! 🎸')">Guitaring?! 🎸</button>
+    <input type="text" placeholder="Other habit..." oninput="autoNext('habits', this, 3)">
   </div>
+</div>
 
-  <div class="q" id="q3div">
-    <label>3. Are you Studious or Tumultuous? 🫵</label><br />
-    <label><input type="radio" name="q3" value="Studious 📚" /> Studious 📚</label><br />
-    <label><input type="radio" name="q3" value="Tumultuous 🗣️" /> Tumultuous 🗣️</label><br />
+<div class="step">
+  <p>Are you Studious or Tumultuous? 🫵</p>
+  <div class="options">
+    <button type="button" onclick="selectAnswer('personality','Studious 📚')">Studious 📚</button>
+    <button type="button" onclick="selectAnswer('personality','Tumultuous 🗣️')">Tumultuous 🗣️</button>
   </div>
+</div>
 
-  <div class="q" id="q4div">
-    <label>4. What's YOUR Favourite kulay?! 🏳️‍🌈🥶</label><br />
-    <label><input type="radio" name="q4" value="black" /> black</label><br />
-    <label><input type="radio" name="q4" value="white" /> white</label><br />
-    <input type="text" name="q4text" placeholder="Or type your color" />
+<div class="step">
+  <p>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</p>
+  <div class="options">
+    <button type="button" onclick="selectAnswer('color','black')">black</button>
+    <button type="button" onclick="selectAnswer('color','white')">white</button>
+    <input type="text" placeholder="Other color..." oninput="autoNext('color', this, 3)">
   </div>
+</div>
 
-  <div class="q" id="q5div">
-    <label>5. What sex are you 🤔🙃</label><br />
-    <label><input type="radio" name="q5" value="Men ♂️" /> Men ♂️</label><br />
-    <label><input type="radio" name="q5" value="Girl ♀️" /> Girl ♀️</label><br />
+<div class="step">
+  <p>What sex are you 🤔🙃</p>
+  <div class="options">
+    <button type="button" onclick="selectAnswer('sex','Men ♂️')">Men ♂️</button>
+    <button type="button" onclick="selectAnswer('sex','Girl ♀️')">Girl ♀️</button>
   </div>
+</div>
 
-  <div class="q" id="q6div">
-    <label>6. and how old are you? 1️⃣0️⃣ 😱</label><br />
-    <label><input type="radio" name="q6" value="9 to 12 🫷" /> 9 to 12 🫷</label><br />
-    <label><input type="radio" name="q6" value="15? 😭" /> 15? 😭</label><br />
-    <input type="text" name="q6text" placeholder="Or type your age" maxlength="3" />
+<div class="step">
+  <p>And how old are you? 1️⃣0️⃣ 😱</p>
+  <div class="options">
+    <button type="button" onclick="selectAnswer('age','9 to 12 🫷')">9 to 12 🫷</button>
+    <button type="button" onclick="selectAnswer('age','15? 😭')">15? 😭</button>
+    <input type="text" placeholder="Type your age..." oninput="autoNext('age', this, 2)">
   </div>
+</div>
 
-  <div class="q" id="q7div">
-    <label>7. Tell me something only the REAL ones know about you 😏🍠</label><br />
-    <textarea name="q7" placeholder="At least 10 characters"></textarea>
-  </div>
+<div class="step">
+  <p>Tell me something only the REAL ones know about you 😏🍠</p>
+  <input type="text" name="real_thing" required>
+  <button type="button" onclick="nextStep(7)">Next</button>
+</div>
 
-  <div class="q" id="q8div">
-    <label>8. What's a random fact about you that sounds fake but isn't? 🫣</label><br />
-    <textarea name="q8" placeholder="At least 10 characters"></textarea>
-  </div>
+<div class="step">
+  <p>What's a random fact about you that sounds fake but isn't? 🫣</p>
+  <input type="text" name="random_fact" required>
+  <button type="button" onclick="nextStep(8)">Next</button>
+</div>
 
-  <div class="q" id="q9div">
-    <label>9. If I met you in a dream, how would you introduce yourself?🚪😜</label><br />
-    <textarea name="q9" placeholder="At least 10 characters"></textarea>
-  </div>
+<div class="step">
+  <p>If I met you in a dream, how would you introduce yourself?🚪😜</p>
+  <input type="text" name="dream_intro" required>
+  <button type="button" onclick="nextStep(9)">Next</button>
+</div>
 
-  <div class="q" id="q10div">
-    <label>10. What's one thing you wish people knew about you? 🔥</label><br />
-    <textarea name="q10" placeholder="At least 10 characters"></textarea>
-  </div>
+<div class="step">
+  <p>Last question! What's one thing you wish people knew about you? 🔥</p>
+  <input type="text" name="wish_known" required>
+  <button type="submit">Submit</button>
+</div>
 
-  <button type="submit" id="submitBtn" disabled>Submit Quiz</button>
-</form>
+<input type="hidden" name="like">
+<input type="hidden" name="habits">
+<input type="hidden" name="personality">
+<input type="hidden" name="color">
+<input type="hidden" name="sex">
+<input type="hidden" name="age">
 
-  </div>  <script>
-    function getQueryParam(param) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(param);
+  </form>
+</div><script>
+  let currentStep = 0;
+
+  function nextStep(index) {
+    const steps = document.querySelectorAll('.step');
+    steps[index].classList.remove('active');
+    steps[index + 1].classList.add('active');
+  }
+
+  function selectAnswer(field, value) {
+    document.querySelector(`[name="${field}"]`).value = value;
+    nextStep(currentStep);
+    currentStep++;
+  }
+
+  function autoNext(field, input, minLength) {
+    if (input.value.length >= minLength) {
+      document.querySelector(`[name="${field}"]`).value = input.value;
+      nextStep(currentStep);
+      currentStep++;
     }
+  }
 
-    const userName = getQueryParam('name');
-    const userNameInput = document.getElementById('userNameInput');
-    const form = document.getElementById('quizForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const questions = Array.from(document.querySelectorAll('.q'));
-
-    if (!userName || userName.length < 4 || userName.length > 20) {
-      alert('You must enter your name first!');
-      window.location.href = 'index.html';
-    } else {
-      userNameInput.value = userName;
-    }
-
-    let current = 0;
-    questions[current].classList.add('show');
-
-    function validateCurrentQuestion(index) {
-      const div = questions[index];
-      const radios = div.querySelectorAll('input[type="radio"]');
-      const textarea = div.querySelector('textarea, input[type="text"]');
-
-      let isValid = false;
-
-      if (radios.length > 0) {
-        const checked = Array.from(radios).some(r => r.checked);
-        const textVal = textarea ? textarea.value.trim() : '';
-        if (textarea && textarea.maxLength === 3) {
-          isValid = checked || (textVal.length >= 2 && textVal.length <= 3);
-        } else if (textarea) {
-          isValid = checked || textVal.length >= 3;
-        } else {
-          isValid = checked;
-        }
-      } else if (textarea) {
-        isValid = textarea.value.trim().length >= 10;
-      }
-
-      return isValid;
-    }
-
-    form.addEventListener('input', () => {
-      if (validateCurrentQuestion(current)) {
-        questions[current].classList.remove('show');
-        current++;
-        if (current < questions.length) {
-          questions[current].classList.add('show');
-        } else {
-          submitBtn.disabled = false;
-        }
-      }
-    });
-  </script></body>
+  document.getElementById("nglForm").addEventListener("submit", function () {
+    const nameValue = document.getElementById("nameInput").value;
+    document.getElementById("userName").value = nameValue;
+  });
+</script></body>
 </html>
