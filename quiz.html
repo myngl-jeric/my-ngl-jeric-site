@@ -1,148 +1,190 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NGL Form</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .form-container {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 400px;
-    }
-    .question {
-      display: none;
-    }
-    .question.active {
-      display: block;
-    }
-    button {
-      background: #007BFF;
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-    .option {
-      display: block;
-      margin: 0.5rem 0;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Step-by-Step Quiz</title>
+<style>
+  .question { display: none; margin-bottom: 20px; }
+  .question.active { display: block; }
+  #submitBtn { display: none; }
+</style>
 </head>
 <body>
-  <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" id="ngl-form">
-    <input type="hidden" name="name" id="user-name"><div class="form-container">
-  <div class="question active" id="q1">
-    <label>Why did you click this?! Do you like me? 😳</label>
-    <label class="option"><input type="radio" name="q1" value="Yes" required> Yes</label>
-    <label class="option"><input type="radio" name="q1" value="Yes 🙈"> Yes 🙈</label>
-    <button type="button" onclick="nextQuestion(1)">Next</button>
+
+<form id="quizForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
+  <!-- Hidden input to send the name from URL -->
+  <input type="hidden" name="name" id="hiddenName" />
+
+  <!-- Question 1 -->
+  <div class="question active" data-question="1">
+    <p>Why did you click this?! Do you like me? 😳</p>
+    <label><input type="radio" name="q1" value="Yes" /> Yes</label><br />
+    <label><input type="radio" name="q1" value="Yes 🙈" /> Yes 🙈</label><br />
   </div>
 
-  <div class="question" id="q2">
-    <label>Enough of that, What kind of habits do you have 👀</label>
-    <label class="option"><input type="radio" name="q2" value="Chyess ♟️" required> Chyess ♟️</label>
-    <label class="option"><input type="radio" name="q2" value="Guitaring?! 🎸"> Guitaring?! 🎸</label>
-    <input type="text" name="q2-custom" placeholder="Type your habit...">
-    <button type="button" onclick="nextQuestion(2)">Next</button>
+  <!-- Question 2 -->
+  <div class="question" data-question="2">
+    <p>Enough of that, What kind of habits do you have 👀</p>
+    <label><input type="radio" name="q2" value="Chyess ♟️" /> Chyess ♟️</label><br />
+    <label><input type="radio" name="q2" value="Guitaring?! 🎸" /> Guitaring?! 🎸</label><br />
+    <label>Other habit:<br />
+      <textarea name="q2_other" rows="3" placeholder="Type your habit here (min 10 characters)"></textarea>
+    </label>
   </div>
 
-  <div class="question" id="q3">
-    <label>Are you Studious or Tumultuous? 🫵</label>
-    <label class="option"><input type="radio" name="q3" value="Studious 📚" required> Studious 📚</label>
-    <label class="option"><input type="radio" name="q3" value="Tumultuous 🗣️"> Tumultuous 🗣️</label>
-    <button type="button" onclick="nextQuestion(3)">Next</button>
+  <!-- Question 3 -->
+  <div class="question" data-question="3">
+    <p>Are you Studious or Tumultuous? 🫵</p>
+    <label><input type="radio" name="q3" value="Studious 📚" /> Studious 📚</label><br />
+    <label><input type="radio" name="q3" value="Tumultuous 🗣️" /> Tumultuous 🗣️</label><br />
   </div>
 
-  <div class="question" id="q4">
-    <label>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</label>
-    <label class="option"><input type="radio" name="q4" value="black" required> black</label>
-    <label class="option"><input type="radio" name="q4" value="white"> white</label>
-    <input type="text" name="q4-custom" placeholder="Type your color...">
-    <button type="button" onclick="nextQuestion(4)">Next</button>
+  <!-- Question 4 -->
+  <div class="question" data-question="4">
+    <p>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</p>
+    <label><input type="radio" name="q4" value="black" /> black</label><br />
+    <label><input type="radio" name="q4" value="white" /> white</label><br />
+    <label>Other color:<br />
+      <textarea name="q4_other" rows="3" placeholder="Type your favourite color here (min 10 characters)"></textarea>
+    </label>
   </div>
 
-  <div class="question" id="q5">
-    <label>What sex are you 🤔🙃</label>
-    <label class="option"><input type="radio" name="q5" value="Men ♂️" required> Men ♂️</label>
-    <label class="option"><input type="radio" name="q5" value="Girl ♀️"> Girl ♀️</label>
-    <button type="button" onclick="nextQuestion(5)">Next</button>
+  <!-- Question 5 -->
+  <div class="question" data-question="5">
+    <p>What sex are you? 🤔🙃</p>
+    <label><input type="radio" name="q5" value="Men ♂️" /> Men ♂️</label><br />
+    <label><input type="radio" name="q5" value="Girl ♀️" /> Girl ♀️</label><br />
   </div>
 
-  <div class="question" id="q6">
-    <label>and how old are you? 1️⃣0️⃣ 😱</label>
-    <label class="option"><input type="radio" name="q6" value="9 to 12 🫷" required> 9 to 12 🫷</label>
-    <label class="option"><input type="radio" name="q6" value="15? 😭"> 15? 😭</label>
-    <input type="text" name="q6-custom" placeholder="Type your age...">
-    <button type="button" onclick="nextQuestion(6)">Next</button>
+  <!-- Question 6 -->
+  <div class="question" data-question="6">
+    <p>And how old are you? 1️⃣0️⃣ 😱</p>
+    <label><input type="radio" name="q6" value="9 to 12 🫷" /> 9 to 12 🫷</label><br />
+    <label><input type="radio" name="q6" value="15? 😭" /> 15? 😭</label><br />
+    <label>Your age:<br />
+      <input type="text" name="q6_other" placeholder="Type your age here (min 10 characters)" />
+    </label>
   </div>
 
-  <div class="question" id="q7">
-    <label>Tell me something only the REAL ones know about you 😏🍠</label>
-    <textarea name="q7" required></textarea>
-    <button type="button" onclick="nextQuestion(7)">Next</button>
+  <!-- Question 7 -->
+  <div class="question" data-question="7">
+    <p>Tell me something only the REAL ones know about you 😏🍠</p>
+    <textarea name="q7" rows="4" placeholder="Type your answer here (min 10 characters)"></textarea>
   </div>
 
-  <div class="question" id="q8">
-    <label>What's a random fact about you that sounds fake but isn't? 🫣</label>
-    <textarea name="q8" required></textarea>
-    <button type="button" onclick="nextQuestion(8)">Next</button>
+  <!-- Question 8 -->
+  <div class="question" data-question="8">
+    <p>What's a random fact about you that sounds fake but isn't? 🫣</p>
+    <textarea name="q8" rows="4" placeholder="Type your answer here (min 10 characters)"></textarea>
   </div>
 
-  <div class="question" id="q9">
-    <label>If I met you in a dream, how would you introduce yourself?🚪😜</label>
-    <textarea name="q9" required></textarea>
-    <button type="button" onclick="nextQuestion(9)">Next</button>
+  <!-- Question 9 -->
+  <div class="question" data-question="9">
+    <p>If I met you in a dream, how would you introduce yourself?🚪😜</p>
+    <textarea name="q9" rows="4" placeholder="Type your answer here (min 10 characters)"></textarea>
   </div>
 
-  <div class="question" id="q10">
-    <label>Last question! What's one thing you wish people knew about you? 🔥</label>
-    <textarea name="q10" required></textarea>
-    <button type="submit">Submit</button>
+  <!-- Question 10 -->
+  <div class="question" data-question="10">
+    <p>Last question! What's one thing you wish people knew about you? 🔥</p>
+    <textarea name="q10" rows="4" placeholder="Type your answer here (min 10 characters)"></textarea>
   </div>
-</div>
 
-  </form>  <script>
-    const questions = document.querySelectorAll('.question');
+  <button type="button" id="nextBtn">Next</button>
+  <button type="submit" id="submitBtn">Submit</button>
+</form>
 
-    function nextQuestion(current) {
-      const currentQ = document.getElementById(`q${current}`);
-      const inputs = currentQ.querySelectorAll('input, textarea');
-      let isValid = false;
+<script>
+  const questions = document.querySelectorAll('.question');
+  const nextBtn = document.getElementById('nextBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const hiddenName = document.getElementById('hiddenName');
+  let current = 0;
 
-      inputs.forEach(input => {
-        if ((input.type === 'radio' && input.checked) || (input.type === 'text' && input.value.trim() !== '') || (input.tagName === 'TEXTAREA' && input.value.trim() !== '')) {
-          isValid = true;
-        }
-      });
+  // Get 'name' from URL and put it in hidden input if available
+  const urlParams = new URLSearchParams(window.location.search);
+  const nameFromURL = urlParams.get('name');
+  if (nameFromURL) {
+    hiddenName.value = nameFromURL;
+  }
 
-      if (!isValid) {
-        alert("Please answer before continuing.");
-        return;
+  function showQuestion(index) {
+    questions.forEach((q, i) => q.classList.toggle('active', i === index));
+    if (index === questions.length - 1) {
+      nextBtn.style.display = 'none';
+      submitBtn.style.display = 'inline-block';
+    } else {
+      nextBtn.style.display = 'inline-block';
+      submitBtn.style.display = 'none';
+    }
+  }
+
+  function validateQuestion(index) {
+    const q = questions[index];
+    const radios = q.querySelectorAll('input[type="radio"]');
+    const textareas = q.querySelectorAll('textarea');
+    const textInputs = q.querySelectorAll('input[type="text"]');
+
+    // If question has radios
+    if (radios.length > 0) {
+      const oneChecked = Array.from(radios).some(r => r.checked);
+      if (!oneChecked) {
+        alert('Please select an option before proceeding.');
+        return false;
       }
-
-      currentQ.classList.remove('active');
-      const nextQ = document.getElementById(`q${current + 1}`);
-      if (nextQ) nextQ.classList.add('active');
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const userName = urlParams.get('name');
-    if (userName) {
-      document.getElementById('user-name').value = userName;
+    // If question has textareas or text inputs (typed answers)
+    if (textareas.length > 0 || textInputs.length > 0) {
+      // For textareas
+      for (const ta of textareas) {
+        if (ta.value.trim().length > 0 && ta.value.trim().length < 10) {
+          alert('Please enter at least 10 characters for your typed answer.');
+          return false;
+        }
+      }
+      // For text inputs
+      for (const ti of textInputs) {
+        if (ti.value.trim().length > 0 && ti.value.trim().length < 10) {
+          alert('Please enter at least 10 characters for your typed answer.');
+          return false;
+        }
+      }
     }
-  </script></body>
+
+    // Special case for questions with radio + optional typed answer (like q2, q4, q6)
+    // Allow proceed if radio selected OR typed answer >= 10 chars
+    // We already checked radios above - so if no radio selected but typed answer >= 10 chars, allow
+    if (radios.length > 0 && (textareas.length > 0 || textInputs.length > 0)) {
+      const oneChecked = Array.from(radios).some(r => r.checked);
+      let typedValid = false;
+      for (const ta of textareas) {
+        if (ta.value.trim().length >= 10) typedValid = true;
+      }
+      for (const ti of textInputs) {
+        if (ti.value.trim().length >= 10) typedValid = true;
+      }
+      if (!oneChecked && !typedValid) {
+        alert('Please select an option or enter at least 10 characters in the text box.');
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (validateQuestion(current)) {
+      current++;
+      showQuestion(current);
+    }
+  });
+
+  // On page load show first question only
+  showQuestion(current);
+  submitBtn.style.display = 'none';
+</script>
+
+</body>
 </html>
