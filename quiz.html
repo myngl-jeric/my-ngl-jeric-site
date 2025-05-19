@@ -3,94 +3,94 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Animated Sequential Form with Validation</title>
+<title>Sequential Form with Validation and Formsubmit</title>
 <style>
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 480px;
+    font-family: Arial, sans-serif;
+    max-width: 500px;
     margin: 40px auto;
     padding: 20px;
     background: #f9f9f9;
     color: #222;
   }
   form {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    padding: 30px 25px;
+    background: white;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   }
   .question {
     display: none;
-    opacity: 0;
-    transition: opacity 0.5s ease;
     margin-bottom: 25px;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
   .question.active {
     display: block;
     opacity: 1;
+    transform: translateX(0);
   }
-  p {
-    font-size: 1.15rem;
-    margin-bottom: 12px;
+  .question p {
     font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
   }
   .options label {
     display: block;
-    margin: 8px 0;
-    font-size: 1rem;
+    margin: 7px 0;
     cursor: pointer;
     user-select: none;
-    padding: 6px 10px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
+    font-size: 1rem;
   }
-  .options input[type="radio"] {
-    margin-right: 8px;
-    cursor: pointer;
-  }
-  .options label:hover {
-    background-color: #e0f0ff;
+  input[type="radio"] {
+    margin-right: 10px;
   }
   textarea, input[type="text"] {
     width: 100%;
-    padding: 10px 12px;
-    margin-top: 10px;
+    padding: 8px 10px;
+    margin-top: 8px;
     font-size: 1rem;
-    border: 1.8px solid #ccc;
-    border-radius: 8px;
+    border: 1.5px solid #ccc;
+    border-radius: 5px;
     resize: vertical;
+    box-sizing: border-box;
     transition: border-color 0.3s ease;
   }
   textarea:focus, input[type="text"]:focus {
+    border-color: #007BFF;
     outline: none;
-    border-color: #3b82f6;
-    background: #f0f8ff;
   }
   button {
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    padding: 14px 26px;
+    padding: 12px 20px;
     font-size: 1.1rem;
-    border-radius: 10px;
     cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background-color: #007BFF;
+    color: white;
     transition: background-color 0.3s ease;
-    user-select: none;
-    margin-top: 10px;
+    margin-right: 10px;
   }
   button:hover:not(:disabled) {
-    background-color: #2563eb;
+    background-color: #0056b3;
   }
   button:disabled {
-    background-color: #a5b4fc;
+    background-color: #999;
     cursor: default;
+  }
+  #submitBtn {
+    background-color: #28a745;
+  }
+  #submitBtn:hover {
+    background-color: #1e7e34;
   }
 </style>
 </head>
 <body>
 
 <form id="multiStepForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank" novalidate>
-
+  <!-- Hidden input for name -->
   <input type="hidden" name="name" id="hiddenName" value="" />
 
   <div class="question active" data-index="0">
@@ -107,7 +107,7 @@
       <label><input type="radio" name="Q2" value="Chyess ♟️" /> Chyess ♟️</label>
       <label><input type="radio" name="Q2" value="Guitaring?! 🎸" /> Guitaring?! 🎸</label>
     </div>
-    <textarea name="Q2_Typed" placeholder="Type your habit here (min 5 chars)"></textarea>
+    <textarea name="Q2_Typed" placeholder="Type your habit here (min 5 chars)" rows="3"></textarea>
   </div>
 
   <div class="question" data-index="2">
@@ -124,7 +124,7 @@
       <label><input type="radio" name="Q4" value="black" /> black</label>
       <label><input type="radio" name="Q4" value="white" /> white</label>
     </div>
-    <textarea name="Q4_Typed" placeholder="Type your colour here (min 3 chars)"></textarea>
+    <textarea name="Q4_Typed" placeholder="Type your colour here (min 3 chars)" rows="2"></textarea>
   </div>
 
   <div class="question" data-index="4">
@@ -146,22 +146,22 @@
 
   <div class="question" data-index="6">
     <p>Tell me something only the REAL ones know about you 😏🍠</p>
-    <textarea name="Q7" placeholder="At least 10 characters"></textarea>
+    <textarea name="Q7" placeholder="At least 10 characters" rows="4"></textarea>
   </div>
 
   <div class="question" data-index="7">
     <p>What's a random fact about you that sounds fake but isn't? 🫣</p>
-    <textarea name="Q8" placeholder="At least 10 characters"></textarea>
+    <textarea name="Q8" placeholder="At least 10 characters" rows="4"></textarea>
   </div>
 
   <div class="question" data-index="8">
     <p>If I met you in a dream, how would you introduce yourself?🚪😜</p>
-    <textarea name="Q9" placeholder="At least 10 characters"></textarea>
+    <textarea name="Q9" placeholder="At least 10 characters" rows="4"></textarea>
   </div>
 
   <div class="question" data-index="9">
     <p>Last question! What's one thing you wish people knew about you? 🔥</p>
-    <textarea name="Q10" placeholder="At least 10 characters"></textarea>
+    <textarea name="Q10" placeholder="At least 10 characters" rows="4"></textarea>
   </div>
 
   <button type="button" id="nextBtn">Next</button>
@@ -175,7 +175,7 @@
   const submitBtn = document.getElementById('submitBtn');
   let currentIndex = 0;
 
-  // Set name from URL param to hidden input
+  // Pre-fill hidden input from URL parameter "name"
   function setNameFromURL() {
     const params = new URLSearchParams(window.location.search);
     const name = params.get('name') || '';
@@ -191,7 +191,7 @@
       return len >= 3;
     } else if (index === 5) { // Q6: 2-3 chars
       return len >= 2 && len <= 3;
-    } else {
+    } else { // For Q7-Q10
       return len >= 10;
     }
   }
@@ -202,11 +202,11 @@
     const textareas = q.querySelectorAll('textarea');
     const textInputs = q.querySelectorAll('input[type="text"]');
 
-    // Check radio buttons
+    // Check if at least one radio is checked
     if (radios.length > 0) {
       const oneChecked = Array.from(radios).some(r => r.checked);
       if (!oneChecked) {
-        // If textareas or text inputs, check if typed answer valid instead
+        // If textareas or text inputs present, validate those instead
         if (textareas.length > 0 || textInputs.length > 0) {
           let typedValid = false;
           for (const ta of textareas) {
@@ -216,42 +216,71 @@
             if (validLength(ti.value, index)) typedValid = true;
           }
           if (!typedValid) {
-            alert(index === 1 ? 'Please select an option or enter at least 5 characters in the text box.'
-                  : index === 3 ? 'Please select an option or enter at least 3 characters in the text box.'
-                  : index === 5 ? 'Please select an option or enter between 2 to 3 characters in the text box.'
-                  : 'Please select an option or enter at least 10 characters in the text box.');
+            if (index === 1) {
+              alert('Please select an option or enter at least 5 characters in the text box.');
+            } else if (index === 3) {
+              alert('Please select an option or enter at least 3 characters in the text box.');
+            } else if (index === 5) {
+              alert('Please select an option or enter your age (2-3 characters) in the text box.');
+            } else {
+              alert('Please select an option or enter valid text.');
+            }
             return false;
           }
         } else {
-          alert('Please select an option before proceeding.');
+          alert('Please select an option.');
+          return false;
+        }
+      }
+    } else if (textareas.length > 0) {
+      // No radio buttons, just validate textarea length
+      for (const ta of textareas) {
+        if (!validLength(ta.value, index)) {
+          alert(`Please enter at least ${index >= 6 ? 10 : 'required'} characters.`);
           return false;
         }
       }
     }
-
-    // Validate typed answers length if present
-    for (const ta of textareas) {
-      if (ta.value.trim().length > 0 && !validLength(ta.value, index)) {
-        alert(index === 1 ? 'Please enter at least 5 characters for your typed answer.'
-          : index === 3 ? 'Please enter at least 3 characters for your typed answer.'
-          : index === 5 ? 'Please enter between 2 to 3 characters for your typed answer.'
-          : 'Please enter at least 10 characters for your typed answer.');
-        return false;
-      }
-    }
-    for (const ti of textInputs) {
-      if (ti.value.trim().length > 0 && !validLength(ti.value, index)) {
-        alert(index === 1 ? 'Please enter at least 5 characters for your typed answer.'
-          : index === 3 ? 'Please enter at least 3 characters for your typed answer.'
-          : index === 5 ? 'Please enter between 2 to 3 characters for your typed answer.'
-          : 'Please enter at least 10 characters for your typed answer.');
-        return false;
-      }
-    }
-
     return true;
   }
 
   function showQuestion(index) {
     questions.forEach((q, i) => {
-      if (i
+      if (i === index) {
+        q.classList.add('active');
+      } else {
+        q.classList.remove('active');
+      }
+    });
+
+    if (index === questions.length - 1) {
+      nextBtn.style.display = 'none';
+      submitBtn.style.display = 'inline-block';
+    } else {
+      nextBtn.style.display = 'inline-block';
+      submitBtn.style.display = 'none';
+    }
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (validateQuestion(currentIndex)) {
+      currentIndex++;
+      showQuestion(currentIndex);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+
+  form.addEventListener('submit', e => {
+    // Validate final question on submit
+    if (!validateQuestion(currentIndex)) {
+      e.preventDefault();
+      return false;
+    }
+    // Otherwise, form submits to formsubmit.co in a new tab
+  });
+
+  showQuestion(currentIndex);
+</script>
+
+</body>
+</html>
