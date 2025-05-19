@@ -1,164 +1,158 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anonymous Q&A</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-    }
-    body {
-      height: 100vh;
-      background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .form-container {
-      background: white;
-      border-radius: 24px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 500px;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      transition: all 0.4s ease;
-    }
-    .question {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    .option-button, .next-button, .submit-button {
-      padding: 12px;
-      border: none;
-      border-radius: 14px;
-      background: #81d4fa;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .option-button:hover, .next-button:hover, .submit-button:hover {
-      background: #4fc3f7;
-    }
-    .input-box {
-      padding: 12px;
-      border-radius: 14px;
-      border: 2px solid #b2ebf2;
-      outline: none;
-      font-size: 1rem;
-    }
-    .hidden {
-      display: none;
-    }
-    .airplane-icon {
-      width: 24px;
-      height: 24px;
-      margin-left: 8px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Animated Multi-step Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #A2C4F7, #4C78E7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  form {
+    background: white;
+    padding: 2rem 2.5rem;
+    border-radius: 22px; /* More rounded */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    width: 350px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .question {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+  }
+
+  .question.active {
+    position: relative;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+  }
+
+  .shake {
+    animation: shake 0.5s;
+    border: 2px solid #f44336 !important;
+    border-radius: 22px;
+  }
+
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    border-radius: 14px; /* More rounded */
+    border: 1.8px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 0.6rem;
+    box-sizing: border-box;
+  }
+
+  input[type="text"]:focus, textarea:focus {
+    border-color: #3f72af;
+    box-shadow: 0 0 8px 3px #6190e8aa;
+  }
+
+  .options {
+    margin-top: 0.6rem;
+  }
+
+  .options label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+    cursor: pointer;
+    user-select: none;
+    padding-left: 25px;
+    position: relative;
+    font-weight: 500;
+  }
+
+  .options input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .options input[type="radio"] + label::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 2px;
+    width: 18px; height: 18px;
+    border: 2px solid #6190e8;
+    border-radius: 50%;
+    background: white;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .options input[type="radio"]:checked + label::before {
+    background-color: #6190e8;
+    border-color: #3f72af;
+  }
+
+  .options input[type="radio"]:checked + label {
+    animation: popRadio 0.3s forwards;
+    color: #3f72af;
+  }
+
+  @keyframes popRadio {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  #nextBtn {
+    margin-top: 1.5rem;
+    padding: 0.8rem 2rem;
+    background: linear-gradient(135deg, #4c78e7, #6190e8);
+    border: none;
+    border-radius: 999px; /* Pill-like button */
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #nextBtn:hover {
+    background: linear-gradient(135deg, #6190e8, #4c78e7);
+  }
+
+  #nextBtn:active {
+    transform: scale(0.95);
+  }
+
+  #nextBtn svg {
+    margin-left: 8px;
+    width: 22px;
+    height: 22px;
+    stroke: white;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>
 </head>
 <body>
-  <form class="form-container" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
-    <input type="hidden" name="name" id="userName"><div class="question-block" id="q1">
-  <div class="question">Why did you click this?! Do you like me? 😳</div>
-  <button class="option-button" type="button" onclick="next('q1', 'q2', 'Yes')">Yes</button>
-  <button class="option-button" type="button" onclick="next('q1', 'q2', 'Yes 🙈')">Yes 🙈</button>
-</div>
-
-<div class="question-block hidden" id="q2">
-  <div class="question">Enough of that, What kind of habits do you have 👀</div>
-  <button class="option-button" type="button" onclick="next('q2', 'q3', 'Chyess ♟️')">Chyess ♟️</button>
-  <button class="option-button" type="button" onclick="next('q2', 'q3', 'Guitaring?! 🎸')">Guitaring?! 🎸</button>
-  <input class="input-box" type="text" id="habit" name="habit" placeholder="Type your habit" oninput="checkLength('habit', 5, 'q2', 'q3')">
-</div>
-
-<div class="question-block hidden" id="q3">
-  <div class="question">Are you Studious or Tumultuous? 🫵</div>
-  <button class="option-button" type="button" onclick="next('q3', 'q4', 'Studious 📚')">Studious 📚</button>
-  <button class="option-button" type="button" onclick="next('q3', 'q4', 'Tumultuous 🗣️')">Tumultuous 🗣️</button>
-</div>
-
-<div class="question-block hidden" id="q4">
-  <div class="question">What's YOUR Favourite kulay?! 🏳️‍🌈🥶</div>
-  <button class="option-button" type="button" onclick="next('q4', 'q5', 'black')">black</button>
-  <button class="option-button" type="button" onclick="next('q4', 'q5', 'white')">white</button>
-  <input class="input-box" type="text" id="color" name="color" placeholder="Type your colour" oninput="checkLength('color', 3, 'q4', 'q5')">
-</div>
-
-<div class="question-block hidden" id="q5">
-  <div class="question">What sex are you 🤔🙃</div>
-  <button class="option-button" type="button" onclick="next('q5', 'q6', 'Men ♂️')">Men ♂️</button>
-  <button class="option-button" type="button" onclick="next('q5', 'q6', 'Girl ♀️')">Girl ♀️</button>
-</div>
-
-<div class="question-block hidden" id="q6">
-  <div class="question">and how old are you? 1️⃣0️⃣ 😱</div>
-  <button class="option-button" type="button" onclick="next('q6', 'q7', '9 below 📉🥀')">9 below 📉🥀</button>
-  <button class="option-button" type="button" onclick="next('q6', 'q7', '15? 😭')">15? 😭</button>
-  <input class="input-box" type="text" id="age" name="age" placeholder="Type your age" oninput="checkLengthExact('age', 2, 3, 'q6', 'q7')">
-</div>
-
-<div class="question-block hidden" id="q7">
-  <div class="question">Tell me something only the REAL ones know about you 😏🍠</div>
-  <input class="input-box" type="text" name="real_fact" placeholder="Type here" oninput="checkLength(this.name, 10, 'q7', 'q8')">
-</div>
-
-<div class="question-block hidden" id="q8">
-  <div class="question">What's a random fact about you that sounds fake but isn't? 🫣</div>
-  <input class="input-box" type="text" name="fake_fact" placeholder="Type here" oninput="checkLength(this.name, 10, 'q8', 'q9')">
-</div>
-
-<div class="question-block hidden" id="q9">
-  <div class="question">If I met you in a dream, how would you introduce yourself?🚪😜</div>
-  <input class="input-box" type="text" name="dream_intro" placeholder="Type here" oninput="checkLength(this.name, 10, 'q9', 'q10')">
-</div>
-
-<div class="question-block hidden" id="q10">
-  <div class="question">Last question! What's one thing you wish people knew about you? 🔥</div>
-  <input class="input-box" type="text" name="secret" placeholder="Type here" oninput="checkLength(this.name, 10, 'q10', null)">
-  <button class="submit-button" type="submit">Send <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Paper_plane_font_awesome.svg/1200px-Paper_plane_font_awesome.svg.png" class="airplane-icon"></button>
-</div>
-
-  </form>  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const name = urlParams.get('name');
-    if (name) {
-      document.getElementById('userName').value = name;
-    }
-
-    function next(currentId, nextId, value) {
-      if (value) {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = currentId;
-        input.value = value;
-        document.querySelector('form').appendChild(input);
-      }
-      document.getElementById(currentId).classList.add('hidden');
-      if (nextId) document.getElementById(nextId).classList.remove('hidden');
-    }
-
-    function checkLength(id, min, currentId, nextId) {
-      const input = document.getElementById(id);
-      if (input && input.value.length >= min) {
-        next(currentId, nextId, input.value);
-      }
-    }
-
-    function checkLengthExact(id, min, max, currentId, nextId) {
-      const input = document.getElementById(id);
-      if (input && input.value.length >= min && input.value.length <= max) {
-        next(currentId, nextId, input.value);
-      }
-    }
-  </script></body>
-</html>
+<!-- your form content continues here -->
