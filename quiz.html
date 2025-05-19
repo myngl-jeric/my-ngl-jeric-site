@@ -1,212 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NGL Inspired Anonymous Form</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom right, #f9c5d1, #fbc2eb);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .form-container {
-      background: white;
-      padding: 2rem;
-      border-radius: 20px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
-    .question {
-      display: none;
-      flex-direction: column;
-    }
-    .question.active {
-      display: flex;
-    }
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 1rem;
-    }
-    button, .submit-btn {
-      padding: 10px;
-      background-color: #ff6ec4;
-      border: none;
-      border-radius: 25px;
-      color: white;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    button:hover, .submit-btn:hover {
-      background-color: #f42a8f;
-    }
-    input[type="text"] {
-      padding: 8px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      font-size: 16px;
-    }
-    .send-icon {
-      font-size: 20px;
-      margin-left: 5px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anonymous Survey</title>
+<style>
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to top right, #a3cef1, #70a1ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    max-width: 400px;
+    width: 90%;
+    padding: 30px;
+    box-sizing: border-box;
+  }
+  h2 {
+    margin-top: 0;
+    font-weight: 600;
+    color: #333;
+  }
+  .question {
+    margin-bottom: 20px;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  label {
+    background: #e1e7ff;
+    padding: 12px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 500;
+    transition: background 0.25s ease;
+  }
+  input[type="radio"]:checked + label,
+  input[type="checkbox"]:checked + label {
+    background: #70a1ff;
+    color: white;
+  }
+  input[type="radio"],
+  input[type="checkbox"] {
+    display: none;
+  }
+  input[type="text"] {
+    padding: 10px;
+    border-radius: 12px;
+    border: 1.5px solid #bbb;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  input[type="text"]:focus {
+    outline: none;
+    border-color: #70a1ff;
+  }
+  .btn-next {
+    margin-top: 15px;
+    padding: 12px 24px;
+    background: #70a1ff;
+    border: none;
+    border-radius: 24px;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s ease;
+  }
+  .btn-next:hover {
+    background: #5487e0;
+  }
+  .hidden {
+    display: none;
+  }
+  .send-icon {
+    width: 18px;
+    height: 18px;
+    fill: white;
+  }
+</style>
 </head>
 <body>
-  <form id="nglForm" class="form-container" method="POST">
-    <div id="questions">
-      <!-- Questions will be injected by JS -->
+<div class="container">
+  <form id="surveyForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
+    <!-- To include the name param in URL: ?name=xxx -->
+    <input type="hidden" name="_subject" value="New Survey Response" />
+    <input type="hidden" name="_captcha" value="false" />
+    <input type="hidden" id="nameParam" name="Name" value="" />
+    <!-- QUESTIONS -->
+    <div class="question" data-q="1">
+      <h2>Why did you click this?! Do you like me? 😳</h2>
+      <div class="options">
+        <input type="radio" id="q1o1" name="Why did you click this" value="Yes" required />
+        <label for="q1o1">Yes</label>
+
+        <input type="radio" id="q1o2" name="Why did you click this" value="Yes 🙈" />
+        <label for="q1o2">Yes 🙈</label>
+      </div>
     </div>
-    <button type="submit" class="submit-btn" style="display: none;">Send <span class="send-icon">✈️</span></button>
+
+    <div class="question hidden" data-q="2">
+      <h2>Enough of that, What kind of habits do you have 👀</h2>
+      <div class="options">
+        <input type="radio" id="q2o1" name="Habits" value="Chyess ♟️" required />
+        <label for="q2o1">Chyess ♟️</label>
+
+        <input type="radio" id="q2o2" name="Habits" value="Guitaring?! 🎸" />
+        <label for="q2o2">Guitaring?! 🎸</label>
+      </div>
+      <input type="text" id="q2text" name="Habits - Other" placeholder="Type your habit (5+ chars)" minlength="5" />
+    </div>
+
+    <div class="question hidden" data-q="3">
+      <h2>Are you Studious or Tumultuous? 🫵</h2>
+      <div class="options">
+        <input type="radio" id="q3o1" name="Studious or Tumultuous" value="Studious 📚" required />
+        <label for="q3o1">Studious 📚</label>
+
+        <input type="radio" id="q3o2" name="Studious or Tumultuous" value="Tumultuous 🗣️" />
+        <label for="q3o2">Tumultuous 🗣️</label>
+      </div>
+    </div>
+
+    <div class="question hidden" data-q="4">
+      <h2>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</h2>
+      <div class="options">
+        <input type="radio" id="q4o1" name="Favourite Colour" value="black" required />
+        <label for="q4o1">black</label>
+
+        <input type="radio" id="q4o2" name="Favourite Colour" value="white" />
+        <label for="q4o2">white</label>
+      </div>
+      <input type="text" id="q4text" name="Favourite Colour - Other" placeholder="Type your colour (3+ chars)" minlength="3" />
+    </div>
+
+    <div class="question hidden" data-q="5">
+      <h2>What sex are you 🤔🙃</h2>
+      <div class="options">
+        <input type="radio" id="q5o1" name="Sex" value="Men ♂️" required />
+        <label for="q5o1">Men ♂️</label>
+
+        <input type="radio" id="q5o2" name="Sex" value="Girl ♀️" />
+        <label for="q5o2">Girl ♀️</label>
+      </div>
+    </div>
+
+    <div class="question hidden" data-q="6">
+      <h2>and how old are you? 1️⃣0️⃣ 😱</h2>
+      <div class="options">
+        <input type="radio" id="q6o1" name="Age" value="9 below 📉🥀" required />
+        <label for="q6o1">9 below 📉🥀</label>
+
+        <input type="radio" id="q6o2" name="Age" value="15? 😭" />
+        <label for="q6o2">15? 😭</label>
+      </div>
+      <input type="text" id="q6text" name="Age - Other" placeholder="Type your age (2-3 chars)" pattern=".{2,3}" />
+    </div>
+
+    <div class="question hidden" data-q="7">
+      <h2>Tell me something only the REAL ones know about you 😏🍠</h2>
+      <input type="text" id="q7text" name="Real Ones Secret" placeholder="Write here (10+ chars)" minlength="10" required />
+    </div>
+
+    <div class="question hidden" data-q="8">
+      <h2>What's a random fact about you that sounds fake but isn't? 🫣</h2>
+      <input type="text" id="q8text" name="Random Fact" placeholder="Write here (10+ chars)" minlength="10" required />
+    </div>
+
+    <div class="question hidden" data-q="9">
+      <h2>If I met you in a dream, how would you introduce yourself?🚪😜</h2>
+      <input type="text" id="q9text" name="Dream Introduction" placeholder="Write here (10+ chars)" minlength="10" required />
+    </div>
+
+    <div class="question hidden" data-q="10">
+      <h2>Last question! What's one thing you wish people knew about you? 🔥</h2>
+      <input type="text" id="q10text" name="Final Wish" placeholder="Write here (10+ chars)" minlength="10" required />
+    </div>
+
+    <button type="button" id="nextBtn" class="btn-next">
+      Next
+      <svg class="send-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+    </button>
+    <button type="submit" id="submitBtn" class="btn-next hidden" style="background:#3c9d9b;">
+      Send
+      <svg class="send-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+    </button>
   </form>
+</div>
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const userName = urlParams.get('name') || 'Anonymous';
-    const form = document.getElementById("nglForm");
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const nameValue = urlParams.get('name') || '';
+  document.getElementById('nameParam').value = nameValue;
 
-    const questions = [
-      {
-        q: "Why did you click this?! Do you like me? 😳",
-        options: ["Yes", "Yes 🙈"]
-      },
-      {
-        q: "Enough of that, What kind of habits do you have 👀",
-        options: ["Chyess ♟️", "Guitaring?! 🎸"],
-        textInput: true,
-        minChars: 5
-      },
-      {
-        q: "Are you Studious or Tumultuous? 🫵",
-        options: ["Studious 📚", "Tumultuous 🗣️"]
-      },
-      {
-        q: "What's YOUR Favourite kulay?! 🏳️‍🌈🥶",
-        options: ["black", "white"],
-        textInput: true,
-        minChars: 3
-      },
-      {
-        q: "What sex are you 🤔🙃",
-        options: ["Men ♂️", "Girl ♀️"]
-      },
-      {
-        q: "and how old are you? 1️⃣0️⃣ 😱",
-        options: ["9 below 📉🥀", "15? 😭"],
-        textInput: true,
-        minChars: 2,
-        maxChars: 3
-      },
-      {
-        q: "Tell me something only the REAL ones know about you 😏🍠",
-        textInput: true,
-        minChars: 10
-      },
-      {
-        q: "What's a random fact about you that sounds fake but isn't? 🫣",
-        textInput: true,
-        minChars: 10
-      },
-      {
-        q: "If I met you in a dream, how would you introduce yourself?🚪😜",
-        textInput: true,
-        minChars: 10
-      },
-      {
-        q: "Last question! What's one thing you wish people knew about you? 🔥",
-        textInput: true,
-        minChars: 10
-      }
-    ];
+  const form = document.getElementById('surveyForm');
+  const questions = document.querySelectorAll('.question');
+  const nextBtn = document.getElementById('nextBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  let current = 0;
 
-    const container = document.getElementById("questions");
-    let currentIndex = 0;
+  function validateCurrentQuestion() {
+    const currentQ = questions[current];
+    const inputs = currentQ.querySelectorAll('input');
+    let valid = false;
 
-    function renderQuestion(index) {
-      const qData = questions[index];
-      const div = document.createElement("div");
-      div.classList.add("question", "active");
-
-      const label = document.createElement("label");
-      label.textContent = qData.q;
-      div.appendChild(label);
-
-      const optionsDiv = document.createElement("div");
-      optionsDiv.classList.add("options");
-
-      if (qData.options) {
-        qData.options.forEach((opt, i) => {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.textContent = opt;
-          btn.onclick = () => {
-            addHiddenInput(`q${index + 1}`, opt);
-            goToNext();
-          };
-          optionsDiv.appendChild(btn);
-        });
-      }
-
-      if (qData.textInput) {
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = "Type here...";
-        optionsDiv.appendChild(input);
-
-        const nextBtn = document.createElement("button");
-        nextBtn.type = "button";
-        nextBtn.textContent = "Next";
-        nextBtn.onclick = () => {
-          const val = input.value.trim();
-          if (
-            (!qData.minChars || val.length >= qData.minChars) &&
-            (!qData.maxChars || val.length <= qData.maxChars)
-          ) {
-            addHiddenInput(`q${index + 1}`, val);
-            goToNext();
-          } else {
-            alert(`Answer must be ${qData.minChars || 0}${qData.maxChars ? ' to ' + qData.maxChars : '+'} characters long.`);
-          }
-        };
-        optionsDiv.appendChild(nextBtn);
-      }
-
-      div.appendChild(optionsDiv);
-      container.innerHTML = '';
-      container.appendChild(div);
-    }
-
-    function addHiddenInput(name, value) {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = name;
-      input.value = value;
-      form.appendChild(input);
-    }
-
-    function goToNext() {
-      currentIndex++;
-      if (currentIndex < questions.length) {
-        renderQuestion(currentIndex);
-      } else {
-        form.action = `https://formsubmit.co/${encodeURIComponent("notjery05@gmail.com")}?name=${encodeURIComponent(userName)}`;
-        document.querySelector('.submit-btn').style.display = "block";
-        container.innerHTML = "<p>You're done! Ready to submit?</p>";
+    if(current === 1) { // q2: 5+ chars if typing
+      // check if one radio is checked OR text input has 5+ chars
+      const radios = Array.from(currentQ.querySelectorAll('input[type="radio"]'));
+      const text = currentQ.querySelector('input[type="text"]');
+      const radioChecked = radios.some(r => r.checked);
+      if(radioChecked) valid = true;
+      else if(text.value.trim().length >= 5) valid = true;
+    } else if(current === 5) { // q6 age text 2-3 chars
+      const radios = Array.from(currentQ.querySelectorAll('input[type="radio"]'));
+      const text = currentQ.querySelector('input[type="text"]');
+      const radioChecked = radios.some(r => r.checked);
+      if(radioChecked) valid = true;
+      else if(text.value.trim().length >= 2 && text.value.trim().length <= 3) valid = true;
+    } else {
+      for(let input of inputs) {
+        if(input.type === 'radio' && input.required && input.checked) {
+          valid = true;
+          break;
+        }
+        if(input.type === 'text' && input.required && input.value.trim().length >= 10) {
+          valid = true;
+          break;
+        }
       }
     }
 
-    renderQuestion(currentIndex);
-  </script>
+    return valid;
+  }
+
+  function showQuestion(index) {
+    questions.forEach((q, i) => {
+      q.classList.toggle('hidden', i !== index);
+    });
+    if(index === questions.length - 1){
+      nextBtn.classList.add('hidden');
+      submitBtn.classList.remove('hidden');
+    } else {
+      nextBtn.classList.remove('hidden');
+      submitBtn.classList.add('hidden');
+    }
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if(validateCurrentQuestion()) {
+      current++;
+      showQuestion(current);
+    } else {
+      alert('Please answer the question correctly before moving on.');
+    }
+  });
+
+  showQuestion(current);
+</script>
 </body>
 </html>
