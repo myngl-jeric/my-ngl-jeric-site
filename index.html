@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NGL Clone</title>
   <style>
+    /* Your existing styles here... */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
     body {
       margin: 0;
@@ -225,7 +226,7 @@
     </form>
     <div class="people-tap-count">👇 0 people just tapped this button 😢🥀</div>
     <div class="extra-box">
-      <a href="quiz.html" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
+      <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
     </div>
   </div>
 
@@ -262,10 +263,9 @@
     }, 800);
   });
 
-  // Dual submission function: sends to Getform, then submits normally to Formsubmit
+  // Dual submission: async post to getform.io then normal submit to formsubmit.co
   async function dualSubmit(event) {
-    event.preventDefault(); // Prevent normal submit
-    
+    event.preventDefault();
     const form = event.target;
     const formData = new FormData(form);
 
@@ -279,27 +279,28 @@
         alert('Error submitting to Getform. Please try again.');
         return false;
       }
-
-      // Submit normally to Formsubmit if Getform succeeded
+      // After successful Getform post, submit normally
       form.submit();
     } catch (error) {
-      alert('Network error during submission. Please try again.');
+      alert('Error submitting the form. Please try again.');
       return false;
     }
-
-    return false;
   }
 
-  // Validate name before allowing quiz.html access
-  document.querySelector('.extra-box a').addEventListener('click', function(event) {
-    const nameInput = document.getElementById('name');
-    const nameValue = nameInput.value.trim();
+  // Quiz link click handler with validation & redirect
+  document.getElementById('quiz-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    const nameInput = document.getElementById('name').value.trim();
 
-    if (nameValue.length < 4 || nameValue.length > 20) {
-      event.preventDefault();
-      alert('Please enter your name (4-20 characters) before proceeding.');
-      nameInput.focus();
+    if (nameInput.length < 4 || nameInput.length > 20) {
+      alert('Please enter your name between 4 and 20 characters before proceeding.');
+      document.getElementById('name').focus();
+      return;
     }
+
+    // Redirect to quiz.html with name query parameter
+    const encodedName = encodeURIComponent(nameInput);
+    window.location.href = `quiz.html?name=${encodedName}`;
   });
 </script>
 </body>
