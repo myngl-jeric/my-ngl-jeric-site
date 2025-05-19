@@ -207,4 +207,113 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="2" data-maxlength="3">
-    <p>
+    <p>and how old are you? 1️⃣0️⃣ 😱</p>
+    <div class="options">
+      <input type="radio" id="q6o1" name="Age" value="9 below 📉🥀" />
+      <label for="q6o1">9 below 📉🥀</label>
+      <input type="radio" id="q6o2" name="Age" value="15? 😭" />
+      <label for="q6o2">15? 😭</label>
+      <label for="ageOther">Other (please type):</label>
+      <input type="text" id="ageOther" name="AgeOther" placeholder="Type your age here (2-3 chars)" minlength="2" maxlength="3" />
+    </div>
+  </div>
+
+  <div class="question" data-req="true" data-minlength="10">
+    <p>Tell me something only the REAL ones know about you 😏🍠</p>
+    <textarea name="RealOnesKnow" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
+  </div>
+
+  <div class="question" data-req="true" data-minlength="10">
+    <p>What's a random fact about you that sounds fake but isn't? 🫣</p>
+    <textarea name="RandomFact" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
+  </div>
+
+  <div class="question" data-req="true" data-minlength="10">
+    <p>If I met you in a dream, how would you introduce yourself?🚪😜</p>
+    <textarea name="DreamIntro" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
+  </div>
+
+  <div class="question" data-req="true" data-minlength="10">
+    <p>Last question! What's one thing you wish people knew about you? 🔥</p>
+    <textarea name="WishPeopleKnew" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
+  </div>
+
+  <!-- Hidden field for redirect -->
+  <input type="hidden" name="_next" value="https://formsubmit.co/thanks.html" />
+
+  <button type="button" id="nextBtn" aria-label="Next Question">
+    Next
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg>
+  </button>
+</form>
+
+<script>
+  const form = document.getElementById('multiStepForm');
+  const questions = form.querySelectorAll('.question');
+  const nextBtn = document.getElementById('nextBtn');
+  let current = 0;
+
+  function validateCurrent() {
+    const currentQuestion = questions[current];
+    const required = currentQuestion.dataset.req === "true";
+    if (!required) return true;
+
+    // Check inputs inside current question
+    const radios = currentQuestion.querySelectorAll('input[type="radio"]');
+    const textInputs = currentQuestion.querySelectorAll('input[type="text"], textarea');
+
+    // For radio questions (some with optional text field)
+    if (radios.length > 0) {
+      // Check if a radio is selected OR text input is filled and meets length requirements
+      const checkedRadio = Array.from(radios).some(r => r.checked);
+      const validTextInput = Array.from(textInputs).some(input => {
+        const val = input.value.trim();
+        if (!val) return false;
+        const minL = parseInt(currentQuestion.dataset.minlength) || 10;
+        const maxL = parseInt(currentQuestion.dataset.maxlength) || Infinity;
+        return val.length >= minL && val.length <= maxL;
+      });
+      if (!checkedRadio && !validTextInput) return false;
+    } else {
+      // For pure textareas or text inputs only questions
+      for (const input of textInputs) {
+        const val = input.value.trim();
+        const minL = parseInt(currentQuestion.dataset.minlength) || 10;
+        const maxL = parseInt(currentQuestion.dataset.maxlength) || Infinity;
+        if (val.length < minL || val.length > maxL) return false;
+      }
+    }
+    return true;
+  }
+
+  function showQuestion(index) {
+    questions.forEach((q, i) => {
+      q.classList.toggle('active', i === index);
+      q.classList.remove('shake');
+    });
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (!validateCurrent()) {
+      // Shake current question to indicate error
+      questions[current].classList.add('shake');
+      return;
+    }
+    questions[current].classList.remove('shake');
+    if (current === questions.length - 1) {
+      // Submit form on last question
+      form.submit();
+      return;
+    }
+    current++;
+    showQuestion(current);
+    // Scroll form to top smoothly on new question
+    form.scrollIntoView({behavior: "smooth"});
+  });
+
+  // On page load show first question
+  showQuestion(0);
+</script>
+
+</body>
+</html>
