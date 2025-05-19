@@ -1,162 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dice Roll Interface</title>
-<style>
-  body {
-    background-color: #111;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-  #dice {
-    font-size: 48px;
-    cursor: pointer;
-    user-select: none;
-    display: inline-block;
-    animation: bounce 1s infinite;
-  }
-  #dice.shake {
-    animation: shake 0.5s;
-  }
-  #dice.roll {
-    animation: roll 1s forwards;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-  }
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-  }
-  @keyframes roll {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(1080deg); }
-  }
-  #messageBox {
-    margin-top: 20px;
-    min-height: 30px;
-    font-size: 20px;
-    text-align: center;
-  }
-  #sendButton {
-    margin-top: 20px;
-    background-color: black;
-    border: none;
-    color: white;
-    font-size: 18px;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  #lock {
-    font-size: 24px;
-    user-select: none;
-    margin-left: 10px;
-  }
-  .extra-text {
-    color: #fff;
-    font-weight: 600;
-    font-size: 18px;
-    margin: 15px 0 6px;
-    user-select: none;
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
-  .extra-box {
-    background: black;
-    color: white;
-    padding: 10px 20px;
-    margin-top: 5px;
-    font-size: 18px;
-    user-select: none;
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
-  #tapCount {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #ccc;
-    user-select: none;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NGL Clone</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+    body {
+      margin: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: linear-gradient(to bottom right, #f43f5e, #f97316);
+      color: #fff;
+      text-align: center;
+    }
+    .container {
+      padding: 30px 15px;
+      max-width: 420px;
+      margin: auto;
+    }
+    .profile {
+      background: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      color: #000;
+      max-width: 400px;
+      margin: 20px auto 10px;
+      position: relative;
+      font-weight: 600;
+      user-select: none;
+    }
+    .profile::before {
+      content: "🔒";
+      font-size: 60px;
+      display: block;
+      margin: 0 auto 15px;
+      filter: blur(3px);
+      position: relative;
+      z-index: 1;
+      user-select: none;
+    }
+    .lock-container {
+      position: absolute;
+      top: 38px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+      user-select: none;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      font-size: 36px;
+      line-height: 1;
+    }
+    .username {
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 1.3rem;
+    }
+    .description {
+      font-weight: 400;
+      color: #444;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      line-height: 1.3;
+      user-select: none;
+    }
+    .prompt {
+      background: rgba(255, 255, 255, 0.15);
+      color: #000;
+      padding: 22px 25px;
+      border-radius: 15px;
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      user-select: none;
+    }
+    form {
+      margin-top: 20px;
+      position: relative;
+    }
+    input[type="text"] {
+      width: 80%;
+      max-width: 300px;
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+    }
+    textarea {
+      width: 80%;
+      max-width: 300px;
+      height: 100px;
+      padding: 10px 45px 10px 15px;
+      border-radius: 10px;
+      border: none;
+      resize: none;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    .dice-button {
+      position: absolute;
+      right: 40px;
+      bottom: 73px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f43f5e;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.6s ease;
+      user-select: none;
+      box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
+      font-size: 24px;
+      line-height: 1;
+      color: white;
+    }
+    .dice-button:active {
+      transform: rotate(360deg);
+    }
+    .send-button {
+      margin: 20px auto 0;
+      padding: 15px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      width: 80%;
+      max-width: 300px;
+      background: #000;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      user-select: none;
+      box-sizing: border-box;
+    }
+    .extra-box {
+      margin: 15px auto 0;
+      padding: 15px 20px;
+      font-size: 18px;
+      border-radius: 30px;
+      width: 80%;
+      max-width: 300px;
+      background: #000;
+      color: #fff;
+      user-select: none;
+    }
+
+    @keyframes rollBounceShake {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      20% {
+        transform: translateY(-10px) rotate(45deg);
+      }
+      40% {
+        transform: translateY(5px) rotate(-30deg);
+      }
+      60% {
+        transform: translateY(-5px) rotate(30deg);
+      }
+      80% {
+        transform: translateY(2px) rotate(-15deg);
+      }
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+    }
+
+    .rolling {
+      animation: rollBounceShake 0.8s ease forwards;
+    }
+  </style>
 </head>
 <body>
-
-<div>
-  <span id="dice" title="Roll the dice">🎲</span>
-  <span id="lock" title="Lock">🔒</span>
-</div>
-
-<div id="messageBox"></div>
-
-<button id="sendButton">Send</button>
-
-<!-- New text above the black box -->
-<div class="extra-text">😳 Do you want to know me even further? 🙈</div>
-
-<!-- The black box below the send button -->
-<div class="extra-box">Do you want to know me even further?</div>
-
-<!-- Tap count text above everything else -->
-<div id="tapCount">👇 0 people just tapped this button 😢🥀</div>
+  <div class="container">
+    <div class="profile">
+      <div class="lock-container" aria-label="Locked profile">🔒</div>
+      <div class="username">@JericAus</div>
+      <div class="description">
+        Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
+      </div>
+      <div class="prompt">send me anonymous messages...</div>
+    </div>
+    <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank" onsubmit="return dualSubmit(event)">
+      <input
+        type="text"
+        name="name"
+        id="name"
+        placeholder="Your name (4-20 characters)"
+        minlength="4"
+        maxlength="20"
+        pattern=".{4,20}"
+        title="Name must be between 4 and 20 characters."
+        autocomplete="off"
+      />
+      <textarea
+        name="message"
+        id="message"
+        placeholder="Send me anonymous messages..."
+        required
+        spellcheck="false"
+      ></textarea>
+      <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
+      <button type="submit" class="send-button">Send!</button>
+    </form>
+    <div class="extra-box">Do you want to know me even further?</div>
+  </div>
 
 <script>
-  const dice = document.getElementById('dice');
-  const messageBox = document.getElementById('messageBox');
-  const tapCount = document.getElementById('tapCount');
-
   const phrases = [
-    "You rolled a 1! Try again.",
-    "Lucky 2! Keep going.",
-    "Three's a charm!",
-    "Four score and seven!",
-    "High five!",
-    "Six, perfect roll!"
+    "I like u, do u like me too?",
+    "I'm still not over u",
+    "I'll make u mine :p",
+    "u look gud w/out trying",
+    "how does it feel being everyones crush",
+    "would u go on a date with me?",
+    "you want to make new friends?",
+    "would u say yes if someone asked today?",
+    "how many kids do you want to have",
+    "ur aesthetic >"
   ];
 
-  let tapCounter = 0;
+  const diceButton = document.getElementById('dice');
+  const messageField = document.getElementById('message');
 
-  dice.addEventListener('click', () => {
-    tapCounter++;
-    tapCount.textContent = `👇 ${tapCounter} people just tapped this button 😢🥀`;
+  const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
 
-    dice.classList.remove('bounce');
-    dice.classList.add('shake');
+  diceButton.addEventListener('click', () => {
+    if (diceButton.classList.contains('rolling')) return;
 
-    // Play sound
-    const audio = new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg');
-    audio.play();
+    diceButton.classList.add('rolling');
+    diceSound.currentTime = 0;
+    diceSound.play();
 
     setTimeout(() => {
-      dice.classList.remove('shake');
-      dice.classList.add('roll');
-      
-      // Roll animation duration = 1 second
-      setTimeout(() => {
-        dice.classList.remove('roll');
-        dice.classList.add('bounce');
-
-        // Show random phrase
-        const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-        messageBox.textContent = phrase;
-      }, 1000);
-    }, 500);
+      const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+      messageField.value = randomPhrase;
+      diceButton.classList.remove('rolling');
+    }, 800);
   });
-
-  // Initial bounce animation
-  dice.classList.add('bounce');
 </script>
-
 </body>
 </html>
