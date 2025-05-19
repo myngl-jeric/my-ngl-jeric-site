@@ -1,92 +1,111 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NGL Clone</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
       background: linear-gradient(to bottom right, #f43f5e, #f97316);
       color: #fff;
       text-align: center;
     }
+
     .container {
-      padding: 20px 10px;
+      padding: 30px 15px;
     }
+
     .profile {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 20px;
-      padding: 15px 10px;
+      background: #fff;
+      border-radius: 15px;
+      padding: 20px;
       color: #000;
-      max-width: 360px;
-      margin: 20px auto 10px;
+      max-width: 400px;
+      margin: 20px auto 10px auto;
       position: relative;
     }
+
     .profile::before {
       content: "";
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      background: #ccc;
-      filter: blur(2px);
+      background: rgba(200, 200, 200, 0.6);
       display: block;
-      margin: 0 auto 5px;
+      margin: 0 auto 10px auto;
+      position: relative;
+      filter: blur(1px);
     }
-    .lock {
-      font-size: 26px;
+
+    .lock-icon {
+      background: #fff;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #000;
       position: absolute;
-      top: 15px;
-      left: calc(50% - 13px);
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
     }
+
     .username {
       font-weight: bold;
-      font-size: 20px;
-      margin: 2px 0;
+      margin-bottom: 5px;
     }
+
     .description {
       font-size: 14px;
-      margin: 4px 0 8px;
-      line-height: 1.3;
+      margin: 8px 0 0 0;
     }
+
     .prompt {
       background: rgba(255, 255, 255, 0.2);
       color: #fff;
-      padding: 15px;
+      padding: 20px;
       border-radius: 15px;
-      margin-top: 5px;
-      font-size: 16px;
+      margin-top: 10px;
+      font-size: 18px;
     }
+
     form {
-      margin: 15px 0 10px;
+      margin-top: 20px;
     }
-    .input-group {
-      position: relative;
-      display: inline-block;
-    }
+
     textarea {
       width: 80%;
       max-width: 300px;
-      height: 90px;
-      padding: 10px 45px 10px 10px;
-      border-radius: 10px;
-      border: none;
-      resize: none;
-      font-size: 15px;
-    }
-    input[type="text"] {
-      width: 80%;
-      max-width: 300px;
-      margin: 5px 0;
+      height: 100px;
       padding: 10px;
       border-radius: 10px;
       border: none;
-      font-size: 15px;
-    }
-    .send-button {
-      margin-top: 10px;
-      padding: 12px 20px;
+      resize: none;
       font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      max-width: 300px;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .send-button {
+      display: block;
+      margin: 10px auto;
+      padding: 15px 20px;
+      font-size: 18px;
       border: none;
       border-radius: 30px;
       width: 80%;
@@ -95,38 +114,49 @@
       color: #fff;
       cursor: pointer;
     }
-    .dice-button {
+
+    .dice {
       position: absolute;
       bottom: 10px;
-      right: 10px;
-      background: transparent;
-      border: none;
-      font-size: 22px;
+      right: 10%;
+      background: #fff;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      animation: pop 0.2s;
     }
-    .dice-button:active {
-      transform: rotate(360deg) scale(1.1);
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="profile">
-      <div class="lock">🔒</div>
+      <div class="lock-icon">🔒</div>
       <div class="username">@JericAus</div>
-      <div class="description">Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D</div>
-      <div class="prompt">send me anonymous messages...</div>
-    </div><form action="https://formsubmit.co/notjery05@gmail.com" method="POST" onsubmit="submitToGetform(event)">
-  <input type="text" name="name" placeholder="Your name (4-20 characters)" pattern=".{4,20}" title="Name must be 4-20 characters long" />
-  <div class="input-group">
-    <textarea name="message" placeholder="Type your message here..." required id="message-box"></textarea>
-    <button type="button" class="dice-button" onclick="rollPhrase()">🎲</button>
+      <div class="description">
+        Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
+      </div>
+    </div>
+    <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" onsubmit="submitDual(event)">
+      <input type="text" name="name" placeholder="Your name (4–20 characters)" pattern=".{4,20}" title="4 to 20 characters only" />
+      <div style="position: relative; display: inline-block;">
+        <textarea name="message" placeholder="Type your message here..." required id="message-box"></textarea>
+        <div class="dice" onclick="rollDice()">🎲</div>
+      </div>
+      <button type="submit" class="send-button">Send!</button>
+    </form>
   </div>
-  <button type="submit" class="send-button">Send!</button>
-</form>
 
-  </div><audio id="dice-sound" src="https://www.myinstants.com/media/sounds/dice-roll.mp3"></audio>
+  <audio id="dice-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_f484316196.mp3" preload="auto"></audio>
 
   <script>
     const phrases = [
@@ -142,22 +172,24 @@
       "ur aesthetic >"
     ];
 
-    function rollPhrase() {
-      const messageBox = document.getElementById("message-box");
+    function rollDice() {
+      const box = document.getElementById("message-box");
       const sound = document.getElementById("dice-sound");
-      const random = phrases[Math.floor(Math.random() * phrases.length)];
-      messageBox.value = random;
-      sound.currentTime = 0;
+      box.value = phrases[Math.floor(Math.random() * phrases.length)];
       sound.play();
     }
 
-    function submitToGetform(event) {
+    function submitDual(event) {
+      event.preventDefault();
       const form = event.target;
-      const formData = new FormData(form);
+      const data = new FormData(form);
       fetch("https://getform.io/f/aronlglb", {
         method: "POST",
-        body: formData,
+        body: data
+      }).finally(() => {
+        form.submit(); // Proceed to formsubmit.co
       });
     }
-  </script></body>
+  </script>
+</body>
 </html>
