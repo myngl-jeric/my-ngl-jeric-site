@@ -51,7 +51,7 @@
       <label><input type="radio" name="Q4" value="black" /> black</label>
       <label><input type="radio" name="Q4" value="white" /> white</label>
     </div>
-    <textarea name="Q4_Typed" placeholder="Type your colour here (min 10 chars)"></textarea>
+    <textarea name="Q4_Typed" placeholder="Type your colour here (min 3 chars)"></textarea>
   </div>
 
   <div class="question" data-index="4">
@@ -65,7 +65,7 @@
   <div class="question" data-index="5">
     <p>And how old are you? 1️⃣0️⃣ 😱</p>
     <div class="options">
-      <label><input type="radio" name="Q6" value="9 to 12 🫷" /> 9 to 12 🫷</label>
+      <label><input type="radio" name="Q6" value="9 below 📉🥀" /> 9 below 📉🥀</label>
       <label><input type="radio" name="Q6" value="15? 😭" /> 15? 😭</label>
     </div>
     <input type="text" name="Q6_Typed" placeholder="Type your age here (2-3 chars)" maxlength="3" />
@@ -114,6 +114,8 @@
     const len = value.trim().length;
     if (index === 1) { // Q2: 5+ chars
       return len >= 5;
+    } else if (index === 3) { // Q4: 3+ chars
+      return len >= 3;
     } else if (index === 5) { // Q6: 2-3 chars
       return len >= 2 && len <= 3;
     } else {
@@ -143,6 +145,8 @@
           if (!typedValid) {
             if (index === 1) {
               alert('Please select an option or enter at least 5 characters in the text box.');
+            } else if (index === 3) {
+              alert('Please select an option or enter at least 3 characters in the text box.');
             } else if (index === 5) {
               alert('Please select an option or enter between 2 to 3 characters in the text box.');
             } else {
@@ -162,6 +166,8 @@
       if (ta.value.trim().length > 0 && !validLength(ta.value, index)) {
         if (index === 1) {
           alert('Please enter at least 5 characters for your typed answer.');
+        } else if (index === 3) {
+          alert('Please enter at least 3 characters for your typed answer.');
         } else if (index === 5) {
           alert('Please enter between 2 to 3 characters for your typed answer.');
         } else {
@@ -174,6 +180,8 @@
       if (ti.value.trim().length > 0 && !validLength(ti.value, index)) {
         if (index === 1) {
           alert('Please enter at least 5 characters for your typed answer.');
+        } else if (index === 3) {
+          alert('Please enter at least 3 characters for your typed answer.');
         } else if (index === 5) {
           alert('Please enter between 2 to 3 characters for your typed answer.');
         } else {
