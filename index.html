@@ -54,11 +54,8 @@
       z-index: 2;
       user-select: none;
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-    .lock-container svg {
-      width: 28px;
-      height: 28px;
-      fill: #f43f5e;
+      font-size: 36px;
+      line-height: 1;
     }
     .username {
       font-weight: 700;
@@ -124,14 +121,12 @@
       transition: transform 0.6s ease;
       user-select: none;
       box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
+      font-size: 24px;
+      line-height: 1;
+      color: white;
     }
     .dice-button:active {
       transform: rotate(360deg);
-    }
-    .dice-button svg {
-      width: 22px;
-      height: 22px;
-      fill: white;
     }
     .send-button {
       margin: 20px auto 0;
@@ -189,12 +184,7 @@
 <body>
   <div class="container">
     <div class="profile">
-      <div class="lock-container" aria-label="Locked profile">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 17a2 2 0 0 0 2-2v-3a2 2 0 0 0-4 0v3a2 2 0 0 0 2 2z"></path>
-          <path d="M18 8h-1V6a5 5 0 0 0-10 0v2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM8 6a4 4 0 0 1 8 0v2H8V6z"></path>
-        </svg>
-      </div>
+      <div class="lock-container" aria-label="Locked profile">🔒</div>
       <div class="username">@JericAus</div>
       <div class="description">
         Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
@@ -220,9 +210,7 @@
         required
         spellcheck="false"
       ></textarea>
-      <button type="button" class="dice-button" id="dice" aria-label="Roll dice">
-        🎲
-      </button>
+      <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
       <button type="submit" class="send-button">Send!</button>
     </form>
     <div class="extra-box">Do you want to know me even further?</div>
@@ -245,9 +233,21 @@
   const diceButton = document.getElementById('dice');
   const messageField = document.getElementById('message');
 
-  // Load dice roll sound
   const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
 
   diceButton.addEventListener('click', () => {
-    // Prevent double clicks during animation
-    if (diceButton.classList.contains('animating')) return
+    if (diceButton.classList.contains('rolling')) return;
+
+    diceButton.classList.add('rolling');
+    diceSound.currentTime = 0;
+    diceSound.play();
+
+    setTimeout(() => {
+      const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+      messageField.value = randomPhrase;
+      diceButton.classList.remove('rolling');
+    }, 800);
+  });
+</script>
+</body>
+</html>
