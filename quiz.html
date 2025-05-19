@@ -3,284 +3,208 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sequential Form with Validation and Formsubmit</title>
+<title>Animated Multi-step Form</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #f9f9f9;
-    color: #222;
+  /* Container & general */
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #A2C4F7, #4C78E7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   form {
     background: white;
-    padding: 25px 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    width: 350px;
+    position: relative;
+    overflow: hidden;
   }
+
+  /* Question styling & animation */
   .question {
-    display: none;
-    margin-bottom: 25px;
+    position: absolute;
+    width: 100%;
     opacity: 0;
-    transform: translateX(30px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(20px) scale(0.97);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
   }
   .question.active {
-    display: block;
+    position: relative;
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
   }
-  .question p {
-    font-weight: 600;
-    font-size: 1.1rem;
-    margin-bottom: 15px;
+
+  /* Shake animation for validation errors */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+  }
+  .shake {
+    animation: shake 0.5s;
+    border: 2px solid #f44336 !important;
+    border-radius: 12px;
+  }
+
+  /* Inputs */
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1.8px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 0.6rem;
+    box-sizing: border-box;
+  }
+  input[type="text"]:focus, textarea:focus {
+    border-color: #3f72af;
+    box-shadow: 0 0 8px 3px #6190e8aa;
+  }
+
+  /* Radio options styling */
+  .options {
+    margin-top: 0.6rem;
   }
   .options label {
     display: block;
-    margin: 7px 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
     cursor: pointer;
     user-select: none;
-    font-size: 1rem;
+    padding-left: 25px;
+    position: relative;
   }
-  input[type="radio"] {
-    margin-right: 10px;
+  .options input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
   }
-  textarea, input[type="text"] {
-    width: 100%;
-    padding: 8px 10px;
-    margin-top: 8px;
-    font-size: 1rem;
-    border: 1.5px solid #ccc;
-    border-radius: 5px;
-    resize: vertical;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
+  .options input[type="radio"] + label::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 2px;
+    width: 18px; height: 18px;
+    border: 2px solid #6190e8;
+    border-radius: 50%;
+    background: white;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
-  textarea:focus, input[type="text"]:focus {
-    border-color: #007BFF;
-    outline: none;
+  .options input[type="radio"]:checked + label::before {
+    background-color: #6190e8;
+    border-color: #3f72af;
   }
-  button {
-    padding: 12px 20px;
+  /* Pop effect on selecting radio */
+  .options input[type="radio"]:checked + label {
+    animation: popRadio 0.3s forwards;
+    color: #3f72af;
+  }
+  @keyframes popRadio {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  /* Next button */
+  #nextBtn {
+    margin-top: 1.5rem;
+    padding: 0.8rem 2rem;
+    background: linear-gradient(135deg, #4c78e7, #6190e8);
+    border: none;
+    border-radius: 30px;
+    color: white;
+    font-weight: 600;
     font-size: 1.1rem;
     cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: #007BFF;
-    color: white;
-    transition: background-color 0.3s ease;
-    margin-right: 10px;
+    transition: background 0.3s ease, transform 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  button:hover:not(:disabled) {
-    background-color: #0056b3;
+  #nextBtn:hover {
+    background: linear-gradient(135deg, #6190e8, #4c78e7);
   }
-  button:disabled {
-    background-color: #999;
-    cursor: default;
+  #nextBtn:active {
+    transform: scale(0.95);
   }
-  #submitBtn {
-    background-color: #28a745;
-  }
-  #submitBtn:hover {
-    background-color: #1e7e34;
+
+  /* Paper airplane icon */
+  #nextBtn svg {
+    margin-left: 8px;
+    width: 22px;
+    height: 22px;
+    stroke: white;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 </style>
 </head>
 <body>
 
-<form id="multiStepForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank" novalidate>
-  <!-- Hidden input for name -->
-  <input type="hidden" name="name" id="hiddenName" value="" />
-
-  <div class="question active" data-index="0">
+<form id="multiStepForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST" novalidate>
+  <!-- Questions -->
+  <div class="question active" data-req="true" data-minlength="10">
     <p>Why did you click this?! Do you like me? 😳</p>
     <div class="options">
-      <label><input type="radio" name="Q1" value="Yes" /> Yes</label>
-      <label><input type="radio" name="Q1" value="Yes 🙈" /> Yes 🙈</label>
+      <input type="radio" id="q1o1" name="WhyDidYouClick" value="Yes" />
+      <label for="q1o1">Yes</label>
+      <input type="radio" id="q1o2" name="WhyDidYouClick" value="Yes 🙈" />
+      <label for="q1o2">Yes 🙈</label>
     </div>
   </div>
 
-  <div class="question" data-index="1">
+  <div class="question" data-req="true" data-minlength="5">
     <p>Enough of that, What kind of habits do you have 👀</p>
     <div class="options">
-      <label><input type="radio" name="Q2" value="Chyess ♟️" /> Chyess ♟️</label>
-      <label><input type="radio" name="Q2" value="Guitaring?! 🎸" /> Guitaring?! 🎸</label>
+      <input type="radio" id="q2o1" name="Habits" value="Chyess ♟️" />
+      <label for="q2o1">Chyess ♟️</label>
+      <input type="radio" id="q2o2" name="Habits" value="Guitaring?! 🎸" />
+      <label for="q2o2">Guitaring?! 🎸</label>
+      <label for="habitOther">Other (please type):</label>
+      <input type="text" id="habitOther" name="HabitsOther" placeholder="Type your habit here (5+ chars)" minlength="5" />
     </div>
-    <textarea name="Q2_Typed" placeholder="Type your habit here (min 5 chars)" rows="3"></textarea>
   </div>
 
-  <div class="question" data-index="2">
+  <div class="question" data-req="true" data-minlength="10">
     <p>Are you Studious or Tumultuous? 🫵</p>
     <div class="options">
-      <label><input type="radio" name="Q3" value="Studious 📚" /> Studious 📚</label>
-      <label><input type="radio" name="Q3" value="Tumultuous 🗣️" /> Tumultuous 🗣️</label>
+      <input type="radio" id="q3o1" name="StudyTumult" value="Studious 📚" />
+      <label for="q3o1">Studious 📚</label>
+      <input type="radio" id="q3o2" name="StudyTumult" value="Tumultuous 🗣️" />
+      <label for="q3o2">Tumultuous 🗣️</label>
     </div>
   </div>
 
-  <div class="question" data-index="3">
+  <div class="question" data-req="true" data-minlength="3">
     <p>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</p>
     <div class="options">
-      <label><input type="radio" name="Q4" value="black" /> black</label>
-      <label><input type="radio" name="Q4" value="white" /> white</label>
+      <input type="radio" id="q4o1" name="FavouriteColor" value="black" />
+      <label for="q4o1">black</label>
+      <input type="radio" id="q4o2" name="FavouriteColor" value="white" />
+      <label for="q4o2">white</label>
+      <label for="colorOther">Other (please type):</label>
+      <input type="text" id="colorOther" name="FavouriteColorOther" placeholder="Type your color here (3+ chars)" minlength="3" />
     </div>
-    <textarea name="Q4_Typed" placeholder="Type your colour here (min 3 chars)" rows="2"></textarea>
   </div>
 
-  <div class="question" data-index="4">
+  <div class="question" data-req="true" data-minlength="10">
     <p>What sex are you 🤔🙃</p>
     <div class="options">
-      <label><input type="radio" name="Q5" value="Men ♂️" /> Men ♂️</label>
-      <label><input type="radio" name="Q5" value="Girl ♀️" /> Girl ♀️</label>
+      <input type="radio" id="q5o1" name="Sex" value="Men ♂️" />
+      <label for="q5o1">Men ♂️</label>
+      <input type="radio" id="q5o2" name="Sex" value="Girl ♀️" />
+      <label for="q5o2">Girl ♀️</label>
     </div>
   </div>
 
-  <div class="question" data-index="5">
-    <p>And how old are you? 1️⃣0️⃣ 😱</p>
-    <div class="options">
-      <label><input type="radio" name="Q6" value="9 below 📉🥀" /> 9 below 📉🥀</label>
-      <label><input type="radio" name="Q6" value="15? 😭" /> 15? 😭</label>
-    </div>
-    <input type="text" name="Q6_Typed" placeholder="Type your age here (2-3 chars)" maxlength="3" />
-  </div>
-
-  <div class="question" data-index="6">
-    <p>Tell me something only the REAL ones know about you 😏🍠</p>
-    <textarea name="Q7" placeholder="At least 10 characters" rows="4"></textarea>
-  </div>
-
-  <div class="question" data-index="7">
-    <p>What's a random fact about you that sounds fake but isn't? 🫣</p>
-    <textarea name="Q8" placeholder="At least 10 characters" rows="4"></textarea>
-  </div>
-
-  <div class="question" data-index="8">
-    <p>If I met you in a dream, how would you introduce yourself?🚪😜</p>
-    <textarea name="Q9" placeholder="At least 10 characters" rows="4"></textarea>
-  </div>
-
-  <div class="question" data-index="9">
-    <p>Last question! What's one thing you wish people knew about you? 🔥</p>
-    <textarea name="Q10" placeholder="At least 10 characters" rows="4"></textarea>
-  </div>
-
-  <button type="button" id="nextBtn">Next</button>
-  <button type="submit" id="submitBtn" style="display:none;">Submit</button>
-</form>
-
-<script>
-  const form = document.getElementById('multiStepForm');
-  const questions = form.querySelectorAll('.question');
-  const nextBtn = document.getElementById('nextBtn');
-  const submitBtn = document.getElementById('submitBtn');
-  let currentIndex = 0;
-
-  // Pre-fill hidden input from URL parameter "name"
-  function setNameFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get('name') || '';
-    document.getElementById('hiddenName').value = name;
-  }
-  setNameFromURL();
-
-  function validLength(value, index) {
-    const len = value.trim().length;
-    if (index === 1) { // Q2: 5+ chars
-      return len >= 5;
-    } else if (index === 3) { // Q4: 3+ chars
-      return len >= 3;
-    } else if (index === 5) { // Q6: 2-3 chars
-      return len >= 2 && len <= 3;
-    } else { // For Q7-Q10
-      return len >= 10;
-    }
-  }
-
-  function validateQuestion(index) {
-    const q = questions[index];
-    const radios = q.querySelectorAll('input[type="radio"]');
-    const textareas = q.querySelectorAll('textarea');
-    const textInputs = q.querySelectorAll('input[type="text"]');
-
-    // Check if at least one radio is checked
-    if (radios.length > 0) {
-      const oneChecked = Array.from(radios).some(r => r.checked);
-      if (!oneChecked) {
-        // If textareas or text inputs present, validate those instead
-        if (textareas.length > 0 || textInputs.length > 0) {
-          let typedValid = false;
-          for (const ta of textareas) {
-            if (validLength(ta.value, index)) typedValid = true;
-          }
-          for (const ti of textInputs) {
-            if (validLength(ti.value, index)) typedValid = true;
-          }
-          if (!typedValid) {
-            if (index === 1) {
-              alert('Please select an option or enter at least 5 characters in the text box.');
-            } else if (index === 3) {
-              alert('Please select an option or enter at least 3 characters in the text box.');
-            } else if (index === 5) {
-              alert('Please select an option or enter your age (2-3 characters) in the text box.');
-            } else {
-              alert('Please select an option or enter valid text.');
-            }
-            return false;
-          }
-        } else {
-          alert('Please select an option.');
-          return false;
-        }
-      }
-    } else if (textareas.length > 0) {
-      // No radio buttons, just validate textarea length
-      for (const ta of textareas) {
-        if (!validLength(ta.value, index)) {
-          alert(`Please enter at least ${index >= 6 ? 10 : 'required'} characters.`);
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  function showQuestion(index) {
-    questions.forEach((q, i) => {
-      if (i === index) {
-        q.classList.add('active');
-      } else {
-        q.classList.remove('active');
-      }
-    });
-
-    if (index === questions.length - 1) {
-      nextBtn.style.display = 'none';
-      submitBtn.style.display = 'inline-block';
-    } else {
-      nextBtn.style.display = 'inline-block';
-      submitBtn.style.display = 'none';
-    }
-  }
-
-  nextBtn.addEventListener('click', () => {
-    if (validateQuestion(currentIndex)) {
-      currentIndex++;
-      showQuestion(currentIndex);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  });
-
-  form.addEventListener('submit', e => {
-    // Validate final question on submit
-    if (!validateQuestion(currentIndex)) {
-      e.preventDefault();
-      return false;
-    }
-    // Otherwise, form submits to formsubmit.co in a new tab
-  });
-
-  showQuestion(currentIndex);
-</script>
-
-</body>
-</html>
+  <div class="question" data-req="true" data-minlength="2" data-maxlength="3">
+    <p>
