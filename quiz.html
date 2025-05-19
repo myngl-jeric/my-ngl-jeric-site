@@ -19,7 +19,7 @@
   form {
     background: white;
     padding: 2rem 2.5rem;
-    border-radius: 22px; /* More rounded */
+    border-radius: 22px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.15);
     width: 350px;
     position: relative;
@@ -58,7 +58,7 @@
     width: 100%;
     padding: 0.6rem 0.8rem;
     font-size: 1rem;
-    border-radius: 14px; /* More rounded */
+    border-radius: 14px;
     border: 1.8px solid #ccc;
     outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -71,60 +71,12 @@
     box-shadow: 0 0 8px 3px #6190e8aa;
   }
 
-  .options {
-    margin-top: 0.6rem;
-  }
-
-  .options label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 1.05rem;
-    cursor: pointer;
-    user-select: none;
-    padding-left: 25px;
-    position: relative;
-    font-weight: 500;
-  }
-
-  .options input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  .options input[type="radio"] + label::before {
-    content: "";
-    position: absolute;
-    left: 0; top: 2px;
-    width: 18px; height: 18px;
-    border: 2px solid #6190e8;
-    border-radius: 50%;
-    background: white;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-  }
-
-  .options input[type="radio"]:checked + label::before {
-    background-color: #6190e8;
-    border-color: #3f72af;
-  }
-
-  .options input[type="radio"]:checked + label {
-    animation: popRadio 0.3s forwards;
-    color: #3f72af;
-  }
-
-  @keyframes popRadio {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-  }
-
   #nextBtn {
     margin-top: 1.5rem;
     padding: 0.8rem 2rem;
     background: linear-gradient(135deg, #4c78e7, #6190e8);
     border: none;
-    border-radius: 999px; /* Pill-like button */
+    border-radius: 999px;
     color: white;
     font-weight: 600;
     font-size: 1.1rem;
@@ -155,4 +107,52 @@
 </style>
 </head>
 <body>
-<!-- your form content continues here -->
+
+<form id="multiStepForm">
+  <div class="question active">
+    <label for="name">What's your name?</label>
+    <input type="text" id="name" required />
+  </div>
+
+  <div class="question">
+    <label for="message">Send a message:</label>
+    <textarea id="message" rows="3" required></textarea>
+  </div>
+
+  <button type="button" id="nextBtn">
+    Next
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M9 18l6-6-6-6" />
+    </svg>
+  </button>
+</form>
+
+<script>
+  const questions = document.querySelectorAll('.question');
+  const nextBtn = document.getElementById('nextBtn');
+  let current = 0;
+
+  nextBtn.addEventListener('click', () => {
+    const currentQuestion = questions[current];
+    const input = currentQuestion.querySelector('input, textarea');
+
+    if (!input.checkValidity()) {
+      input.classList.add('shake');
+      setTimeout(() => input.classList.remove('shake'), 500);
+      return;
+    }
+
+    questions[current].classList.remove('active');
+    current++;
+
+    if (current < questions.length) {
+      questions[current].classList.add('active');
+    } else {
+      alert("Form complete!");
+      // Optionally: document.getElementById("multiStepForm").submit();
+    }
+  });
+</script>
+
+</body>
+</html>
