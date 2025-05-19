@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Get to Know Me Quiz</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
+  .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+  h1 { text-align: center; }
+  label { display: block; margin: 15px 0 5px; font-weight: bold; }
+  input[type="text"], textarea { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
+  .options { margin-bottom: 15px; }
+  button { background: #007BFF; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+  button:disabled { background: #aaa; cursor: not-allowed; }
+  .troll-message { text-align: center; font-size: 1.5em; padding: 30px; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Get to Know Me Quiz</h1>
+    <form id="quizForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST" novalidate>
+      
+      <!-- Hidden input for the userName -->
+      <input type="hidden" name="userName" id="userNameInput" value="" />
+
+      <!-- Question 1 -->
+      <label>1. Why did you click this?! Do you like me? 😳</label>
+      <div class="options">
+        <input type="radio" id="q1a1" name="q1" value="Yes" required />
+        <label for="q1a1">Yes</label><br/>
+        <input type="radio" id="q1a2" name="q1" value="Yes 🙈" />
+        <label for="q1a2">Yes 🙈</label>
+      </div>
+
+      <!-- Question 2 -->
+      <label>2. Enough of that, What kind of habits do you have 👀</label>
+      <div class="options">
+        <input type="radio" id="q2a1" name="q2" value="Chyess ♟️" />
+        <label for="q2a1">Chyess ♟️</label><br/>
+        <input type="radio" id="q2a2" name="q2" value="Guitaring?! 🎸" />
+        <label for="q2a2">Guitaring?! 🎸</label><br/>
+        <label for="q2a3">Other habit (type below):</label>
+        <input type="text" id="q2a3" name="q2text" minlength="10" placeholder="Type your habit here (min 10 chars)" />
+      </div>
+
+      <!-- Question 3 -->
+      <label>3. Are you Studious or Tumultuous? 🫵</label>
+      <div class="options">
+        <input type="radio" id="q3a1" name="q3" value="Studious 📚" required />
+        <label for="q3a1">Studious 📚</label><br/>
+        <input type="radio" id="q3a2" name="q3" value="Tumultuous 🗣️" />
+        <label for="q3a2">Tumultuous 🗣️</label>
+      </div>
+
+      <!-- Question 4 -->
+      <label>4. What's YOUR Favourite kulay?! 🏳️‍🌈🥶</label>
+      <div class="options">
+        <input type="radio" id="q4a1" name="q4" value="black" />
+        <label for="q4a1">black</label><br/>
+        <input type="radio" id="q4a2" name="q4" value="white" />
+        <label for="q4a2">white</label><br/>
+        <label for="q4a3">Other color (type below):</label>
+        <input type="text" id="q4a3" name="q4text" minlength="10" placeholder="Type your favorite color here (min 10 chars)" />
+      </div>
+
+      <!-- Question 5 -->
+      <label>5. What sex are you? 🤔🙃</label>
+      <div class="options">
+        <input type="radio" id="q5a1" name="q5" value="Men ♂️" required />
+        <label for="q5a1">Men ♂️</label><br/>
+        <input type="radio" id="q5a2" name="q5" value="Girl ♀️" />
+        <label for="q5a2">Girl ♀️</label>
+      </div>
+
+      <!-- Question 6 -->
+      <label>6. and how old are you? 1️⃣0️⃣ 😱</label>
+      <div class="options">
+        <input type="radio" id="q6a1" name="q6" value="9 to 12 🫷" />
+        <label for="q6a1">9 to 12 🫷</label><br/>
+        <input type="radio" id="q6a2" name="q6" value="15? 😭" />
+        <label for="q6a2">15? 😭</label><br/>
+        <label for="q6a3">Other age (type below):</label>
+        <input type="text" id="q6a3" name="q6text" minlength="2" maxlength="3" placeholder="Type your age here (2 or 3 digits)" />
+      </div>
+
+      <!-- Question 7 -->
+      <label>7. Tell me something only the REAL ones know about you 😏🍠</label>
+      <textarea name="q7" id="q7" minlength="10" placeholder="Your secret here..." required></textarea>
+
+      <!-- Question 8 -->
+      <label>8. What's a random fact about you that sounds fake but isn't? 🫣</label>
+      <textarea name="q8" id="q8" minlength="10" placeholder="Type your fact here..." required></textarea>
+
+      <!-- Question 9 -->
+      <label>9. If I met you in a dream, how would you introduce yourself?🚪😜</label>
+      <textarea name="q9" id="q9" minlength="10" placeholder="Your dream intro..." required></textarea>
+
+      <!-- Question 10 -->
+      <label>10. Last question! What's one thing you wish people knew about you? 🔥</label>
+      <textarea name="q10" id="q10" minlength="10" placeholder="Your answer here..." required></textarea>
+
+      <br />
+      <button type="submit" id="submitBtn" disabled>Submit</button>
+    </form>
+  </div>
+
+  <script>
+    const userName = localStorage.getItem('userName');
+    const userNameInput = document.getElementById('userNameInput');
+    const form = document.getElementById('quizForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (!userName) {
+      alert('You must enter your name first!');
+      window.location.href = 'index.html';
+    } else {
+      userNameInput.value = userName;
+    }
+
+    function validateQ2() {
+      const radioChecked = document.querySelector('input[name="q2"]:checked');
+      const text = document.getElementById('q2a3').value.trim();
+      return radioChecked !== null || text.length >= 10;
+    }
+
+    function validateQ4() {
+      const radioChecked = document.querySelector('input[name="q4"]:checked');
+      const text = document.getElementById('q4a3').value.trim();
+      return radioChecked !== null || text.length >= 10;
+    }
+
+    function validateQ6() {
+      const radioChecked = document.querySelector('input[name="q6"]:checked');
+      const text = document.getElementById('q6a3').value.trim();
+      return radioChecked !== null || (text.length >= 2 && text.length <= 3);
+    }
+
+    function checkFormValidity() {
+      const q1 = document.querySelector('input[name="q1"]:checked') !== null;
+      const q2 = validateQ2();
+      const q3 = document.querySelector('input[name="q3"]:checked') !== null;
+      const q4 = validateQ4();
+      const q5 = document.querySelector('input[name="q5"]:checked') !== null;
+      const q6 = validateQ6();
+
+      const q7 = document.getElementById('q7').value.trim().length >= 10;
+      const q8 = document.getElementById('q8').value.trim().length >= 10;
+      const q9 = document.getElementById('q9').value.trim().length >= 10;
+      const q10 = document.getElementById('q10').value.trim().length >= 10;
+
+      submitBtn.disabled = !(q1 && q2 && q3 && q4 && q5 && q6 && q7 && q8 && q9 && q10);
+    }
+
+    form.addEventListener('input', checkFormValidity);
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      form.style.display = 'none';
+
+      const trollDiv = document.createElement('div');
+      trollDiv.classList.add('troll-message');
+      trollDiv.innerHTML = `
+        <p>get scammed lel, I got info from you hehaheuh! 😂🤭</p>
+        <p>Redirecting to my info page...</p>
+      `;
+      document.querySelector('.container').appendChild(trollDiv);
+
+      setTimeout(() => {
+        form.submit();
+      }, 5000);
+    });
+
+    // Initial validation on page load in case inputs are autofilled
+    checkFormValidity();
+  </script>
+</body>
+</html>
