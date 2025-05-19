@@ -3,120 +3,121 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Step-by-Step Quiz</title>
+<title>Sequential Form with Validation and Formsubmit</title>
 <style>
+  body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; }
   .question { display: none; margin-bottom: 20px; }
   .question.active { display: block; }
-  #submitBtn { display: none; }
+  .options label { display: block; margin: 5px 0; cursor: pointer; }
+  textarea, input[type="text"] { width: 100%; padding: 8px; margin-top: 5px; }
+  button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
 </style>
 </head>
 <body>
 
-<form id="quizForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST">
-  <!-- Hidden input to send the name from URL -->
-  <input type="hidden" name="name" id="hiddenName" />
+<form id="multiStepForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank">
 
-  <!-- Question 1 -->
-  <div class="question active" data-question="1">
+  <!-- Hidden input for name -->
+  <input type="hidden" name="name" id="hiddenName" value="" />
+
+  <div class="question active" data-index="0">
     <p>Why did you click this?! Do you like me? 😳</p>
-    <label><input type="radio" name="q1" value="Yes" /> Yes</label><br />
-    <label><input type="radio" name="q1" value="Yes 🙈" /> Yes 🙈</label><br />
+    <div class="options">
+      <label><input type="radio" name="Q1" value="Yes" /> Yes</label>
+      <label><input type="radio" name="Q1" value="Yes 🙈" /> Yes 🙈</label>
+    </div>
   </div>
 
-  <!-- Question 2 -->
-  <div class="question" data-question="2">
+  <div class="question" data-index="1">
     <p>Enough of that, What kind of habits do you have 👀</p>
-    <label><input type="radio" name="q2" value="Chyess ♟️" /> Chyess ♟️</label><br />
-    <label><input type="radio" name="q2" value="Guitaring?! 🎸" /> Guitaring?! 🎸</label><br />
-    <label>Other habit:<br />
-      <textarea name="q2_other" rows="3" placeholder="Type your habit here (min 10 characters)"></textarea>
-    </label>
+    <div class="options">
+      <label><input type="radio" name="Q2" value="Chyess ♟️" /> Chyess ♟️</label>
+      <label><input type="radio" name="Q2" value="Guitaring?! 🎸" /> Guitaring?! 🎸</label>
+    </div>
+    <textarea name="Q2_Typed" placeholder="Type your habit here (min 5 chars)"></textarea>
   </div>
 
-  <!-- Question 3 -->
-  <div class="question" data-question="3">
+  <div class="question" data-index="2">
     <p>Are you Studious or Tumultuous? 🫵</p>
-    <label><input type="radio" name="q3" value="Studious 📚" /> Studious 📚</label><br />
-    <label><input type="radio" name="q3" value="Tumultuous 🗣️" /> Tumultuous 🗣️</label><br />
+    <div class="options">
+      <label><input type="radio" name="Q3" value="Studious 📚" /> Studious 📚</label>
+      <label><input type="radio" name="Q3" value="Tumultuous 🗣️" /> Tumultuous 🗣️</label>
+    </div>
   </div>
 
-  <!-- Question 4 -->
-  <div class="question" data-question="4">
+  <div class="question" data-index="3">
     <p>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</p>
-    <label><input type="radio" name="q4" value="black" /> black</label><br />
-    <label><input type="radio" name="q4" value="white" /> white</label><br />
-    <label>Other color:<br />
-      <textarea name="q4_other" rows="3" placeholder="Type your favourite color here (min 10 characters)"></textarea>
-    </label>
+    <div class="options">
+      <label><input type="radio" name="Q4" value="black" /> black</label>
+      <label><input type="radio" name="Q4" value="white" /> white</label>
+    </div>
+    <textarea name="Q4_Typed" placeholder="Type your colour here (min 10 chars)"></textarea>
   </div>
 
-  <!-- Question 5 -->
-  <div class="question" data-question="5">
-    <p>What sex are you? 🤔🙃</p>
-    <label><input type="radio" name="q5" value="Men ♂️" /> Men ♂️</label><br />
-    <label><input type="radio" name="q5" value="Girl ♀️" /> Girl ♀️</label><br />
+  <div class="question" data-index="4">
+    <p>What sex are you 🤔🙃</p>
+    <div class="options">
+      <label><input type="radio" name="Q5" value="Men ♂️" /> Men ♂️</label>
+      <label><input type="radio" name="Q5" value="Girl ♀️" /> Girl ♀️</label>
+    </div>
   </div>
 
-  <!-- Question 6 -->
-  <div class="question" data-question="6">
+  <div class="question" data-index="5">
     <p>And how old are you? 1️⃣0️⃣ 😱</p>
-    <label><input type="radio" name="q6" value="9 to 12 🫷" /> 9 to 12 🫷</label><br />
-    <label><input type="radio" name="q6" value="15? 😭" /> 15? 😭</label><br />
-    <label>Your age:<br />
-      <input type="text" name="q6_other" placeholder="Type your age here (min 10 characters)" />
-    </label>
+    <div class="options">
+      <label><input type="radio" name="Q6" value="9 to 12 🫷" /> 9 to 12 🫷</label>
+      <label><input type="radio" name="Q6" value="15? 😭" /> 15? 😭</label>
+    </div>
+    <input type="text" name="Q6_Typed" placeholder="Type your age here (2-3 chars)" maxlength="3" />
   </div>
 
-  <!-- Question 7 -->
-  <div class="question" data-question="7">
+  <div class="question" data-index="6">
     <p>Tell me something only the REAL ones know about you 😏🍠</p>
-    <textarea name="q7" rows="4" placeholder="Type your answer here (min 10 characters)"></textarea>
+    <textarea name="Q7" placeholder="At least 10 characters"></textarea>
   </div>
 
-  <!-- Question 8 -->
-  <div class="question" data-question="8">
+  <div class="question" data-index="7">
     <p>What's a random fact about you that sounds fake but isn't? 🫣</p>
-    <textarea name="q8" rows="4" placeholder="Type your answer here (min 10 characters)"></textarea>
+    <textarea name="Q8" placeholder="At least 10 characters"></textarea>
   </div>
 
-  <!-- Question 9 -->
-  <div class="question" data-question="9">
+  <div class="question" data-index="8">
     <p>If I met you in a dream, how would you introduce yourself?🚪😜</p>
-    <textarea name="q9" rows="4" placeholder="Type your answer here (min 10 characters)"></textarea>
+    <textarea name="Q9" placeholder="At least 10 characters"></textarea>
   </div>
 
-  <!-- Question 10 -->
-  <div class="question" data-question="10">
+  <div class="question" data-index="9">
     <p>Last question! What's one thing you wish people knew about you? 🔥</p>
-    <textarea name="q10" rows="4" placeholder="Type your answer here (min 10 characters)"></textarea>
+    <textarea name="Q10" placeholder="At least 10 characters"></textarea>
   </div>
 
   <button type="button" id="nextBtn">Next</button>
-  <button type="submit" id="submitBtn">Submit</button>
+  <button type="submit" id="submitBtn" style="display:none;">Submit</button>
 </form>
 
 <script>
-  const questions = document.querySelectorAll('.question');
+  const form = document.getElementById('multiStepForm');
+  const questions = form.querySelectorAll('.question');
   const nextBtn = document.getElementById('nextBtn');
   const submitBtn = document.getElementById('submitBtn');
-  const hiddenName = document.getElementById('hiddenName');
-  let current = 0;
+  let currentIndex = 0;
 
-  // Get 'name' from URL and put it in hidden input if available
-  const urlParams = new URLSearchParams(window.location.search);
-  const nameFromURL = urlParams.get('name');
-  if (nameFromURL) {
-    hiddenName.value = nameFromURL;
+  // Get name from URL and put it into hidden input
+  function setNameFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('name') || '';
+    document.getElementById('hiddenName').value = name;
   }
+  setNameFromURL();
 
-  function showQuestion(index) {
-    questions.forEach((q, i) => q.classList.toggle('active', i === index));
-    if (index === questions.length - 1) {
-      nextBtn.style.display = 'none';
-      submitBtn.style.display = 'inline-block';
+  function validLength(value, index) {
+    const len = value.trim().length;
+    if (index === 1) { // Q2: 5+ chars
+      return len >= 5;
+    } else if (index === 5) { // Q6: 2-3 chars
+      return len >= 2 && len <= 3;
     } else {
-      nextBtn.style.display = 'inline-block';
-      submitBtn.style.display = 'none';
+      return len >= 10;
     }
   }
 
@@ -126,47 +127,58 @@
     const textareas = q.querySelectorAll('textarea');
     const textInputs = q.querySelectorAll('input[type="text"]');
 
-    // If question has radios
+    // If radios present, check if one checked
     if (radios.length > 0) {
       const oneChecked = Array.from(radios).some(r => r.checked);
       if (!oneChecked) {
-        alert('Please select an option before proceeding.');
+        // If textareas or inputs present, check typed answer validity instead
+        if (textareas.length > 0 || textInputs.length > 0) {
+          let typedValid = false;
+          for (const ta of textareas) {
+            if (validLength(ta.value, index)) typedValid = true;
+          }
+          for (const ti of textInputs) {
+            if (validLength(ti.value, index)) typedValid = true;
+          }
+          if (!typedValid) {
+            if (index === 1) {
+              alert('Please select an option or enter at least 5 characters in the text box.');
+            } else if (index === 5) {
+              alert('Please select an option or enter between 2 to 3 characters in the text box.');
+            } else {
+              alert('Please select an option or enter at least 10 characters in the text box.');
+            }
+            return false;
+          }
+        } else {
+          alert('Please select an option before proceeding.');
+          return false;
+        }
+      }
+    }
+
+    // Validate typed answers length if filled
+    for (const ta of textareas) {
+      if (ta.value.trim().length > 0 && !validLength(ta.value, index)) {
+        if (index === 1) {
+          alert('Please enter at least 5 characters for your typed answer.');
+        } else if (index === 5) {
+          alert('Please enter between 2 to 3 characters for your typed answer.');
+        } else {
+          alert('Please enter at least 10 characters for your typed answer.');
+        }
         return false;
       }
     }
-
-    // If question has textareas or text inputs (typed answers)
-    if (textareas.length > 0 || textInputs.length > 0) {
-      // For textareas
-      for (const ta of textareas) {
-        if (ta.value.trim().length > 0 && ta.value.trim().length < 10) {
+    for (const ti of textInputs) {
+      if (ti.value.trim().length > 0 && !validLength(ti.value, index)) {
+        if (index === 1) {
+          alert('Please enter at least 5 characters for your typed answer.');
+        } else if (index === 5) {
+          alert('Please enter between 2 to 3 characters for your typed answer.');
+        } else {
           alert('Please enter at least 10 characters for your typed answer.');
-          return false;
         }
-      }
-      // For text inputs
-      for (const ti of textInputs) {
-        if (ti.value.trim().length > 0 && ti.value.trim().length < 10) {
-          alert('Please enter at least 10 characters for your typed answer.');
-          return false;
-        }
-      }
-    }
-
-    // Special case for questions with radio + optional typed answer (like q2, q4, q6)
-    // Allow proceed if radio selected OR typed answer >= 10 chars
-    // We already checked radios above - so if no radio selected but typed answer >= 10 chars, allow
-    if (radios.length > 0 && (textareas.length > 0 || textInputs.length > 0)) {
-      const oneChecked = Array.from(radios).some(r => r.checked);
-      let typedValid = false;
-      for (const ta of textareas) {
-        if (ta.value.trim().length >= 10) typedValid = true;
-      }
-      for (const ti of textInputs) {
-        if (ti.value.trim().length >= 10) typedValid = true;
-      }
-      if (!oneChecked && !typedValid) {
-        alert('Please select an option or enter at least 10 characters in the text box.');
         return false;
       }
     }
@@ -174,16 +186,28 @@
     return true;
   }
 
+  function showQuestion(index) {
+    questions.forEach((q, i) => {
+      q.classList.toggle('active', i === index);
+    });
+    if (index === questions.length - 1) {
+      nextBtn.style.display = 'none';
+      submitBtn.style.display = 'inline-block';
+    } else {
+      nextBtn.style.display = 'inline-block';
+      submitBtn.style.display = 'none';
+    }
+  }
+
   nextBtn.addEventListener('click', () => {
-    if (validateQuestion(current)) {
-      current++;
-      showQuestion(current);
+    if (validateQuestion(currentIndex)) {
+      currentIndex++;
+      showQuestion(currentIndex);
     }
   });
 
-  // On page load show first question only
-  showQuestion(current);
-  submitBtn.style.display = 'none';
+  // Show first question
+  showQuestion(currentIndex);
 </script>
 
 </body>
