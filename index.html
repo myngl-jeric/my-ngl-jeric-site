@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,65 +12,62 @@
       color: #fff;
       text-align: center;
     }
+
     .container {
       padding: 30px 15px;
     }
+
     .profile {
       background: #fff;
       border-radius: 15px;
       padding: 20px;
       color: #000;
       max-width: 400px;
-      margin: 20px auto 10px auto;
+      margin: 20px auto;
       position: relative;
     }
-    .profile::before {
-      content: "";
-      width: 100px;
-      height: 100px;
+
+    .circle-icon {
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      background: rgba(200, 200, 200, 0.6);
-      display: block;
-      margin: 0 auto 10px auto;
-      filter: blur(2px);
+      background: #ccc;
+      margin: 0 auto 10px;
       position: relative;
     }
-    .lock-icon {
-      background: #fff;
-      border-radius: 50%;
-      width: 42px;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      color: #000;
+
+    .lock {
+      font-size: 24px;
       position: absolute;
-      top: 22px;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
+      transform: translate(-50%, -50%);
     }
+
     .username {
       font-weight: bold;
       margin-bottom: 5px;
     }
+
     .description {
-      margin-bottom: 10px;
       font-size: 14px;
+      margin-top: 10px;
+      margin-bottom: 10px;
     }
+
     .prompt {
       background: rgba(255, 255, 255, 0.2);
       color: #fff;
-      padding: 15px;
+      padding: 20px;
       border-radius: 15px;
+      margin-top: 10px;
       font-size: 18px;
-      margin: 10px auto 0 auto;
-      max-width: 400px;
     }
+
     form {
       margin-top: 20px;
     }
+
     textarea {
       width: 80%;
       max-width: 300px;
@@ -80,15 +78,17 @@
       resize: none;
       font-size: 16px;
     }
-    input[name="name"] {
+
+    input[type="text"] {
       width: 80%;
       max-width: 300px;
+      margin-top: 10px;
       padding: 10px;
       border-radius: 10px;
       border: none;
       font-size: 16px;
-      margin-bottom: 10px;
     }
+
     .send-button {
       display: block;
       margin: 20px auto;
@@ -102,38 +102,62 @@
       color: #fff;
       cursor: pointer;
     }
+
     .dice-button {
       position: absolute;
       bottom: 10px;
       right: 10px;
-      background: none;
+      background: transparent;
       border: none;
       font-size: 20px;
       cursor: pointer;
+      transition: transform 0.4s ease;
     }
-    .textarea-container {
-      position: relative;
-      display: inline-block;
+
+    .dice-button.flip {
+      transform: rotateY(180deg);
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="profile">
-      <div class="lock-icon">🔒</div>
+      <div class="circle-icon">
+        <div class="lock">🔒</div>
+      </div>
       <div class="username">@JericAus</div>
-      <div class="description">Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D</div>
+      <div class="description">
+        Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
+      </div>
+      <div class="prompt">send me anonymous messages...</div>
     </div>
-    <div class="prompt">send me anonymous messages...</div>
-    <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" onsubmit="dualSubmit(event)">
-      <input type="text" name="name" placeholder="Your name (4-20 characters)" minlength="4" maxlength="20">
-      <div class="textarea-container">
-        <textarea name="message" placeholder="Type your message here..." required></textarea>
-        <button type="button" class="dice-button" onclick="rollDice()">🎲</button>
+
+    <form 
+      action="https://formsubmit.co/notjery05@gmail.com" 
+      method="POST"
+      onsubmit="submitDual(event)"
+    >
+      <input 
+        type="text" 
+        name="name" 
+        placeholder="Your name ( 4-20 characters )"
+        minlength="4" 
+        maxlength="20"
+      />
+      <div style="position: relative; display: inline-block; width: 80%; max-width: 300px;">
+        <textarea id="messageBox" name="message" placeholder="Type your message here..." required></textarea>
+        <button 
+          type="button" 
+          class="dice-button" 
+          onclick="rollDice(this)"
+          title="Roll a message"
+        >🎲</button>
       </div>
       <button type="submit" class="send-button">Send!</button>
     </form>
-  </div>  <script>
+  </div>
+
+  <script>
     const phrases = [
       "I like u, do u like me too?",
       "I'm still not over u",
@@ -147,27 +171,39 @@
       "ur aesthetic >"
     ];
 
-    function rollDice() {
-      const sound = new Audio("https://www.myinstants.com/media/sounds/dice.mp3");
-      const textarea = document.querySelector('textarea[name="message"]');
+    function rollDice(btn) {
+      const messageBox = document.getElementById("messageBox");
       const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-      textarea.value = randomPhrase;
-      sound.play();
+      messageBox.value = randomPhrase;
+
+      // Flip animation
+      btn.classList.add("flip");
+      setTimeout(() => btn.classList.remove("flip"), 400);
+
+      // Optional: Sound (only works with user interaction)
+      const audio = new Audio("https://www.myinstants.com/media/sounds/dice-roll.mp3");
+      audio.play().catch(() => {});
     }
 
-    function dualSubmit(event) {
+    function submitDual(event) {
       event.preventDefault();
       const form = event.target;
-      const data = new FormData(form);
 
-      fetch("https://getform.io/f/aronlglb", {
+      // Submit to Formsubmit
+      fetch(form.action, {
         method: "POST",
-        body: data
+        body: new FormData(form)
       });
 
-      setTimeout(() => {
-        form.submit();
-      }, 300);
+      // Submit to Getform
+      fetch("https://getform.io/f/aronlglb", {
+        method: "POST",
+        body: new FormData(form)
+      }).then(() => {
+        alert("Message sent anonymously!");
+        form.reset();
+      });
     }
-  </script></body>
+  </script>
+</body>
 </html>
