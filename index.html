@@ -154,12 +154,6 @@
       color: #fff;
       user-select: none;
     }
-    .tap-count {
-      margin: 10px auto 0;
-      font-size: 18px;
-      color: #fff;
-      user-select: none;
-    }
 
     @keyframes rollBounceShake {
       0% {
@@ -208,6 +202,7 @@
         pattern=".{4,20}"
         title="Name must be between 4 and 20 characters."
         autocomplete="off"
+        required
       />
       <textarea
         name="message"
@@ -219,8 +214,7 @@
       <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
       <button type="submit" class="send-button">Send!</button>
     </form>
-
-    <div class="tap-count">👇 0 people just tapped this button 😢🥀</div>
+    <div class="extra-box">👇 0 people just tapped this button 😢🥀</div>
     <div class="extra-box">Do you want to know me even further?</div>
   </div>
 
