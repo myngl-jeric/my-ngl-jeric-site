@@ -83,25 +83,27 @@
     form {
       margin-top: 20px;
       position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
     }
-    input[type="text"], textarea {
-      width: 90%;
-      max-width: 400px;
+    input[type="text"] {
+      width: 80%;
+      max-width: 300px;
       padding: 10px 15px;
       border-radius: 10px;
       border: none;
       font-size: 16px;
+      margin-bottom: 12px;
       box-sizing: border-box;
-      user-select: text;
     }
     textarea {
+      width: 80%;
+      max-width: 300px;
       height: 100px;
+      padding: 10px 45px 10px 15px;
+      border-radius: 10px;
+      border: none;
       resize: none;
-      padding-right: 45px;
+      font-size: 16px;
+      box-sizing: border-box;
     }
     .dice-button {
       position: absolute;
@@ -127,13 +129,13 @@
       transform: rotate(360deg);
     }
     .send-button {
-      margin: 0 auto;
+      margin: 20px auto 0;
       padding: 15px 20px;
       font-size: 18px;
       border: none;
       border-radius: 30px;
-      width: 90%;
-      max-width: 400px;
+      width: 80%;
+      max-width: 300px;
       background: #000;
       color: #fff;
       cursor: pointer;
@@ -151,6 +153,15 @@
       background: #000;
       color: #fff;
       user-select: none;
+    }
+    .people-tap-count {
+      color: #fff;
+      margin: 10px auto 0;
+      font-size: 18px;
+      max-width: 420px;
+      user-select: none;
+      white-space: nowrap;
+      overflow-x: auto;
     }
 
     @keyframes rollBounceShake {
@@ -189,7 +200,7 @@
       </div>
       <div class="prompt">send me anonymous messages...</div>
     </div>
-    <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank" onsubmit="return validateName()">
+    <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank" onsubmit="return dualSubmit(event)">
       <input
         type="text"
         name="name"
@@ -212,9 +223,7 @@
       <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
       <button type="submit" class="send-button">Send!</button>
     </form>
-    <div style="color: #fff; margin: 10px auto 0; font-size: 18px; max-width: 300px; user-select: none;">
-      👇 0 people just tapped this button 😢🥀
-    </div>
+    <div class="people-tap-count">👇 0 people just tapped this button 😢🥀</div>
     <div class="extra-box">Do you want to know me even further?</div>
   </div>
 
@@ -250,16 +259,6 @@
       diceButton.classList.remove('rolling');
     }, 800);
   });
-
-  function validateName() {
-    const nameInput = document.getElementById('name');
-    if (!nameInput.value || nameInput.value.length < 4 || nameInput.value.length > 20) {
-      alert('Please enter a valid name between 4 and 20 characters.');
-      nameInput.focus();
-      return false;
-    }
-    return true;
-  }
 </script>
 </body>
 </html>
