@@ -300,7 +300,10 @@
       message,
       time: new Date().toISOString()
     });
-    localStorage.setItem('messages', JSON.stringify(messages try {
+    localStorage.setItem('messages', JSON.stringify(messages));
+
+    // Save to Firebase Firestore
+    try {
       await db.collection("messages").add({
         name: name,
         message: message,
