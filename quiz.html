@@ -259,6 +259,9 @@
   <!-- Hidden field for redirect -->
   <input type="hidden" name="_next" value="https://formsubmit.co/thanks.html" />
 
+  <!-- Hidden field for name from URL -->
+  <input type="hidden" id="hiddenName" name="Name" value="" />
+
   <button type="button" id="nextBtn" aria-label="Next Question">
     Next
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg>
@@ -291,9 +294,7 @@
         const maxL = parseInt(currentQuestion.dataset.maxlength) || Infinity;
         return val.length >= minL && val.length <= maxL;
       });
-      if (!checkedRadio && !validTextInput) return false;
-    } else {
-      // For pure textareas or text inputs only questions
+      if (!checkedRadio && !validTextInput) return false // For pure textareas or text inputs only questions
       for (const input of textInputs) {
         const val = input.value.trim();
         const minL = parseInt(currentQuestion.dataset.minlength) || 10;
@@ -332,6 +333,13 @@
   // On page load show first question
   showQuestion(0);
 </script>
-
+<script>
+  // --- New code for getting ?name= and setting it in the hidden field ---
+  function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param) || '';
+  }
+  document.getElementById('hiddenName').value = getQueryParam('name');
+</script>
 </body>
 </html>
