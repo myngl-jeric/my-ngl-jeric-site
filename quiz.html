@@ -274,7 +274,28 @@
   const nextBtn = document.getElementById('nextBtn');
   let current = 0;
 
-  // --- Fixed validation ---
+  // Mutually exclusive logic for radios and "Other" text
+  questions.forEach(q => {
+    const radios = q.querySelectorAll('input[type="radio"]');
+    const textInputs = q.querySelectorAll('input[type="text"]');
+    if (radios.length > 0 && textInputs.length > 0) {
+      // When a radio is clicked, clear text input(s)
+      radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          textInputs.forEach(input => input.value = '');
+        });
+      });
+      // When typing in text box, uncheck radios
+      textInputs.forEach(input => {
+        input.addEventListener('input', () => {
+          if (input.value.trim().length > 0) {
+            radios.forEach(r => r.checked = false);
+          }
+        });
+      });
+    }
+  });
+
   function validateCurrent() {
     const currentQuestion = questions[current];
     const required = currentQuestion.dataset.req === "true";
@@ -283,21 +304,23 @@
     const radios = currentQuestion.querySelectorAll('input[type="radio"]');
     const textInputs = currentQuestion.querySelectorAll('input[type="text"], textarea');
 
-    // For questions with both radios and text input (like "Other")
     if (radios.length > 0 && textInputs.length > 0) {
-      const checkedRadio = Array.from(radios).some(r => r.checked);
+      // If any text input is non-empty, validate only it
+      let textInputVal = "";
+      let textInputValid = false;
       const minL = parseInt(currentQuestion.dataset.minlength) || 1;
       const maxL = parseInt(currentQuestion.dataset.maxlength) || Infinity;
-      let textInputFilled = false;
       for (const input of textInputs) {
         const val = input.value.trim();
-        if (val.length >= minL && val.length <= maxL) {
-          textInputFilled = true;
+        if (val.length > 0) {
+          textInputVal = val;
+          textInputValid = (val.length >= minL && val.length <= maxL);
           break;
         }
       }
-      // Allow next if EITHER a radio is selected OR the text input is valid
-      return checkedRadio || textInputFilled;
+      if (textInputVal.length > 0) return textInputValid;
+      // Otherwise, only a radio may be checked
+      return Array.from(radios).some(r => r.checked);
     }
     // For radio only
     else if (radios.length > 0) {
@@ -329,23 +352,19 @@
 
   nextBtn.addEventListener('click', () => {
     if (!validateCurrent()) {
-      // Shake current question to indicate error
       questions[current].classList.add('shake');
       return;
     }
     questions[current].classList.remove('shake');
     if (current === questions.length - 1) {
-      // Submit form on last question
       form.submit();
       return;
     }
     current++;
     showQuestion(current);
-    // Scroll form to top smoothly on new question
     form.scrollIntoView({behavior: "smooth"});
   });
 
-  // On page load show first question
   showQuestion(0);
 </script>
 <script>
