@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Get Scammed</title>
-  <!-- Redirect to info page after 5 seconds -->
-  <meta http-equiv="refresh" content="5;url=info.html">
+  <!-- No meta redirect initially! Only redirect after puzzle solved -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -18,11 +17,47 @@
       height: 100vh;
       margin: 0;
     }
+    #puzzle-board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 2px;
+      background: #232e47;
+      margin: 2rem auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 36px rgba(76, 120, 231, 0.21);
+    }
+    .tile {
+      width: 100px; height: 100px;
+      position: relative;
+      cursor: pointer;
+      background: #1d2642;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: box-shadow 0.13s;
+    }
+    .tile img {
+      width: 300px; height: 300px;
+      position: absolute;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+    }
+    .hidden {
+      background: #232e47;
+      cursor: default;
+    }
+    #troll-message {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 2rem;
+    }
     .main {
       background: rgba(30, 30, 60, 0.9);
       padding: 2.5rem 2.7rem;
       border-radius: 2.2rem;
-      box-shadow: 0 8px 36px rgba(100, 50, 120, 0.17), 0 1.5px 6px rgba(80, 70, 150, 0.16);
+      box-shadow: 0 8px 3617), 0 1.5px 6px rgba(80, 70, 150, 0.16);
       text-align: center;
       max-width: 90vw;
     }
@@ -52,15 +87,89 @@
       color: #ffe87c;
       text-decoration: underline;
     }
+    @media (max-width: 350px) {
+      #puzzle-board { grid-template-columns: repeat(3, 25vw); grid-template-rows: repeat(3, 25vw);}
+      .tile { width: 25vw; height: 25vw;}
+      .tile img { width: 75vw; height: 75vw;}
+    }
   </style>
 </head>
 <body>
-  <div class="main">
-    <div class="emoji">😆🤭</div>
-    <h2>get scammed lel, I've got info bout u hehaheuh</h2>
-    <div class="hint">
-      Redirecting to your <a href="info.html">info page</a> in 5 seconds...
+  <h2>Solve the Puzzle to Continue 😏</h2>
+  <div id="puzzle-board"></div>
+  <div id="troll-message">
+    <div class="main">
+      <div class="emoji">😆🤭</div>
+      <h2>get scammed lel, I've got info bout u hehaheuh</h2>
+      <div class="hint">
+        Redirecting to your <a href="info.html">info page</a> in 5 seconds...
+      </div>
     </div>
   </div>
+  <script>
+    // Using your Facebook profile picture as the puzzle image!
+    const imgSrc = 'https://scontent.fmnl4-7.fna.fbcdn.net/v/t39.30808-6/426613043_387923087158568_4901958827669884635_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHt44HdFXRByDEtHiEL-OuC4n1MF63_lO7ifUwXrf-U7tflu_XSL_cCUKNp-M-EY7JtHCQkqeyBAU_biGSrjKBP&_nc_ohc=QyCJyildPZ0Q7kNvwFE3P-F&_nc_oc=AdlneB1CWLHkXGThF0nWhQElDoL6fwNBL_Wh7E6ydPRSxuPWUiwy7hPiq87aEcfQhPs&_nc_zt=23&_nc_ht=s.fna&_nc_gid=9SwWHsh8qE-oykVB2pe6mw&oh=00_AfJpbSuNDtYlJ2rHF9o53XDUyrA5_KYU4Ee759yBwsr56g&oe=6832150D';
+
+    const size = 3; // 3x3 puzzle
+    const board = document.getElementById('puzzle-board');
+    let positions = [];
+    let emptyIndex = size*size-1;
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      // prevent solved at start
+      if (array.every((v, i) => v === i)) shuffle(array);
+      return array;
+    }
+    function render() {
+      board.innerHTML = '';
+      for (let i = 0; i < size*size; i++) {
+        let tile = document.createElement('div');
+        tile.className = 'tile';
+        if (positions[i] === emptyIndex) {
+          tile.classList.add('hidden');
+        } else {
+          let img = document.createElement('img');
+          img.src = imgSrc;
+          let x = positions[i] % size, y = Math.floor(positions[i] / size);
+          img.style.left = (-x * 100) + 'px';
+          img.style.top  = (-y * 100) + 'px';
+          tile.appendChild(img);
+        }
+        tile.onclick = () => moveTile(i);
+        board.appendChild(tile);
+      }
+    }
+    function moveTile(i) {
+      const neighbors = [
+        i - 1, i + 1, i - size, i + size
+      ].filter(j =>
+        j >= 0 && j < size*size &&
+        (j % size === i % size || Math.floor(j / size) === Math.floor(i / size))
+      );
+      if (neighbors.includes(positions.indexOf(emptyIndex))) {
+        [positions[i], positions[positions.indexOf(emptyIndex)]] = [positions[positions.indexOf(emptyIndex)], positions[i]];
+        render();
+        setTimeout(checkWin, 100);
+      }
+    }
+    function checkWin() {
+      if (positions.every((v, i) => v === i)) {
+        board.style.display = 'none';
+        document.getElementById('troll-message').style.display = 'flex';
+        // Delay redirect by 5 seconds, match your original
+        setTimeout(function() {
+          window.location.href = "info.html";
+        }, 5000);
+      }
+    }
+    // Init
+    positions = Array.from({length: size*size}, (_, i) => i);
+    shuffle(positions);
+    render();
+  </script>
 </body>
 </html>
