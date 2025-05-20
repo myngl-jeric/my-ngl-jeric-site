@@ -16,35 +16,28 @@
       height: 100vh;
       margin: 0;
     }
-    #puzzle-board {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
-      gap: 2px;
+    #timer {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin-top: 1.3rem;
       background: #232e47;
-      margin: 2rem auto;
-      border-radius: 10px;
-      box-shadow: 0 8px 36px rgba(76, 120, 231, 0.21);
+      padding: 0.7rem 2.5rem;
+      border-radius: 1.2rem;
+      box-shadow: 0 8px 36px rgba(76, 120, 231, 0.15);
+      letter-spacing: 0.06em;
     }
-    .tile {
-      width: 100px; height: 100px;
+    #puzzle-container {
+      margin: 2rem auto 0 auto;
       position: relative;
-      cursor: pointer;
-      background: #1d2642;
-      border-radius: 4px;
-      overflow: hidden;
-      transition: box-shadow 0.13s;
+      min-width: 320px;
+      min-height: 320px;
     }
-    .tile img {
-      width: 300px; height: 300px;
-      position: absolute;
-      object-fit: cover;
+    .flyout {
+      position: absolute !important;
+      z-index: 99;
+      transition: transform 1s cubic-bezier(.18,.89,.32,1.28), opacity 1.2s;
+      opacity: 0;
       pointer-events: none;
-      user-select: none;
-    }
-    .hidden {
-      background: #232e47;
-      cursor: default;
     }
     #troll-message {
       display: none;
@@ -86,16 +79,14 @@
       color: #ffe87c;
       text-decoration: underline;
     }
-    @media (max-width: 350px) {
-      #puzzle-board { grid-template-columns: repeat(3, 25vw); grid-template-rows: repeat(3, 25vw);}
-      .tile { width: 25vw; height: 25vw;}
-      .tile img { width: 75vw; height: 75vw;}
-    }
   </style>
+  <!-- Jigsaw Puzzle library (MIT License) -->
+  <script src="https://unpkg.com/jigsaw-puzzle@1.0.2/dist/jigsawpuzzle.min.js"></script>
 </head>
 <body>
-  <h2>Solve the Puzzle to Continue 😏</h2>
-  <div id="puzzle-board"></div>
+  <h2>Solve the Jigsaw Puzzle to Continue 😏</h2>
+  <div id="timer">⏳ 30s</div>
+  <div id="puzzle-container"></div>
   <div id="troll-message">
     <div class="main">
       <div class="emoji">😆🤭</div>
@@ -106,89 +97,93 @@
     </div>
   </div>
   <script>
-    // Your Imgur photo
+    // Settings
     const imgSrc = 'https://i.imgur.com/6Kt2xTm.jpeg';
-    const size = 3; // 3x3 puzzle
-    const board = document.getElementById('puzzle-board');
-    let positions = [];
-    let emptyIndex = size * size - 1;
+    const rows = 3, cols = 3;
+    let timeLimit = 30; // Initial time in seconds
+    let timer = null, timeLeft = timeLimit, resetCount = 0, puzzle;
 
-    // Helper to check if a permutation is solvable for 3x3
-    function isSolvable(arr) {
-      let invCount = 0;
-      for (let i = 0; i < arr.length - 1; i++) {
-        for (let j = i + 1; j < arr.length; j++) {
-          if (arr[i] !== emptyIndex && arr[j] !== emptyIndex && arr[i] > arr[j]) invCount++;
+    const timerEl = document.getElementById('timer');
+    const container = document.getElementById('puzzle-container');
+    const trollMsg = document.getElementById('troll-message');
+
+    function updateTimerDisplay() {
+      timerEl.textContent = `⏳ ${timeLeft}s`;
+    }
+
+    function startTimer() {
+      updateTimerDisplay();
+      timer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          flyOutPiecesThenReset();
         }
-      }
-      return invCount % 2 === 0;
+      }, 1000);
     }
 
-    // Shuffle until solvable and not already solved
-    function createSolvableShuffle() {
-      let arr;
-      do {
-        arr = Array.from({length: size*size}, (_, i) => i);
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
+    function scramblePieces() {
+      // Remove old puzzle if exists
+      container.innerHTML = '';
+      puzzle = new window.JigsawPuzzle({
+        el: container,
+        imgSrc: imgSrc,
+        rows: rows,
+        cols: cols,
+        onComplete: function() {
+          clearInterval(timer);
+          container.style.display = 'none';
+          trollMsg.style.display = 'flex';
+          setTimeout(() => {
+            window.location.href = "info.html";
+          }, 5000);
         }
-      } while (!isSolvable(arr) || arr.every((v, i) => v === i));
-      return arr;
+      });
     }
 
-    function render() {
-      board.innerHTML = '';
-      for (let i = 0; i < size*size; i++) {
-        let tile = document.createElement('div');
-        tile.className = 'tile';
-        if (positions[i] === emptyIndex) {
-          tile.classList.add('hidden');
-        } else {
-          let img = document.createElement('img');
-          img.src = imgSrc;
-          let x = positions[i] % size, y = Math.floor(positions[i] / size);
-          img.style.left = (-x * 100) + 'px';
-          img.style.top  = (-y * 100) + 'px';
-          tile.appendChild(img);
-        }
-        tile.onclick = () => moveTile(i);
-        board.appendChild(tile);
+    // Animate pieces flying out
+    function flyOutPiecesThenReset() {
+      // Get all puzzle pieces
+      const pieces = Array.from(container.querySelectorAll('canvas, svg, .puzzle-piece, img'));
+      if (!pieces.length) {
+        doReset();
+        return;
       }
+      // Calculate positions and animate
+      pieces.forEach(piece => {
+        // Make sure it's positioned absolutely
+        const rect = piece.getBoundingClientRect();
+        const crect = container.getBoundingClientRect();
+        piece.classList.add('flyout');
+        piece.style.left = (rect.left - crect.left) + "px";
+        piece.style.top = (rect.top - crect.top) + "px";
+        // Random fly direction and distance
+        const angle = Math.random() * 2 * Math.PI;
+        const dist = 300 + Math.random() * 200;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist;
+        piece.style.transform = `translate(${tx}px, ${ty}px) rotate(${Math.random()*720-360}deg) scale(1.3)`;
+        piece.style.opacity = 0;
+      });
+      // Wait for animation, then reset
+      setTimeout(doReset, 1200);
     }
 
-    function moveTile(i) {
-      const blank = positions.indexOf(emptyIndex);
-      const moveable = [blank - 1, blank + 1, blank - size, blank + size]
-        .filter(j =>
-          j >= 0 && j < size*size &&
-          (
-            (j === blank - 1 && blank % size !== 0) ||
-            (j === blank + 1 && blank % size !== size - 1) ||
-            (j === blank - size) ||
-            (j === blank + size)
-          )
-        );
-      if (moveable.includes(i)) {
-        [positions[i], positions[blank]] = [positions[blank], positions[i]];
-        render();
-        setTimeout(checkWin, 100);
-      }
+    function doReset() {
+      // Increase time limit by 5 seconds for each reset
+      resetCount++;
+      timeLimit = 30 + resetCount * 5;
+      timeLeft = timeLimit;
+      container.innerHTML = '';
+      scramblePieces();
+      container.style.display = '';
+      startTimer();
     }
 
-    function checkWin() {
-      if (positions.every((v, i) => v === i)) {
-        board.style.display = 'none';
-        document.getElementById('troll-message').style.display = 'flex';
-        setTimeout(function() {
-          window.location.href = "info.html";
-        }, 5000);
-      }
-    }
-
-    // Init
-    positions = createSolvableShuffle();
-    render();
+    // Initial start
+    scramblePieces();
+    startTimer();
   </script>
 </body>
 </html>
