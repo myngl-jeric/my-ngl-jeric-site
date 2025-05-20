@@ -62,7 +62,23 @@
       font-size: 1.1rem;
       margin-bottom: 1.5rem;
     }
-    /* Responsive design */
+    .delete-btn {
+      display: block;
+      margin: 0 auto 28px auto;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 13px 28px;
+      border-radius: 22px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 16px rgba(231,76,60,0.08);
+    }
+    .delete-btn:hover {
+      background: #c0392b;
+    }
     @media (max-width: 600px) {
       .container {
         padding: 12px 4vw;
@@ -74,51 +90,66 @@
         right: 8vw;
         top: 10px;
       }
+      .delete-btn {
+        width: 90%;
+        font-size: 1rem;
+        padding: 12px 0;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Secret Dashboard 👀</h1>
-    <h2>Quiz & Hacker Answers</h2>
+  <div class="h2>Quiz & Hacker Answers</h2>
     <div id="answers-list" class="data-list"></div>
     <h2>Messages</h2>
     <div id="messages-list" class="data-list"></div>
   </div>
   <script>
     // --- QUIZ/HACKER ANSWERS ---
-    const answers = JSON.parse(localStorage.getItem('answers') || '[]');
-    const answersList = document.getElementById('answers-list');
-    if (answers.length === 0) {
-      answersList.innerHTML = '<div class="no-data">No quiz/hacker answers yet.</div>';
-    } else {
-      answers.slice().reverse().forEach(ans => {
-        answersList.innerHTML += `
-          <div class="item">
-            <span class="label">Q:</span> ${ans.question}<br>
-            <span class="label">A:</span> <b>${ans.answer}</b>
-            <span class="timestamp">${ans.time ? new Date(ans.time).toLocaleString() : ''}</span>
-          </div>
-        `;
-      });
+    function renderDashboard() {
+      const answers = JSON.parse(localStorage.getItem('answers') || '[]');
+      const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+      const answersList = document.getElementById('answers-list');
+      const messagesList = document.getElementById('messages-list');
+      answersList.innerHTML = '';
+      messagesList.innerHTML = '';
+      if (answers.length === 0) {
+        answersList.innerHTML = '<div class="no-data">No quiz/hacker answers yet.</div>';
+      } else {
+        answers.slice().reverse().forEach(ans => {
+          answersList.innerHTML += `
+            <div class="item">
+              <span class="label">Q:</span> ${ans.question}<br>
+              <span class="label">A:</span> <b>${ans.answer}</b>
+              <span class="timestamp">${ans.time ? new Date(ans.time).toLocaleString() : ''}</span>
+            </div>
+          `;
+        });
+      }
+      if (messages.length === 0) {
+        messagesList.innerHTML = '<div class="no-data">No messages yet.</div>';
+      } else {
+        messages.slice().reverse().forEach(msg => {
+          messagesList.innerHTML += `
+            <div class="item">
+              <span class="label">Name:</span> ${msg.name ? msg.name : '<i>Anon</i>'}<br>
+              <span class="label">Message:</span> <b>${msg.message}</b>
+              <span class="timestamp">${msg.time ? new Date(msg.time).toLocaleString() : ''}</span>
+            </div>
+          `;
+        });
+      }
     }
 
-    // --- MESSAGES ---
-    const messages = JSON.parse(localStorage.getItem('messages') || '[]');
-    const messagesList = document.getElementById('messages-list');
-    if (messages.length === 0) {
-      messagesList.innerHTML = '<div class="no-data">No messages yet.</div>';
-    } else {
-      messages.slice().reverse().forEach(msg => {
-        messagesList.innerHTML += `
-          <div class="item">
-            <span class="label">Name:</span> ${msg.name ? msg.name : '<i>Anon</i>'}<br>
-            <span class="label">Message:</span> <b>${msg.message}</b>
-            <span class="timestamp">${msg.time ? new Date(msg.time).toLocaleString() : ''}</span>
-          </div>
-        `;
-      });
+    function deleteAllData() {
+      if (confirm('Are you sure you want to delete ALL answers and messages? This cannot be undone!')) {
+        localStorage.removeItem('answers');
+        localStorage.removeItem('messages');
+        renderDashboard();
+      }
     }
+
+    renderDashboard();
   </script>
 </body>
 </html>
