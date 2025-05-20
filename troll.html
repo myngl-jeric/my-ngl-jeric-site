@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Get Scammed</title>
-  <!-- No meta redirect initially! Only redirect after puzzle solved -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -107,23 +106,37 @@
     </div>
   </div>
   <script>
-    // Using your Imgur photo as the puzzle image!
+    // Your Imgur photo
     const imgSrc = 'https://i.imgur.com/6Kt2xTm.jpeg';
-
     const size = 3; // 3x3 puzzle
     const board = document.getElementById('puzzle-board');
     let positions = [];
-    let emptyIndex = size*size-1;
+    let emptyIndex = size * size - 1;
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+    // Helper to check if a permutation is solvable for 3x3
+    function isSolvable(arr) {
+      let invCount = 0;
+      for (let i = 0; i < arr.length - 1; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+          if (arr[i] !== emptyIndex && arr[j] !== emptyIndex && arr[i] > arr[j]) invCount++;
+        }
       }
-      // prevent solved at start
-      if (array.every((v, i) => v === i)) shuffle(array);
-      return array;
+      return invCount % 2 === 0;
     }
+
+    // Shuffle until solvable and not already solved
+    function createSolvableShuffle() {
+      let arr;
+      do {
+        arr = Array.from({length: size*size}, (_, i) => i);
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+      } while (!isSolvable(arr) || arr.every((v, i) => v === i));
+      return arr;
+    }
+
     function render() {
       board.innerHTML = '';
       for (let i = 0; i < size*size; i++) {
@@ -143,32 +156,38 @@
         board.appendChild(tile);
       }
     }
+
     function moveTile(i) {
-      const neighbors = [
-        i - 1, i + 1, i - size, i + size
-      ].filter(j =>
-        j >= 0 && j < size*size &&
-        (j % size === i % size || Math.floor(j / size) === Math.floor(i / size))
-      );
-      if (neighbors.includes(positions.indexOf(emptyIndex))) {
-        [positions[i], positions[positions.indexOf(emptyIndex)]] = [positions[positions.indexOf(emptyIndex)], positions[i]];
+      const blank = positions.indexOf(emptyIndex);
+      const moveable = [blank - 1, blank + 1, blank - size, blank + size]
+        .filter(j =>
+          j >= 0 && j < size*size &&
+          (
+            (j === blank - 1 && blank % size !== 0) ||
+            (j === blank + 1 && blank % size !== size - 1) ||
+            (j === blank - size) ||
+            (j === blank + size)
+          )
+        );
+      if (moveable.includes(i)) {
+        [positions[i], positions[blank]] = [positions[blank], positions[i]];
         render();
         setTimeout(checkWin, 100);
       }
     }
+
     function checkWin() {
       if (positions.every((v, i) => v === i)) {
         board.style.display = 'none';
         document.getElementById('troll-message').style.display = 'flex';
-        // Delay redirect by 5 seconds, match your original
         setTimeout(function() {
           window.location.href = "info.html";
         }, 5000);
       }
     }
+
     // Init
-    positions = Array.from({length: size*size}, (_, i) => i);
-    shuffle(positions);
+    positions = createSolvableShuffle();
     render();
   </script>
 </body>
