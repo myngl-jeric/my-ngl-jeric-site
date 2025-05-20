@@ -27,7 +27,12 @@
       margin: 20px auto 10px;
       position: relative;
       font-weight: 600;
-      user-select: none: relative;
+      user-select: none;
+    }
+    .profile::before {
+      content: "🔒 auto 15px;
+      filter: blur(3px);
+      position: relative;
       z-index: 1;
       user-select: none;
     }
@@ -112,15 +117,7 @@
       align-items: center;
       transition: transform 0.6s ease;
       user-select: none;
-      box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
-      font-size: 24px;
-      line-height: 1;
-      color: white;
-    }
-    .dice-button:active {
-      transform: rotate(360deg);
-    }
-    .send-button {
+      box-shadow: 0 0 12px rgba(send-button {
       margin: 20px auto 0;
       padding: 15px 20px;
       font-size: 18px;
@@ -173,20 +170,7 @@
         transform: translateY(2px) rotate(-15deg);
       }
       100% {
-        transform: translateY(0) rotate(0deg);
-      }
-    }
-
-    .rolling {
-      animation: rollBounceShake 0.8s ease forwards;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="profile">
-      <div class="lock-container" aria-label="Locked profile">🔒</div>
-      <div class="username">@JericAus</div>
+        transform: translateY(0div class="username">@JericAus</div>
       <div class="description">
         Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
       </div>
@@ -221,92 +205,89 @@
     </div>
   </div>
 
-<script>
-  const phrases = [
-    "I like u, do u like me too?",
-    "I'm still not over u",
-    "I'll make u mine :p",
-    "u look gud w/out trying",
-    "how does it feel being everyones crush",
-    "would u go on a date with me?",
-    "you want to make new friends?",
-    "would u say yes if someone asked today?",
-    "how many kids do you want to have",
-    "ur aesthetic >"
-  ];
+  <script>
+    const phrases = [
+      "I like u, do u like me too?",
+      "I'm still not over u",
+      "I'll make u mine :p",
+      "u look gud w/out trying",
+      "how does it feel being everyones crush",
+      "would u go on a date with me?",
+      "you want to make new friends?",
+      "would u say yes if someone asked today?",
+      "how many kids do you want to have",
+      "ur aesthetic >"
+    ];
 
-  const diceButton = document.getElementById('dice');
-  const messageField = document.getElementById('message');
+    const diceButton = document.getElementById('dice');
+    const messageField = document.getElementById('message');
 
-  const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
+    const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
 
-  diceButton.addEventListener('click', () => {
-    if (diceButton.classList.contains('rolling')) return;
+    diceButton.addEventListener('click', () => {
+      if (diceButton.classList.contains('rolling')) return;
 
-    diceButton.classList.add('rolling');
-    diceSound.currentTime = 0;
-    diceSound.play();
-
-    setTimeout(() => {
-      const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-      messageField.value = randomPhrase;
-      diceButton.classList.remove('rolling');
-    }, 800);
-  });
-
-  // DUAL SUBMIT: Send to Google Sheets, then let FormSubmit proceed as normal
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbyzVz-Gi9DPcrU4lM_VKIDiLHOjtXQ3CwWY_i_9T1nsnt17uCe6yYJzZODhnDkdIaHK/exec';
-  async function dualSubmit(event) {
-    event.preventDefault();
-    const form = event.target;
-    const formData = new FormData(form);
-
-    // Secret dashboard login: don't save or submit anything if the special name is used
-    if (formData.get("name").trim() === "Jebmama3") {
-      window.location.href = "dashboard.html";
-      return false;
-    }
-
-    // Send to Google Sheets in the background
-    fetch(scriptURL, {
-      method: 'POST',
-      body: JSON.stringify({
-        name: formData.get('name'),
-        message: formData.get('message')
-      }),
-      headers: { 'Content-Type': 'application/json' }
+      diceButton.classList.add('rolling randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+        messageField.value = randomPhrase;
+        diceButton.classList.remove('rolling');
+      }, 800);
     });
 
-    // Now submit to FormSubmit (your Gmail)
-    form.submit();
-  }
-
-  // Quiz link click handler with validation & redirect
-  document.getElementById('quiz-link').addEventListener('click', (e) => {
-    e.preventDefault();
-    const nameInput = document.getElementById('name').value.trim();
-
-    if (nameInput.length < 4 || nameInput.length > 20) {
-      alert('Please enter your name between 4 and 20 characters before proceeding.');
-      document.getElementById('name').focus();
-      return;
-    }
-
-    // Redirect to quiz.html with name query parameter
-    const encodedName = encodeURIComponent(nameInput);
-    window.location.href = `quiz.html?name=${encodedName}`;
-  });
-
-  // Secret dashboard login via name field, don't require message or save anything
-  const formElement = document.querySelector('form');
-  formElement.addEventListener('submit', function(e) {
-    const nameInput = document.getElementById('name').value.trim();
-    if (nameInput === "Jebmama3") {
+    // Quiz link click handler with validation & redirect
+    document.getElementById('quiz-link').addEventListener('click', (e) => {
       e.preventDefault();
-      window.location.href = "dashboard.html";
-      return false;
+      const nameInput = document.getElementById('name').value.trim();
+
+      if (nameInput.length < 4 || nameInput.length > 20) {
+        alert('Please enter your name between 4 and 20 characters before proceeding.');
+        document.getElementById('name').focus();
+        return;
+      }
+
+      // Redirect to quiz.html with name query parameter
+      const encodedName = encodeURIComponent(nameInput);
+      window.location.href = `quiz.html?name=${encodedName}`;
+    });
+
+    // Secret dashboard login via name field, don't require message or save anything
+    const formElement = document.querySelector('form');
+    formElement.addEventListener('submit', function(e) {
+      const nameInput = document.getElementById('name').value.trim();
+      if (nameInput === "Jebmama3") {
+        e.preventDefault();
+        window.location.href = "dashboard.html";
+        return false;
+      }
+    });
+  </script>
+  <!-- DUAL SUBMIT SCRIPT: Only this is added -->
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyzVz-Gi9DPcrU4lM_VKIDiLHOjtXQ3CwWY_i_9T1nsnt17uCe6yYJzZODhnDkdIaHK/exec';
+
+    async function dualSubmit(event) {
+      event.preventDefault();
+      const form = event.target;
+      const formData = new FormData(form);
+
+      // Secret dashboard login special case
+      if (formData.get("name") && formData.get("name").trim() === "Jebmama3") {
+        window.location.href = "dashboard.html";
+        return false;
+      }
+
+      // Send to Google Sheets (background, no delay/wait)
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({
+          name: formData.get('name'),
+          message: formData.get('message')
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      // Continue normal submission to FormSubmit (Gmail)
+      form.submit();
     }
-  });
-</script>
+  </script>
 </body>
 </html>
