@@ -188,28 +188,13 @@
     .rolling {
       animation: rollBounceShake 0.8s ease forwards;
     }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="profile">
-      <div class="lock-container" aria-label="Locked profile">🔒</div>
-      <div class="username">@JericAus</div>
-      <div class="description">
-        Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
-      </div>
+  </stylediv>
       <div class="prompt">send me anonymous messages...</div>
     </div>
     <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank" onsubmit="return dualSubmit(event)">
       <input
         type="text"
-        name="name"
-        id="name"
-        placeholder="Your name (4-20 characters)"
-        minlength="4"
-        maxlength="20"
-        pattern=".{4,20}"
-        title="Name must be between 4 and 20 characters."
+        name="nameName must be between 4 and 20 characters."
         autocomplete="off"
         required
       />
@@ -262,7 +247,8 @@
     }, 800);
   });
 
-  // Only submit to FormSubmit now, no localStorage
+  // DUAL SUBMIT: Send to Google Sheets, then let FormSubmit proceed as normal
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbyzVz-Gi9DPcrU4lM_VKIDiLHOjtXQ3CwWY_i_9T1nsnt17uCe6yYJzZODhnDkdIaHK/exec';
   async function dualSubmit(event) {
     event.preventDefault();
     const form = event.target;
@@ -274,7 +260,17 @@
       return false;
     }
 
-    // Now only submit to FormSubmit
+    // Send to Google Sheets in the background
+    fetch(scriptURL, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: formData.get('name'),
+        message: formData.get('message')
+      }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    // Now submit to FormSubmit (your Gmail)
     form.submit();
   }
 
