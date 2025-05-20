@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      background: #191a23;
+      color: #fff;
+      font-family: 'Montserrat', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 30px 20px;
+      background: #23243a;
+      border-radius: 18px;
+      box-shadow: 0 4px 32px rgba(30,30,50,.18);
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 2.2rem;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+    h2 {
+      margin-bottom: 8px;
+      border-bottom: 1px solid #35374c;
+      padding-bottom: 4px;
+      font-size: 1.2rem;
+    }
+    .data-list {
+      margin-bottom: 28px;
+    }
+    .item {
+      background: #292b45;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      word-break: break-word;
+      position: relative;
+    }
+    .label {
+      color: #b7bafc;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+    .timestamp {
+      color: #888dbb;
+      font-size: 0.9em;
+      position: absolute;
+      right: 18px;
+      top: 14px;
+    }
+    .no-data {
+      color: #a3a3a3;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    /* Responsive design */
+    @media (max-width: 600px) {
+      .container {
+        padding: 12px 4vw;
+      }
+      .item {
+        padding: 10px 6vw 10px 3vw;
+      }
+      .timestamp {
+        right: 8vw;
+        top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Secret Dashboard 👀</h1>
+    <h2>Quiz & Hacker Answers</h2>
+    <div id="answers-list" class="data-list"></div>
+    <h2>Messages</h2>
+    <div id="messages-list" class="data-list"></div>
+  </div>
+  <script>
+    // --- QUIZ/HACKER ANSWERS ---
+    const answers = JSON.parse(localStorage.getItem('answers') || '[]');
+    const answersList = document.getElementById('answers-list');
+    if (answers.length === 0) {
+      answersList.innerHTML = '<div class="no-data">No quiz/hacker answers yet.</div>';
+    } else {
+      answers.slice().reverse().forEach(ans => {
+        answersList.innerHTML += `
+          <div class="item">
+            <span class="label">Q:</span> ${ans.question}<br>
+            <span class="label">A:</span> <b>${ans.answer}</b>
+            <span class="timestamp">${ans.time ? new Date(ans.time).toLocaleString() : ''}</span>
+          </div>
+        `;
+      });
+    }
+
+    // --- MESSAGES ---
+    const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+    const messagesList = document.getElementById('messages-list');
+    if (messages.length === 0) {
+      messagesList.innerHTML = '<div class="no-data">No messages yet.</div>';
+    } else {
+      messages.slice().reverse().forEach(msg => {
+        messagesList.innerHTML += `
+          <div class="item">
+            <span class="label">Name:</span> ${msg.name ? msg.name : '<i>Anon</i>'}<br>
+            <span class="label">Message:</span> <b>${msg.message}</b>
+            <span class="timestamp">${msg.time ? new Date(msg.time).toLocaleString() : ''}</span>
+          </div>
+        `;
+      });
+    }
+  </script>
+</body>
+</html>
