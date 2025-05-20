@@ -39,7 +39,12 @@
       z-index: 1;
       user-select: none;
     }
-    width: 60px;
+    .lock-container {
+      position: absolute;
+      top: 38px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
       border-radius: 50%;
       background: white;
       display: flex;
@@ -50,6 +55,7 @@
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
       font-size: 36px;
       line-height: 1;
+      height: 60px;
     }
     .username {
       font-weight: 700;
