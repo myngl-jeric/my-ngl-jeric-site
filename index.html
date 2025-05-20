@@ -107,7 +107,7 @@
     }
     .dice-button {
       position: absolute;
- right: 40px;
+      right: 40px;
       bottom: 73px;
       width: 38px;
       height: 38px;
@@ -163,6 +163,7 @@
       white-space: nowrap;
       overflow-x: auto;
     }
+
     @keyframes rollBounceShake {
       0% {
         transform: translateY(0) rotate(0deg);
@@ -183,6 +184,7 @@
         transform: translateY(0) rotate(0deg);
       }
     }
+
     .rolling {
       animation: rollBounceShake 0.8s ease forwards;
     }
@@ -242,7 +244,7 @@
       measurementId: "G-0K2E2VRM11"
     };
     firebase.initializeApp(firebaseConfig);
-    const firebase.firestore();
+    const db = firebase.firestore();
   </script>
 <script>
   const phrases = [
@@ -298,10 +300,7 @@
       message,
       time: new Date().toISOString()
     });
-    localStorage.setItem('messages', JSON.stringify(messages));
-
-    // Save to Firebase Firestore
-    try {
+    localStorage.setItem('messages', JSON.stringify(messages try {
       await db.collection("messages").add({
         name: name,
         message: message,
@@ -310,7 +309,7 @@
       // After saving to Firestore, submit to FormSubmit
       form.submit();
     } catch (error) {
-      alert('Firebase error: ' + error.message);
+      alert('Error submitting to Firebase. Please try again.');
       return false;
     }
   }
