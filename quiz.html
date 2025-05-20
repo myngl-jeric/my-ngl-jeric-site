@@ -274,33 +274,48 @@
   const nextBtn = document.getElementById('nextBtn');
   let current = 0;
 
+  // --- Fixed validation ---
   function validateCurrent() {
     const currentQuestion = questions[current];
     const required = currentQuestion.dataset.req === "true";
     if (!required) return true;
 
-    // Check inputs inside current question
     const radios = currentQuestion.querySelectorAll('input[type="radio"]');
     const textInputs = currentQuestion.querySelectorAll('input[type="text"], textarea');
 
-    // For radio questions (some with optional text field)
-    if (radios.length > 0) {
-      // Check if a radio is selected OR text input is filled and meets length requirements
+    // For questions with both radios and text input (like "Other")
+    if (radios.length > 0 && textInputs.length > 0) {
       const checkedRadio = Array.from(radios).some(r => r.checked);
-      const validTextInput = Array.from(textInputs).some(input => {
-        const val = input.value.trim();
-        if (!val) return false;
-        const minL = parseInt(currentQuestion.dataset.minlength) || 10;
-        const maxL = parseInt(currentQuestion.dataset.maxlength) || Infinity;
-        return val.length >= minL && val.length <= maxL;
-      });
-      if (!checkedRadio && !validTextInput) return false // For pure textareas or text inputs only questions
+      const minL = parseInt(currentQuestion.dataset.minlength) || 1;
+      const maxL = parseInt(currentQuestion.dataset.maxlength) || Infinity;
+      let textInputFilled = false;
       for (const input of textInputs) {
         const val = input.value.trim();
-        const minL = parseInt(currentQuestion.dataset.minlength) || 10;
-        const maxL = parseInt(currentQuestion.dataset.maxlength) || Infinity;
-        if (val.length < minL || val.length > maxL) return false;
+        if (val.length >= minL && val.length <= maxL) {
+          textInputFilled = true;
+          break;
+        }
       }
+      // Allow next if EITHER a radio is selected OR the text input is valid
+      return checkedRadio || textInputFilled;
+    }
+    // For radio only
+    else if (radios.length > 0) {
+      return Array.from(radios).some(r => r.checked);
+    }
+    // For text/textarea only
+    else if (textInputs.length > 0) {
+      let allValid = true;
+      for (const input of textInputs) {
+        const val = input.value.trim();
+        const minL = parseInt(currentQuestion.dataset.minlength) || 1;
+        const maxL = parseInt(currentQuestion.dataset.maxlength) || Infinity;
+        if (val.length < minL || val.length > maxL) {
+          allValid = false;
+          break;
+        }
+      }
+      return allValid;
     }
     return true;
   }
@@ -334,7 +349,7 @@
   showQuestion(0);
 </script>
 <script>
-  // --- New code for getting ?name= and setting it in the hidden field ---
+  // --- Name from URL to hidden input ---
   function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param) || '';
