@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Message Dashboard</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; background: #f8f8f8; }
+    h1 { color: #333; }
+    ul { list-style: none; padding: 0; }
+    li { background: #fff; margin-bottom: 1em; padding: 1em; border-radius: 5px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);}
+    .timestamp { color: #888; font-size: 0.9em; }
+    .email { color: #0077cc; font-size: 0.97em; }
+    .name { font-weight: bold; }
+    .message { margin-top: 0.5em; }
+  </style>
+</head>
+<body>
+  <h1>📬 Message Dashboard</h1>
+  <ul id="messages">
+    <li>Loading messages...</li>
+  </ul>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+  <script>
+    // Replace this with your own Firebase config!
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      // ...rest of your config
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Load messages from Firestore, newest first
+    db.collection("messages").orderBy("timestamp", "desc")
+      .onSnapshot((querySnapshot) => {
+        const list = document.getElementById('messages');
+        list.innerHTML = '';
+        if (querySnapshot.empty) {
+          list.innerHTML = '<li>No messages yet.</li>';
+        } else {
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : "pending";
+            const name = data.name || "Anonymous";
+            const email = data.email ? `<span class="email">&lt;${data.email}&gt;</span>` : "";
+            const message = data.message || "";
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <span class="timestamp">${date}</span><br>
+              <span class="name">${name}</span> ${email}
+              <div class="message">${message}</div>
+            `;
+            list.appendChild(li);
+          });
+        }
+      });
+  </script>
+</body>
+</html>
