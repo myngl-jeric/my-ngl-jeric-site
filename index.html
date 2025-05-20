@@ -27,15 +27,7 @@
       margin: 20px auto 10px;
       position: relative;
       font-weight: 600;
-      user-select: none;
-    }
-    .profile::before {
-      content: "🔒";
-      font-size: 60px;
-      display: block;
-      margin: 0 auto 15px;
-      filter: blur(3px);
-      position: relative;
+      user-select: none: relative;
       z-index: 1;
       user-select: none;
     }
@@ -188,13 +180,28 @@
     .rolling {
       animation: rollBounceShake 0.8s ease forwards;
     }
-  </stylediv>
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="profile">
+      <div class="lock-container" aria-label="Locked profile">🔒</div>
+      <div class="username">@JericAus</div>
+      <div class="description">
+        Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
+      </div>
       <div class="prompt">send me anonymous messages...</div>
     </div>
     <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank" onsubmit="return dualSubmit(event)">
       <input
         type="text"
-        name="nameName must be between 4 and 20 characters."
+        name="name"
+        id="name"
+        placeholder="Your name (4-20 characters)"
+        minlength="4"
+        maxlength="20"
+        pattern=".{4,20}"
+        title="Name must be between 4 and 20 characters."
         autocomplete="off"
         required
       />
