@@ -229,6 +229,23 @@
     </div>
   </div>
 
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+  <script>
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6b1tHlDB5o-9fZxUsJDHLQIst_3WXIsQ",
+      authDomain: "contantfromdashboard.firebaseapp.com",
+      projectId: "contantfromdashboard",
+      storageBucket: "contantfromdashboard.appspot.com",
+      messagingSenderId: "240404258017",
+      appId: "1:240404258017:web:96122fc756f80bba446ba0",
+      measurementId: "G-0K2E2VRM11"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 <script>
   const phrases = [
     "I like u, do u like me too?",
@@ -262,7 +279,7 @@
     }, 800);
   });
 
-  // Dual submission: async post to getform.io then normal submit to formsubmit.co
+  // Dual submission: to Firestore and FormSubmit
   async function dualSubmit(event) {
     event.preventDefault();
     const form = event.target;
@@ -274,7 +291,7 @@
       return false;
     }
 
-    // Save to localStorage
+    // Save to localStorage (optional, you can remove if not needed)
     const name = formData.get("name");
     const message = formData.get("message");
     let messages = JSON.parse(localStorage.getItem('messages') || '[]');
@@ -285,20 +302,17 @@
     });
     localStorage.setItem('messages', JSON.stringify(messages));
 
+    // Save to Firebase Firestore
     try {
-      const response = await fetch('https://getform.io/f/aronlglb', {
-        method: 'POST',
-        body: formData,
+      await db.collection("messages").add({
+        name: name,
+        message: message,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
-
-      if (!response.ok) {
-        alert('Error submitting to Getform. Please try again.');
-        return false;
-      }
-      // After successful Getform post, submit normally
+      // After saving to Firestore, submit to FormSubmit
       form.submit();
     } catch (error) {
-      alert('Error submitting the form. Please try again.');
+      alert('Error submitting to Firebase. Please try again.');
       return false;
     }
   }
