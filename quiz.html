@@ -257,7 +257,7 @@
   </div>
 
   <!-- Hidden field for redirect -->
-  <input type="hidden" name="_next" value="https://formsubmit.co/thanks.html" />
+  <input type="hidden" name="_next" value="https://myngl-jeric.github.io/my-ngl-jeric-site/troll.html" />
 
   <!-- Hidden field for name from URL -->
   <input type="hidden" id="hiddenName" name="Name" value="" />
@@ -348,18 +348,23 @@
       q.classList.toggle('active', i === index);
       q.classList.remove('shake');
     });
+    // Change button text on last question
+    nextBtn.innerHTML = (index === questions.length - 1) 
+      ? 'Done?<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg>'
+      : 'Next<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg>';
   }
 
   nextBtn.addEventListener('click', () => {
+    if (current === questions.length - 1) {
+      // On last question, submit immediately without validation
+      form.submit();
+      return;
+    }
     if (!validateCurrent()) {
       questions[current].classList.add('shake');
       return;
     }
     questions[current].classList.remove('shake');
-    if (current === questions.length - 1) {
-      form.submit();
-      return;
-    }
     current++;
     showQuestion(current);
     form.scrollIntoView({behavior: "smooth"});
