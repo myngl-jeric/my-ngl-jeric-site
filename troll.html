@@ -26,11 +26,40 @@
       box-shadow: 0 8px 36px rgba(76, 120, 231, 0.15);
       letter-spacing: 0.06em;
     }
-    #puzzle-container {
-      margin: 2rem auto 0 auto;
+    #puzzle-board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 2px;
+      background: #232e47;
+      margin: 2rem auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 36px rgba(76, 120, 231, 0.21);
       position: relative;
-      min-width: 320px;
-      min-height: 320px;
+      min-width: 304px;
+      min-height: 304px;
+    }
+    .tile {
+      width: 100px; height: 100px;
+      position: relative;
+      cursor: grab;
+      background: #1d2642;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(30,30,60,0.08);
+      transition: box-shadow 0.13s;
+      user-select: none;
+    }
+    .tile img {
+      width: 300px; height: 300px;
+      position: absolute;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+    }
+    .drag-over {
+      outline: 3px solid #ffe87c;
+      z-index: 2;
     }
     .flyout {
       position: absolute !important;
@@ -66,27 +95,27 @@
       font-size: 1.5rem;
       font-weight: 700;
       margin: 0.7rem 0 0.2rem 0;
-      color: #ffb6e6;
-      letter-spacing: 0.01em;
+      color: # letter:.01em;
     }
     .hint {
-      margin-top: 2.2rem;
-      color: #bcbcff;
-      font-size: 1.03rem;
+      margin-top: 2.: 1.03rem;
       opacity: 0.8;
     }
     a {
       color: #ffe87c;
       text-decoration: underline;
     }
+    @media (max-width: 350px) {
+      #puzzle-board { grid-template-columns: repeat(3, 25vw); grid-template-rows: repeat(3, 25vw);}
+      .tile { width: 25vw; height: 25vw;}
+      .tile img { width: 75vw; height: 75vw;}
+    }
   </style>
-  <!-- Jigsaw Puzzle library (MIT License) -->
-  <script src="https://unpkg.com/jigsaw-puzzle@1.0.2/dist/jigsawpuzzle.min.js"></script>
 </head>
 <body>
-  <h2>Solve the Jigsaw Puzzle to Continue 😏</h2>
+  <h2>Solve the Puzzle to Continue 😏</h2>
   <div id="timer">⏳ 30s</div>
-  <div id="puzzle-container"></div>
+  <div id="puzzle-board"></div>
   <div id="troll-message">
     <div class="main">
       <div class="emoji">😆🤭</div>
@@ -99,19 +128,116 @@
   <script>
     // Settings
     const imgSrc = 'https://i.imgur.com/6Kt2xTm.jpeg';
-    const rows = 3, cols = 3;
-    let timeLimit = 30; // Initial time in seconds
-    let timer = null, timeLeft = timeLimit, resetCount = 0, puzzle;
-
+    const size = 3;
+    let timeLimit = 30;
+    let timeLeft = timeLimit;
+    let timer = null;
+    let resetCount = 0;
+    let board, tiles;
     const timerEl = document.getElementById('timer');
-    const container = document.getElementById('puzzle-container');
+    const puzzleBoard = document.getElementById('puzzle-board');
     const trollMsg = document.getElementById('troll-message');
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      while(array.every((v,i)=>v===i)) shuffle(array); // ensure not solved
+      return array;
+    }
+
+    function setupBoard() {
+      puzzleBoard.innerHTML = '';
+      board = [];
+      tiles = [];
+      let positions = shuffle([...Array(size*size).keys()]);
+      for (let i = 0; i < size*size; i++) {
+        board[i] = positions[i];
+        let tile = document.createElement('div');
+        tile.className = 'tile';
+        tile.draggable = true;
+        tile.dataset.idx = i;
+        tile.style.position = "relative";
+        tile.style.zIndex = 1;
+        // Place image
+        let img = document.createElement('img');
+        img.src = imgSrc;
+        let x = positions[i] % size, y = Math.floor(positions[i] / size);
+        img.style.left = (-x * 100) + 'px';
+        img.style.top  = (-y * 100) + 'px';
+        tile.appendChild(img);
+        puzzleBoard.appendChild(tile);
+        tiles.push(tile);
+      }
+      addDragDrop();
+    }
+
+    function addDragDrop() {
+      tiles.forEach(tile => {
+        tile.addEventListener('dragstart', dragStart);
+        tile.addEventListener('dragover', dragOver);
+        tile.addEventListener('dragleave', dragLeave);
+        tile.addEventListener('drop', dropTile);
+        tile.addEventListener('dragend', dragEnd);
+      });
+    }
+    let dragSrcIdx = null;
+    function dragStart(e) {
+      dragSrcIdx = +this.dataset.idx;
+      this.style.opacity = 0.5;
+    }
+    function dragEnd(e) {
+      this.style.opacity = 1;
+      tiles.forEach(t => t.classList.remove('drag-over'));
+    }
+    function dragOver(e) {
+      e.preventDefault();
+      this.classList.add('drag-over');
+    }
+    function dragLeave(e) {
+      this.classList.remove('drag-over');
+    }
+    function dropTile(e) {
+      e.preventDefault();
+      this.classList.remove('drag-over');
+      const targetIdx = +this.dataset.idx;
+      if (dragSrcIdx === null || dragSrcIdx === targetIdx) return;
+      // Swap
+      [board[dragSrcIdx], board[targetIdx]] = [board[targetIdx], board[dragSrcIdx]];
+      // Redraw both tiles
+      redrawTile(dragSrcIdx);
+      redrawTile(targetIdx);
+      dragSrcIdx = null;
+      checkSolved();
+    }
+    function redrawTile(idx) {
+      let tile = tiles[idx];
+      let boardVal = board[idx];
+      let img = tile.querySelector('img');
+      let x = boardVal % size, y = Math.floor(boardVal / size);
+      img.style.left = (-x * 100) + 'px';
+      img.style.top  = (-y * 100) + 'px';
+    }
+
+    function checkSolved() {
+      if (board.every((v,i)=>v===i)) {
+        clearInterval(timer);
+        puzzleBoard.style.display = 'none';
+        trollMsg.style.display = 'flex';
+        setTimeout(() => {
+          window.location.href = "info.html";
+        }, 5000);
+      }
+    }
 
     function updateTimerDisplay() {
       timerEl.textContent = `⏳ ${timeLeft}s`;
     }
 
     function startTimer() {
+      clearInterval(timer);
+      timeLeft = timeLimit;
       updateTimerDisplay();
       timer = setInterval(() => {
         timeLeft--;
@@ -123,66 +249,35 @@
       }, 1000);
     }
 
-    function scramblePieces() {
-      // Remove old puzzle if exists
-      container.innerHTML = '';
-      puzzle = new window.JigsawPuzzle({
-        el: container,
-        imgSrc: imgSrc,
-        rows: rows,
-        cols: cols,
-        onComplete: function() {
-          clearInterval(timer);
-          container.style.display = 'none';
-          trollMsg.style.display = 'flex';
-          setTimeout(() => {
-            window.location.href = "info.html";
-          }, 5000);
-        }
-      });
-    }
-
     // Animate pieces flying out
     function flyOutPiecesThenReset() {
-      // Get all puzzle pieces
-      const pieces = Array.from(container.querySelectorAll('canvas, svg, .puzzle-piece, img'));
-      if (!pieces.length) {
-        doReset();
-        return;
-      }
-      // Calculate positions and animate
-      pieces.forEach(piece => {
-        // Make sure it's positioned absolutely
-        const rect = piece.getBoundingClientRect();
-        const crect = container.getBoundingClientRect();
-        piece.classList.add('flyout');
-        piece.style.left = (rect.left - crect.left) + "px";
-        piece.style.top = (rect.top - crect.top) + "px";
-        // Random fly direction and distance
+      tiles.forEach((tile, i) => {
+        tile.classList.add('flyout');
+        tile.style.position = 'absolute';
+        const row = Math.floor(i / size), col = i % size;
+        tile.style.left = (col * 102) + 'px';
+        tile.style.top = (row * 102) + 'px';
         const angle = Math.random() * 2 * Math.PI;
-        const dist = 300 + Math.random() * 200;
+        const dist = 250 + Math.random() * 120;
         const tx = Math.cos(angle) * dist;
         const ty = Math.sin(angle) * dist;
-        piece.style.transform = `translate(${tx}px, ${ty}px) rotate(${Math.random()*720-360}deg) scale(1.3)`;
-        piece.style.opacity = 0;
+        tile.style.transform = `translate(${tx}px, ${ty}px) rotate(${Math.random()*720-360}deg) scale(1.2)`;
+        tile.style.opacity = 0;
       });
-      // Wait for animation, then reset
       setTimeout(doReset, 1200);
     }
 
     function doReset() {
-      // Increase time limit by 5 seconds for each reset
       resetCount++;
       timeLimit = 30 + resetCount * 5;
-      timeLeft = timeLimit;
-      container.innerHTML = '';
-      scramblePieces();
-      container.style.display = '';
+      puzzleBoard.innerHTML = '';
+      puzzleBoard.style.display = '';
+      setupBoard();
       startTimer();
     }
 
-    // Initial start
-    scramblePieces();
+    // Initial setup
+    setupBoard();
     startTimer();
   </script>
 </body>
