@@ -59,11 +59,6 @@
     }
     .username {
       font-weight: 700;
-      margin-bottom: 6px;
-      font-size: 1.3rem;
-    }
-    .description {
-      font-weight: 400;
       color: #444;
       font-size: 0.95rem;
       margin-bottom: 12px;
@@ -133,7 +128,7 @@
       padding: 15px 20px;
       font-size: 18px;
       border: none;
-      border-radius: 30px;
+     -radius: 30px;
       width: 80%;
       max-width: 300px;
       background: #000;
@@ -312,7 +307,7 @@
       // After saving to Firestore, submit to FormSubmit
       form.submit();
     } catch (error) {
-      alert('Error submitting to Firebase. Please try again.');
+      alert('Firebase error: ' + error.message);
       return false;
     }
   }
