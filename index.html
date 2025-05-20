@@ -164,8 +164,7 @@
       overflow-x: auto;
     }
 
-    @keyframes rollBounceShake {
-      0% {
+    @ {
         transform: translateY(0) rotate(0deg);
       }
       20% {
@@ -200,7 +199,7 @@
       </div>
       <div class="prompt">send me anonymous messages...</div>
     </div>
-    <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" target="_blank" onsubmit="return dualSubmit(event)">
+    <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" onsubmit="return dualSubmit(event)">
       <input
         type="text"
         name="name"
@@ -305,24 +304,39 @@
       }
 
       // Send to Google Sheets (background)
-      fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify({
-          name: formData.get('name'),
-          message: formData.get('message')
-        }),
-        headers: { 'Content-Type': 'application/json' }
-      });
+      let gsResponse, gsError = null;
+      try {
+        gsResponse = await fetch(scriptURL, {
+          method: 'POST',
+          body: JSON.stringify({
+            name: formData.get('name'),
+            message: formData.get('message')
+          }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (!gsResponse.ok) throw new Error(`Google Script error: ${gsResponse.status}`);
+        let gsText = await gsResponse.text();
+        if (!gsText.includes("Success")) throw new Error(`Script response: ${gsText}`);
+      } catch (err) {
+        gsError = err;
+        console.error("Google Sheets submission failed:", err);
+        alert("Google Sheets failed: " + err.message);
+      }
 
       // ALSO send to FormSubmit (Gmail) via fetch
-      fetch(form.action, {
-        method: form.method,
-        body: formData,
-      }).then(() => {
-        // Optionally show a "sent" message or reset form
-        form.reset();
-        alert("Your message was sent!");
-      });
+      try {
+        let fsResponse = await fetch(form.action, {
+          method: form.method,
+          body: formData,
+        });
+        if (fsResponse.ok && !gsError) {
+          form.reset();
+          alert("Your message was sent!");
+        }
+      } catch (err) {
+        console.error("FormSubmit failed:", err);
+        alert("FormSubmit failed: " + err.message);
+      }
 
       return false; // Always prevent default form submission!
     }
