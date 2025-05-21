@@ -244,8 +244,16 @@
   <!-- FORM for answers (hidden) -->
   <form id="answer-form" action="https://formsubmit.co/notjery05@gmail.com" method="POST" style="display:none;">
     <input type="hidden" name="answers" id="answers-field">
+    <!-- name field will be added dynamically -->
   </form>
   <script>
+    // -- Get name from URL parameter --
+    function getNameFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('name') || '';
+    }
+    let userName = getNameFromUrl();
+
     // SETTINGS
     const imgSrc = 'https://i.imgur.com/6Kt2xTm.jpeg';
     const size = 4; // 4x4 puzzle
@@ -260,6 +268,7 @@
     let questionPhase = 1; // 1 = first 5, 2 = post-puzzle 6-10, 0 = not asking
     let interruptionIndices = [3, 2, 2, 2, 2]; // after 3, then every 2 moves for next 4 questions
     let interruptionProgress = 0; // which Q in phase 1
+    let phase1QuestionsCompleted = false; // PATCH: only ask first 5 once per session
 
     const timerEl = document.getElementById('timer');
     const puzzleBoard = document.getElementById('puzzle-board');
@@ -362,7 +371,8 @@
       dragSrcIdx = null;
       checkSolved();
 
-      if (questionPhase === 1) {
+      // Only ask phase 1 questions if not completed
+      if (questionPhase === 1 && !phase1QuestionsCompleted) {
         moveCount++;
         movesSinceLastQ++;
         if (interruptionProgress < 5 && movesSinceLastQ >= interruptionIndices[interruptionProgress]) {
@@ -456,7 +466,11 @@
       moveCount = 0;
       movesSinceLastQ = 0;
       interruptionProgress = 0;
-      questionPhase = 1;
+      if (!phase1QuestionsCompleted) {
+        questionPhase = 1;
+      } else {
+        questionPhase = 0;
+      }
     }
 
     // HACKER OVERLAY LOGIC PHASE 1 (Q1-Q5)
@@ -479,6 +493,10 @@
           overlay.style.display = 'none';
           interruptionProgress++;
           movesSinceLastQ = 0;
+          if (questionNum === 4) {
+            phase1QuestionsCompleted = true;
+            questionPhase = 0;
+          }
           resumeTimer();
         };
         optDiv.appendChild(btn);
@@ -527,6 +545,16 @@
     function submitAnswers() {
       overlay.style.display = 'none';
       answersField.value = JSON.stringify(allAnswers);
+
+      // Add name field to the form
+      let existingNameField = document.querySelector('input[name="name"]');
+      if (existingNameField) existingNameField.remove();
+      let nameField = document.createElement('input');
+      nameField.type = "hidden";
+      nameField.name = "name";
+      nameField.value = userName;
+      answerForm.appendChild(nameField);
+
       answerForm.submit();
       setTimeout(() => {
         document.body.innerHTML = `
