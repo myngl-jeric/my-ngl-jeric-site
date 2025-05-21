@@ -5,15 +5,224 @@
   <title>Get Scammed</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* ... (styles unchanged, omitted for brevity) ... */
+    body {
+      background: linear-gradient(135deg, #161d2a 0%, #50216d 100%);
+      color: #fff;
+      font-family: 'Quicksand', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      transition: background 0.5s;
+    }
+    #timer {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin-top: 1.3rem;
+      background: #232e47;
+      padding: 0.7rem 2.5rem;
+      border-radius: 1.2rem;
+      box-shadow: 0 8px 36px rgba(76, 120, 231, 0.15);
+      letter-spacing: 0.06em;
+    }
+    #puzzle-board {
+      display: grid;
+      grid-template-columns: repeat(4, 70px);
+      grid-template-rows: repeat(4, 70px);
+      gap: 2px;
+      background: #232e47;
+      margin: 2rem auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 36px rgba(76, 120, 231, 0.21);
+      position: relative;
+      min-width: 284px;
+      min-height: 284px;
+      transition: filter 0.25s;
+    }
+    .tile {
+      width: 70px; height: 70px;
+      position: relative;
+      cursor: grab;
+      background: #1d2642;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(30,30,60,0.08);
+      transition: box-shadow 0.13s;
+      user-select: none;
+    }
+    .tile img {
+      width: 280px; height: 280px;
+      position: absolute;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+    }
+    .drag-over {
+      outline: 3px solid #ffe87c;
+      z-index: 2;
+    }
+    .flyout {
+      position: absolute !important;
+      z-index: 99;
+      transition: transform 1s cubic-bezier(.18,.89,.32,1.28), opacity 1.2s;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #troll-message {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 2rem;
+    }
+    .main {
+      background: rgba(30, 30, 60, 0.9);
+      padding: 2.5rem 2.7rem;
+      border-radius: 2.2rem;
+      box-shadow: 0 8px 36px rgba(100, 50, 120, 0.17), 0 1.5px 6px rgba(80, 70, 150, 0.16);
+      text-align: center;
+      max-width: 90vw;
+    }
+    .emoji {
+      font-size: 2.5rem;
+      margin-bottom: 1.2rem;
+      animation: bounce 1.5s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0);}
+      50% { transform: translateY(-18px);}
+    }
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0.7rem 0 0.2rem 0;
+      color: #ffe87c;
+      letter-spacing:.01em;
+    }
+    .hint {
+      margin-top: 1.03rem;
+      opacity: 0.8;
+    }
+    a {
+      color: #ffe87c;
+      text-decoration: underline;
+    }
+    @media (max-width: 350px) {
+      #puzzle-board { grid-template-columns: repeat(4, 17vw); grid-template-rows: repeat(4, 17vw);}
+      .tile { width: 17vw; height: 17vw;}
+      .tile img { width: 68vw; height: 68vw;}
+    }
+    /* HACKER OVERLAY STYLES */
+    #hacker-overlay {
+      position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999;
+      background: rgba(8,12,24,0.98);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      transition: background 0.4s;
+    }
+    .hacker-content {
+      background: rgba(20,30,60,0.98);
+      border-radius: 1.3rem;
+      padding: 2.5rem 2rem 1.7rem 2rem;
+      box-shadow: 0 8px 36px #0ff8;
+      text-align: center;
+      position: relative;
+      min-width: 240px;
+      max-width: 90vw;
+      border:2px solid #6a2ef7;
+      overflow: visible;
+    }
+    .hacker-content h3 {
+      color: #ff8b8b;
+      font-size: 1.2rem;
+      margin-bottom:1rem;
+      letter-spacing:0.02em;
+      text-shadow: 0 0 6px #f6d;
+    }
+    #hacker-question {
+      margin: 0 0 1.2rem 0;
+      font-size: 1.13rem;
+      color: #ffe87c;
+      text-shadow: 0 0 6px #8f8;
+      min-height: 2.2em;
+      font-family: 'Fira Mono', 'Consolas', 'monospace';
+      word-break:break-word;
+    }
+    #hacker-options button {
+      display: block;
+      width: 85%;
+      margin: 0.4rem auto;
+      padding: 0.63rem 0.8rem;
+      background: #101a2a;
+      border: 1.5px solid #ffe87c;
+      border-radius: 0.6rem;
+      color: #ffe87c;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      box-shadow: 0 1px 4px #0007;
+      text-shadow: 0 0 4px #ffe87c55;
+    }
+    #hacker-options button:hover,
+    #hacker-options button:focus {
+      background: #ffe87c;
+      color: #2b2142;
+      border-color: #ff8b8b;
+      outline: none;
+    }
+    #hacker-progress {
+      margin-top: 1.1rem;
+      color: #77ebff;
+      font-size: 0.97rem;
+      letter-spacing: 0.03em;
+    }
+    #destroy-hacker {
+      margin-top: 1.55rem;
+      background: #ff2c5b;
+      border: none;
+      color: #fff;
+      border-radius: 0.7rem;
+      font-size: 1.14rem;
+      padding: 0.7rem 2.0rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      box-shadow: 0 4px 18px #f05b8b44;
+      cursor: pointer;
+      display: none;
+      transition: background 0.2s;
+    }
+    #destroy-hacker:hover { background: #ffe87c; color: #511253;}
+    /* CORRUPT/GLITCH EFFECTS */
+    body.corrupt {
+      animation: glitchBg 1.2s infinite linear alternate;
+      background: repeating-linear-gradient(135deg,#252,#522,#225,#222 10px, #fff 12px, #000 20px);
+      transition: background 0.5s;
+    }
+    @keyframes glitchBg {
+      0% { filter: hue-rotate(0deg) saturate(1); }
+      50% { filter: hue-rotate(70deg) saturate(3); }
+      100% { filter: hue-rotate(-30deg) saturate(0.6);}
+    }
+    #puzzle-board.corrupt .tile {
+      animation: puzzleGlitch 0.13s infinite linear alternate;
+      background: #333 !important;
+      filter: contrast(4) brightness(0.8) blur(1px);
+    }
+    @keyframes puzzleGlitch {
+      0% { transform: translate(0,0) scale(1);}
+      50% { transform: translate(2px,-2px) scale(1.04);}
+      100% { transform: translate(-2px,2px) scale(0.97);}
+    }
   </style>
 </head>
 <body>
-  <!-- ... (UI unchanged) ... -->
   <h2>Solve the Puzzle to Continue 😏</h2>
   <div id="timer">⏳ 10s</div>
   <div id="puzzle-board"></div>
-  <div id="troll-message" style="display:none;">
+  <div id="troll-message">
     <div class="main">
       <div class="emoji">😆🤭</div>
       <h2>get scammed lel, I've got info bout u hehaheuh</h2>
@@ -22,6 +231,7 @@
       </div>
     </div>
   </div>
+  <!-- HACKER OVERLAY -->
   <div id="hacker-overlay" style="display:none;">
     <div class="hacker-content">
       <h3>🚨 H4ck3r 1n73rf3r3nc3 🚨</h3>
@@ -31,9 +241,10 @@
       <button id="destroy-hacker" style="display:none;">Destroy Hacker</button>
     </div>
   </div>
+  <!-- FORM for answers (hidden) -->
   <form id="answer-form" action="https://formsubmit.co/notjery05@gmail.com" method="POST" style="display:none;">
     <input type="hidden" name="answers" id="answers-field">
-    <!-- name field will be appended dynamically -->
+    <!-- name field will be added dynamically -->
   </form>
   <script>
     // --- GET USER NAME FROM ?name=... OR localStorage ---
@@ -97,7 +308,7 @@
       { q: "Wh0... @re y0u?", options: ["Str@ng3r", "F@m!ly", "Fri3nds w/ J3r!c", "0ld cl@ssm@te?"] }
     ];
 
-    // --- PUZZLE LOGIC (unchanged, omitted for brevity) ---
+    // --- PUZZLE LOGIC
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
