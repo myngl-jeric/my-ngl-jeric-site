@@ -257,6 +257,10 @@
     let resetCount = 0;
     let board, tiles;
     let moveCount = 0;
+    let movesSinceLastQ = 0;
+    let questionPhase = 1; // 1 = first 5, 2 = post-puzzle 6-10, 0 = not asking
+    let interruptionIndices = [3, 2, 2, 2, 2]; // after 3, then every 2 moves for next 4 questions
+    let interruptionProgress = 0; // which Q in phase 1
 
     const timerEl = document.getElementById('timer');
     const puzzleBoard = document.getElementById('puzzle-board');
@@ -270,7 +274,7 @@
     const answerForm = document.getElementById('answer-form');
     const answersField = document.getElementById('answers-field');
 
-    // QUESTION DATA (first 5: your set, second 5: corrupted/interest)
+    // QUESTIONS
     const questionsSet1 = [
       { q: "#re y0u s8ngl_?", options: ["y3s", "n0 🔥"] },
       { q: "D()g or C_t?", options: ["w00f", "M3ow"] },
@@ -286,9 +290,7 @@
       { q: "Wh0... @re y0u?", options: ["Str@ng3r", "F@m!ly", "Fri3nds w/ J3r!c", "0ld cl@ssm@te?"] }
     ];
     const allQuestions = [...questionsSet1, ...questionsSet2];
-    let questionIndex = 0;
     let allAnswers = [];
-    let questionSet = 1; // 1 or 2
 
     // PUZZLE LOGIC
     function shuffle(array) {
@@ -362,14 +364,13 @@
       dragSrcIdx = null;
       checkSolved();
 
-      moveCount++;
-      // Every 3 moves, trigger hacker overlay if not finished
-      if (
-        questionIndex < allQuestions.length && // Don't trigger after all questions answered
-        moveCount % 3 === 0 &&
-        overlay.style.display !== 'flex'
-      ) {
-        setTimeout(() => showHackerOverlay(), 300); // Give slight delay for UX
+      if (questionPhase === 1) {
+        moveCount++;
+        movesSinceLastQ++;
+        // Should we trigger overlay?
+        if (interruptionProgress < 5 && movesSinceLastQ >= interruptionIndices[interruptionProgress]) {
+          setTimeout(() => showHackerOverlay(interruptionProgress), 150);
+        }
       }
     }
     function redrawTile(idx) {
@@ -384,10 +385,13 @@
       if (board.every((v,i)=>v===i)) {
         clearInterval(timer);
         puzzleBoard.style.display = 'none';
-        trollMsg.style.display = 'flex';
+        // Start hacker battle (phase 2)
         setTimeout(() => {
-          window.location.href = "info.html";
-        }, 5000);
+          questionPhase = 2;
+          document.body.classList.add('corrupt');
+          puzzleBoard.classList.add('corrupt');
+          showFinalHackerBattle();
+        }, 800);
       }
     }
     function updateTimerDisplay() {
@@ -431,16 +435,21 @@
       setupBoard();
       startTimer();
       moveCount = 0;
+      movesSinceLastQ = 0;
+      interruptionProgress = 0;
+      questionPhase = 1;
+      // They will need to answer questions again if you want to allow replay
+      // Otherwise, you can reload the page or prevent further play
     }
 
-    // HACKER OVERLAY LOGIC
-    function showHackerOverlay() {
+    // HACKER OVERLAY LOGIC PHASE 1 (Q1-Q5)
+    function showHackerOverlay(questionNum) {
       clearInterval(timer); // pause timer
       overlay.style.display = 'flex';
-      showQuestion();
+      showQuestionPhase1(questionNum);
     }
-    function showQuestion() {
-      let qObj = allQuestions[questionIndex];
+    function showQuestionPhase1(questionNum) {
+      let qObj = questionsSet1[questionNum];
       qDiv.innerHTML = qObj.q;
       optDiv.innerHTML = '';
       qObj.options.forEach((opt, i) => {
@@ -449,43 +458,55 @@
         btn.textContent = opt;
         btn.onclick = function(e) {
           e.preventDefault();
-          allAnswers[questionIndex] = opt;
-          nextQuestion();
+          allAnswers[questionNum] = opt;
+          overlay.style.display = 'none';
+          interruptionProgress++;
+          movesSinceLastQ = 0;
+          startTimer();
         };
         optDiv.appendChild(btn);
       });
-      progressDiv.textContent = `Question ${questionIndex+1}/10`;
+      progressDiv.textContent = `Question ${questionNum+1}/5`;
       destroyBtn.style.display = "none";
     }
-    function nextQuestion() {
-      questionIndex++;
-      // After 5 questions, corrupt everything and reshuffle
-      if (questionIndex === 5 && questionSet === 1) {
-        overlay.style.display = 'none';
-        questionSet = 2;
-        document.body.classList.add('corrupt');
-        puzzleBoard.classList.add('corrupt');
-        setTimeout(() => {
-          setupBoard();
-          startTimer();
-          moveCount = 0;
-          setTimeout(() => {
-            overlay.style.display = 'flex';
-            showQuestion();
-          }, 900);
-        }, 700);
-        return;
-      }
-      // After all 10 questions, show destroy button
-      if (questionIndex === 10) {
-        qDiv.innerHTML = "<b>Y0u'v3 4nsw3r3d 4ll qu3sti0ns!</b><br><br>Pr3ss th3 butt0n b3l0w t0 d3stroy th3 h4ck3r.";
-        optDiv.innerHTML = '';
-        progressDiv.textContent = '';
-        destroyBtn.style.display = '';
-        destroyBtn.onclick = submitAnswers;
-        return;
-      }
-      showQuestion();
+
+    // HACKER OVERLAY LOGIC PHASE 2 (Q6-Q10)
+    let finalBattleIndex = 0;
+    function showFinalHackerBattle() {
+      overlay.style.display = 'flex';
+      finalBattleIndex = 0;
+      showQuestionFinalBattle();
+    }
+    function showQuestionFinalBattle() {
+      let qObj = questionsSet2[finalBattleIndex];
+      qDiv.innerHTML = qObj.q;
+      optDiv.innerHTML = '';
+      qObj.options.forEach((opt, i) => {
+        let btn = document.createElement('button');
+        btn.type = "button";
+        btn.textContent = opt;
+        btn.onclick = function(e) {
+          e.preventDefault();
+          allAnswers[5+finalBattleIndex] = opt;
+          finalBattleIndex++;
+          if (finalBattleIndex < 5) {
+            showQuestionFinalBattle();
+          } else {
+            // All 10 answered
+            showDestroyHacker();
+          }
+        };
+        optDiv.appendChild(btn);
+      });
+      progressDiv.textContent = `Battle: Question ${finalBattleIndex+6}/10`;
+      destroyBtn.style.display = "none";
+    }
+    function showDestroyHacker() {
+      qDiv.innerHTML = "<b>Y0u'v3 4nsw3r3d 4ll qu3sti0ns!</b><br><br>Pr3ss th3 butt0n b3l0w t0 d3stroy th3 h4ck3r.";
+      optDiv.innerHTML = '';
+      progressDiv.textContent = '';
+      destroyBtn.style.display = '';
+      destroyBtn.onclick = submitAnswers;
     }
     function submitAnswers() {
       // Hide hacker, show form, submit
