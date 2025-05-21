@@ -153,7 +153,6 @@
       background: #000;
       color: #fff;
       user-select: none;
-      /* the animation class will be added below */
     }
     .people-tap-count {
       color: #fff;
@@ -190,16 +189,23 @@
       animation: rollBounceShake 0.8s ease forwards;
     }
 
-    /* NGL-style bounce for the whole extra-box (box + words bounce forward together) */
-    @keyframes bounceNGL {
-      0%, 100% { transform: translateY(0) scale(1,1); }
-      15%      { transform: translateY(-10px) scale(1.08,0.97);}
-      30%      { transform: translateY(0) scale(0.96,1.03);}
-      45%      { transform: translateY(-6px) scale(1.04,0.98);}
-      60%      { transform: translateY(0) scale(1,1);}
+    /* NGL-style bounce-and-shake for the whole extra-box (box + words move together) */
+    @keyframes bounceShakeNGL {
+      0%   { transform: translateY(0) scale(1,1) translateX(0);}
+      12%  { transform: translateY(-15px) scale(1.08,0.96) translateX(0);}
+      24%  { transform: translateY(0) scale(0.96,1.03) translateX(0);}
+      /* Start shake */
+      32%  { transform: translateY(0) scale(1,1) translateX(-8px);}
+      391) translateX(-5px);}
+      53%  { transform: translateY(0) scale(1,1) translateX(5px);}
+      60%  { transform: translateY(0) scale(1,1) translateX(-2px);}
+      67%  { transform: translateY(0) scale(1,1) translateX(2px);}
+      74%  { transform: translateY(0) scale(1,1) translateX(0);}
+      /* End shake */
+      100% { transform: translateY(0) scale(1,1) translateX(0);}
     }
     .bounce-ngl {
-      animation: bounceNGL 1.5s infinite cubic-bezier(.36,.07,.19,.97);
+      animation: bounceShakeNGL 1.5s infinite cubic-bezier(.36,.07,.19,.97);
       display: inline-block;
       will-change: transform;
     }
