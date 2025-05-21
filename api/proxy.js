@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   }
 
   // Your new Google Apps Script Web App endpoint
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxiiG2eD5iw9FY1sHbWAYXDAjhAUw_TqoJEQCi73ipT6N-MsinSUtjr4pC34T-5eAXT/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbzKg6fQI_IWAJwOP_JhDjFXPWoDxv_iukIis_qPqS_DsoIWwvXfPQBNFSP5N-c3vxSm/exec';
 
   try {
     // Forward the POST body to GAS
