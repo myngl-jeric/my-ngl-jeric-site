@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NGL Clone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
     body {
       margin: 0;
       font-family: 'Montserrat', Arial, sans-serif;
@@ -143,17 +143,6 @@
       user-select: none;
       box-sizing: border-box;
     }
-    .extra-box {
-      margin: 15px auto 0;
-      padding: 15px 20px;
-      font-size: 18px;
-      border-radius: 30px;
-      width: 80%;
-      max-width: 300px;
-      background: #000;
-      color: #fff;
-      user-select: none;
-    }
     .people-tap-count {
       color: #fff;
       margin: 10px auto 0;
@@ -164,51 +153,50 @@
       overflow-x: auto;
     }
 
-    @keyframes rollBounceShake {
-      0% {
-        transform: translateY(0) rotate(0deg);
-      }
-      20% {
-        transform: translateY(-10px) rotate(45deg);
-      }
-      40% {
-        transform: translateY(5px) rotate(-30deg);
-      }
-      60% {
-        transform: translateY(-5px) rotate(30deg);
-      }
-      80% {
-        transform: translateY(2px) rotate(-15deg);
-      }
-      100% {
-        transform: translateY(0) rotate(0deg);
-      }
+    /* NGL-style bounce + shake + glow animation!  */
+    @keyframes nglBounceShake {
+      0% {transform: scale(1,1) translateY(0) translateX(0); box-shadow: 0 4px 24px -6px #f43f5e80;}
+      10% {transform: scale(1.08,0.94) translateY(-14px) translateX(0); box-shadow: 0 18px 38px -10px #f43f5e80;}
+      17% {transform: scale(0.94,1.08) translateY(4px) translateX(0); box-shadow: 0 4px 24px -6px #f43f5e80;}
+      23% {transform: scale(1.02,0.98) translateY(-2px) translateX(0); box-shadow: 0 12px 32px -8px #f43f5e80;}
+      27% {transform: scale(1,1) translateY(0) translateX(0); box-shadow: 0 8px 28px -6px #f43f5e80;}
+      32%  { transform: scale(1,1) translateY(0) translateX(-7px);}
+      36%  { transform: scale(1,1) translateY(0) translateX(7px);}
+      42%  { transform: scale(1,1) translateY(0) translateX(-5px);}
+      48%  { transform: scale(1,1) translateY(0) translateX(5px);}
+      54%  { transform: scale(1,1) translateY(0) translateX(-3px);}
+      60%  { transform: scale(1,1) translateY(0) translateX(3px);}
+      66%  { transform: scale(1,1) translateY(0) translateX(0);}
+      100% {transform: scale(1,1) translateY(0) translateX(0); box-shadow: 0 8px 28px -6px #f43f5e80;}
     }
-
-    .rolling {
-      animation: rollBounceShake 0.8s ease forwards;
-    }
-
-    /* NGL-style bounce-and-shake for the whole extra-box (box + words move together) */
-    @keyframes bounceShakeNGL {
-      0%   { transform: translateY(0) scale(1,1) translateX(0);}
-      12%  { transform: translateY(-15px) scale(1.08,0.96) translateX(0);}
-      24%  { transform: translateY(0) scale(0.96,1.03) translateX(0);}
-      /* Start shake */
-      32%  { transform: translateY(0) scale(1,1) translateX(-8px);}
-      39%  { transform: translateY(0) scale(1,1) translateX(8px);}
-      46%  { transform: translateY(0) scale(1,1) translateX(-5px);}
-      53%  { transform: translateY(0) scale(1,1) translateX(5px);}
-      60%  { transform: translateY(0) scale(1,1) translateX(-2px);}
-      67%  { transform: translateY(0) scale(1,1) translateX(2px);}
-      74%  { transform: translateY(0) scale(1,1) translateX(0);}
-      /* End shake */
-      100% { transform: translateY(0) scale(1,1) translateX(0);}
-    }
-    .bounce-ngl {
-      animation: bounceShakeNGL 1.5s infinite cubic-bezier(.36,.07,.19,.97);
+    .ngl-btn {
+      animation: nglBounceShake 1.7s infinite cubic-bezier(.22,1.22,.36,1);
       display: inline-block;
-      will-change: transform;
+      will-change: transform, box-shadow;
+      background: #000;
+      color: #fff;
+      border-radius: 38px;
+      padding: 18px 0;
+      width: 92%;
+      max-width: 340px;
+      margin: 24px auto 0;
+      box-shadow: 0 8px 28px -6px #f43f5e80;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 1.23rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .ngl-btn a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
@@ -246,8 +234,8 @@
       <button type="submit" class="send-button">Send!</button>
     </form>
     <div class="people-tap-count">👇 0 people just tapped this button 😢🥀</div>
-    <div class="extra-box bounce-ngl">
-      <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">
+    <div class="ngl-btn">
+      <a href="#" id="quiz-link">
         Do you want to know me even further?
       </a>
     </div>
