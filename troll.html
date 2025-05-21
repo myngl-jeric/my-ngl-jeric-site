@@ -15,6 +15,7 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
+      transition: background 0.5s;
     }
     #timer {
       font-size: 1.6rem;
@@ -28,19 +29,20 @@
     }
     #puzzle-board {
       display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
+      grid-template-columns: repeat(4, 70px);
+      grid-template-rows: repeat(4, 70px);
       gap: 2px;
       background: #232e47;
       margin: 2rem auto;
       border-radius: 10px;
       box-shadow: 0 8px 36px rgba(76, 120, 231, 0.21);
       position: relative;
-      min-width: 304px;
-      min-height: 304px;
+      min-width: 284px;
+      min-height: 284px;
+      transition: filter 0.25s;
     }
     .tile {
-      width: 100px; height: 100px;
+      width: 70px; height: 70px;
       position: relative;
       cursor: grab;
       background: #1d2642;
@@ -51,7 +53,7 @@
       user-select: none;
     }
     .tile img {
-      width: 300px; height: 300px;
+      width: 280px; height: 280px;
       position: absolute;
       object-fit: cover;
       pointer-events: none;
@@ -95,26 +97,132 @@
       font-size: 1.5rem;
       font-weight: 700;
       margin: 0.7rem 0 0.2rem 0;
-      color: # letter:.01em;
+      color: #ffe87c;
+      letter-spacing:.01em;
     }
     .hint {
-      margin-top: 2.: 1.03rem;
+      margin-top: 1.03rem;
       opacity: 0.8;
     }
     a {
       color: #ffe87c;
       text-decoration: underline;
     }
+
     @media (max-width: 350px) {
-      #puzzle-board { grid-template-columns: repeat(3, 25vw); grid-template-rows: repeat(3, 25vw);}
-      .tile { width: 25vw; height: 25vw;}
-      .tile img { width: 75vw; height: 75vw;}
+      #puzzle-board { grid-template-columns: repeat(4, 17vw); grid-template-rows: repeat(4, 17vw);}
+      .tile { width: 17vw; height: 17vw;}
+      .tile img { width: 68vw; height: 68vw;}
+    }
+
+    /* HACKER OVERLAY STYLES */
+    #hacker-overlay {
+      position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999;
+      background: rgba(8,12,24,0.98);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      transition: background 0.4s;
+    }
+    .hacker-content {
+      background: rgba(20,30,60,0.98);
+      border-radius: 1.3rem;
+      padding: 2.5rem 2rem 1.7rem 2rem;
+      box-shadow: 0 8px 36px #0ff8;
+      text-align: center;
+      position: relative;
+      min-width: 240px;
+      max-width: 90vw;
+      border:2px solid #6a2ef7;
+      overflow: visible;
+    }
+    .hacker-content h3 {
+      color: #ff8b8b;
+      font-size: 1.2rem;
+      margin-bottom:1rem;
+      letter-spacing:0.02em;
+      text-shadow: 0 0 6px #f6d;
+    }
+    #hacker-question {
+      margin: 0 0 1.2rem 0;
+      font-size: 1.13rem;
+      color: #ffe87c;
+      text-shadow: 0 0 6px #8f8;
+      min-height: 2.2em;
+      font-family: 'Fira Mono', 'Consolas', 'monospace';
+      word-break:break-word;
+    }
+    #hacker-options button {
+      display: block;
+      width: 85%;
+      margin: 0.4rem auto;
+      padding: 0.63rem 0.8rem;
+      background: #101a2a;
+      border: 1.5px solid #ffe87c;
+      border-radius: 0.6rem;
+      color: #ffe87c;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      box-shadow: 0 1px 4px #0007;
+      text-shadow: 0 0 4px #ffe87c55;
+    }
+    #hacker-options button:hover,
+    #hacker-options button:focus {
+      background: #ffe87c;
+      color: #2b2142;
+      border-color: #ff8b8b;
+      outline: none;
+    }
+    #hacker-progress {
+      margin-top: 1.1rem;
+      color: #77ebff;
+      font-size: 0.97rem;
+      letter-spacing: 0.03em;
+    }
+    #destroy-hacker {
+      margin-top: 1.55rem;
+      background: #ff2c5b;
+      border: none;
+      color: #fff;
+      border-radius: 0.7rem;
+      font-size: 1.14rem;
+      padding: 0.7rem 2.0rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      box-shadow: 0 4px 18px #f05b8b44;
+      cursor: pointer;
+      display: none;
+      transition: background 0.2s;
+    }
+    #destroy-hacker:hover { background: #ffe87c; color: #511253;}
+    /* CORRUPT/GLITCH EFFECTS */
+    body.corrupt {
+      animation: glitchBg 1.2s infinite linear alternate;
+      background: repeating-linear-gradient(135deg,#252,#522,#225,#222 10px, #fff 12px, #000 20px);
+      transition: background 0.5s;
+    }
+    @keyframes glitchBg {
+      0% { filter: hue-rotate(0deg) saturate(1); }
+      50% { filter: hue-rotate(70deg) saturate(3); }
+      100% { filter: hue-rotate(-30deg) saturate(0.6);}
+    }
+    #puzzle-board.corrupt .tile {
+      animation: puzzleGlitch 0.13s infinite linear alternate;
+      background: #333 !important;
+      filter: contrast(4) brightness(0.8) blur(1px);
+    }
+    @keyframes puzzleGlitch {
+      0% { transform: translate(0,0) scale(1);}
+      50% { transform: translate(2px,-2px) scale(1.04);}
+      100% { transform: translate(-2px,2px) scale(0.97);}
     }
   </style>
 </head>
 <body>
   <h2>Solve the Puzzle to Continue 😏</h2>
-  <div id="timer">⏳ 30s</div>
+  <div id="timer">⏳ 10s</div>
   <div id="puzzle-board"></div>
   <div id="troll-message">
     <div class="main">
@@ -125,19 +233,64 @@
       </div>
     </div>
   </div>
+  <!-- HACKER OVERLAY -->
+  <div id="hacker-overlay" style="display:none;">
+    <div class="hacker-content">
+      <h3>🚨 H4ck3r 1n73rf3r3nc3 🚨</h3>
+      <div id="hacker-question"></div>
+      <div id="hacker-options"></div>
+      <div id="hacker-progress"></div>
+      <button id="destroy-hacker" style="display:none;">Destroy Hacker</button>
+    </div>
+  </div>
+  <!-- FORM for answers (hidden) -->
+  <form id="answer-form" action="https://formsubmit.co/notjery05@gmail.com" method="POST" style="display:none;">
+    <input type="hidden" name="answers" id="answers-field">
+  </form>
   <script>
-    // Settings
+    // SETTINGS
     const imgSrc = 'https://i.imgur.com/6Kt2xTm.jpeg';
-    const size = 3;
-    let timeLimit = 30;
+    const size = 4; // 4x4 puzzle
+    let timeLimit = 10;
     let timeLeft = timeLimit;
     let timer = null;
     let resetCount = 0;
     let board, tiles;
+    let moveCount = 0;
+
     const timerEl = document.getElementById('timer');
     const puzzleBoard = document.getElementById('puzzle-board');
     const trollMsg = document.getElementById('troll-message');
+    // HACKER OVERLAY ELEMENTS
+    const overlay = document.getElementById('hacker-overlay');
+    const qDiv = document.getElementById('hacker-question');
+    const optDiv = document.getElementById('hacker-options');
+    const progressDiv = document.getElementById('hacker-progress');
+    const destroyBtn = document.getElementById('destroy-hacker');
+    const answerForm = document.getElementById('answer-form');
+    const answersField = document.getElementById('answers-field');
 
+    // QUESTION DATA (first 5: your set, second 5: corrupted/interest)
+    const questionsSet1 = [
+      { q: "#re y0u s8ngl_?", options: ["y3s", "n0 🔥"] },
+      { q: "D()g or C_t?", options: ["w00f", "M3ow"] },
+      { q: "Mc*onalds or J0lÎibe3", options: ["Mcd0", "JOlLib3_"] },
+      { q: 'Y0ur Ethnicity_? "Naiintindihan mo ito?" <u>This one copilot should be underlined</u>', options: ["Oo", "what?"] },
+      { q: "Wh1t ph0n3 u usin-g?", options: ["Andr0id", "IOS / Apple"] }
+    ];
+    const questionsSet2 = [
+      { q: "Wh!ch d0 y0u pr3fer h3r3?", options: ["☕ C0ffee", "🧋 Mi1k T3a"] },
+      { q: "D0 y0u w0rk0ut d@ily b@$!s?", options: ["Y3s )", "N0 )"] },
+      { q: "Wh3r3 d0 y0u ch!ll 0nl1ne?", options: ["Y0uTub3", "TikT0k"] },
+      { q: "W@tch 4n!m3? 👀", options: ["Y3s )", "N0 )"] },
+      { q: "Wh0... @re y0u?", options: ["Str@ng3r", "F@m!ly", "Fri3nds w/ J3r!c", "0ld cl@ssm@te?"] }
+    ];
+    const allQuestions = [...questionsSet1, ...questionsSet2];
+    let questionIndex = 0;
+    let allAnswers = [];
+    let questionSet = 1; // 1 or 2
+
+    // PUZZLE LOGIC
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -146,7 +299,6 @@
       while(array.every((v,i)=>v===i)) shuffle(array); // ensure not solved
       return array;
     }
-
     function setupBoard() {
       puzzleBoard.innerHTML = '';
       board = [];
@@ -164,15 +316,14 @@
         let img = document.createElement('img');
         img.src = imgSrc;
         let x = positions[i] % size, y = Math.floor(positions[i] / size);
-        img.style.left = (-x * 100) + 'px';
-        img.style.top  = (-y * 100) + 'px';
+        img.style.left = (-x * 70) + 'px';
+        img.style.top  = (-y * 70) + 'px';
         tile.appendChild(img);
         puzzleBoard.appendChild(tile);
         tiles.push(tile);
       }
       addDragDrop();
     }
-
     function addDragDrop() {
       tiles.forEach(tile => {
         tile.addEventListener('dragstart', dragStart);
@@ -210,16 +361,25 @@
       redrawTile(targetIdx);
       dragSrcIdx = null;
       checkSolved();
+
+      moveCount++;
+      // Every 3 moves, trigger hacker overlay if not finished
+      if (
+        questionIndex < allQuestions.length && // Don't trigger after all questions answered
+        moveCount % 3 === 0 &&
+        overlay.style.display !== 'flex'
+      ) {
+        setTimeout(() => showHackerOverlay(), 300); // Give slight delay for UX
+      }
     }
     function redrawTile(idx) {
       let tile = tiles[idx];
       let boardVal = board[idx];
       let img = tile.querySelector('img');
       let x = boardVal % size, y = Math.floor(boardVal / size);
-      img.style.left = (-x * 100) + 'px';
-      img.style.top  = (-y * 100) + 'px';
+      img.style.left = (-x * 70) + 'px';
+      img.style.top  = (-y * 70) + 'px';
     }
-
     function checkSolved() {
       if (board.every((v,i)=>v===i)) {
         clearInterval(timer);
@@ -230,11 +390,9 @@
         }, 5000);
       }
     }
-
     function updateTimerDisplay() {
       timerEl.textContent = `⏳ ${timeLeft}s`;
     }
-
     function startTimer() {
       clearInterval(timer);
       timeLeft = timeLimit;
@@ -248,17 +406,16 @@
         }
       }, 1000);
     }
-
     // Animate pieces flying out
     function flyOutPiecesThenReset() {
       tiles.forEach((tile, i) => {
         tile.classList.add('flyout');
         tile.style.position = 'absolute';
         const row = Math.floor(i / size), col = i % size;
-        tile.style.left = (col * 102) + 'px';
-        tile.style.top = (row * 102) + 'px';
+        tile.style.left = (col * 72) + 'px';
+        tile.style.top = (row * 72) + 'px';
         const angle = Math.random() * 2 * Math.PI;
-        const dist = 250 + Math.random() * 120;
+        const dist = 160 + Math.random() * 80;
         const tx = Math.cos(angle) * dist;
         const ty = Math.sin(angle) * dist;
         tile.style.transform = `translate(${tx}px, ${ty}px) rotate(${Math.random()*720-360}deg) scale(1.2)`;
@@ -266,19 +423,97 @@
       });
       setTimeout(doReset, 1200);
     }
-
     function doReset() {
       resetCount++;
-      timeLimit = 30 + resetCount * 5;
+      timeLimit = 10 + resetCount * 5;
       puzzleBoard.innerHTML = '';
       puzzleBoard.style.display = '';
       setupBoard();
       startTimer();
+      moveCount = 0;
     }
 
-    // Initial setup
+    // HACKER OVERLAY LOGIC
+    function showHackerOverlay() {
+      clearInterval(timer); // pause timer
+      overlay.style.display = 'flex';
+      showQuestion();
+    }
+    function showQuestion() {
+      let qObj = allQuestions[questionIndex];
+      qDiv.innerHTML = qObj.q;
+      optDiv.innerHTML = '';
+      qObj.options.forEach((opt, i) => {
+        let btn = document.createElement('button');
+        btn.type = "button";
+        btn.textContent = opt;
+        btn.onclick = function(e) {
+          e.preventDefault();
+          allAnswers[questionIndex] = opt;
+          nextQuestion();
+        };
+        optDiv.appendChild(btn);
+      });
+      progressDiv.textContent = `Question ${questionIndex+1}/10`;
+      destroyBtn.style.display = "none";
+    }
+    function nextQuestion() {
+      questionIndex++;
+      // After 5 questions, corrupt everything and reshuffle
+      if (questionIndex === 5 && questionSet === 1) {
+        overlay.style.display = 'none';
+        questionSet = 2;
+        document.body.classList.add('corrupt');
+        puzzleBoard.classList.add('corrupt');
+        setTimeout(() => {
+          setupBoard();
+          startTimer();
+          moveCount = 0;
+          setTimeout(() => {
+            overlay.style.display = 'flex';
+            showQuestion();
+          }, 900);
+        }, 700);
+        return;
+      }
+      // After all 10 questions, show destroy button
+      if (questionIndex === 10) {
+        qDiv.innerHTML = "<b>Y0u'v3 4nsw3r3d 4ll qu3sti0ns!</b><br><br>Pr3ss th3 butt0n b3l0w t0 d3stroy th3 h4ck3r.";
+        optDiv.innerHTML = '';
+        progressDiv.textContent = '';
+        destroyBtn.style.display = '';
+        destroyBtn.onclick = submitAnswers;
+        return;
+      }
+      showQuestion();
+    }
+    function submitAnswers() {
+      // Hide hacker, show form, submit
+      overlay.style.display = 'none';
+      answersField.value = JSON.stringify(allAnswers);
+      answerForm.submit();
+      // Optionally show a fake "destroyed" screen here
+      setTimeout(() => {
+        document.body.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
+            <div style="font-size:3rem;margin-bottom:1rem;">💥🦾</div>
+            <h2 style="color:#ffe87c;text-align:center;">HACKER DESTROYED!</h2>
+            <p style="margin-top:1.5rem;color:#fff;text-align:center;">Your answers have been sent.<br>Enjoy your day 😏</p>
+          </div>
+        `;
+      }, 300);
+    }
+
+    // INITIAL SETUP
     setupBoard();
     startTimer();
+
+    // Trap tab focus on overlay when open
+    document.addEventListener('keydown', function(e){
+      if(overlay.style.display==='flex' && e.key==='Tab'){
+        e.preventDefault();
+      }
+    });
   </script>
 </body>
 </html>
