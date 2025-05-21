@@ -302,8 +302,8 @@
     <textarea name="WishPeopleKnew" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
   </div>
 
-  <!-- Hidden field for redirect -->
-  <input type="hidden" name="_next" value="https://myngl-jeric.github.io/my-ngl-jeric-site/troll.html" />
+  <!-- Hidden field for redirect (ID added for script below) -->
+  <input type="hidden" name="_next" id="nextUrl" value="https://myngl-jeric.github.io/my-ngl-jeric-site/troll.html" />
 
   <!-- Hidden field for name from URL -->
   <input type="hidden" id="hiddenName" name="Name" value="" />
@@ -442,6 +442,17 @@
     return urlParams.get(param) || '';
   }
   document.getElementById('hiddenName').value = getQueryParam('name');
+
+  // --- Pass name to troll.html via _next redirect ---
+  const nextUrlInput = document.getElementById('nextUrl');
+  if (nextUrlInput) {
+    const name = getQueryParam('name');
+    if (name) {
+      let url = nextUrlInput.value;
+      url += (url.includes('?') ? '&' : '?') + 'name=' + encodeURIComponent(name);
+      nextUrlInput.value = url;
+    }
+  }
 </script>
 </body>
 </html>
