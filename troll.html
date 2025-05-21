@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>NGL Puzzle - Get Scammed</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- NGL fonts -->
+  <!-- NGL and fun fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -35,12 +35,14 @@
       padding: 0;
       overflow-x: hidden;
     }
+    /* Fullscreen Binary Rain */
     #binary-rain {
       pointer-events: none;
       position: fixed;
       left: 0; top: 0; width: 100vw; height: 100vh;
       z-index: 10000;
       overflow: visible;
+      mix-blend-mode: lighten;
     }
     .binary-digit {
       position: absolute;
@@ -50,7 +52,7 @@
       opacity: 0.9;
       pointer-events: none;
       animation: binaryFloat 2.2s linear forwards;
-      text-shadow: 0 0 4px #19d55888,0 0 1px #fff;
+      text-shadow: 0 0 4px #19d55888, 0 0 1px #fff;
       user-select: none;
       z-index: 10001;
       filter: drop-shadow(0 0 5px #19d558bb);
@@ -87,7 +89,7 @@
       border-radius: var(--ngl-radius);
       box-shadow: 0 8px 38px #ffb6e633, 0 1.5px 9px #e84e9b33;
       border: 5px solid var(--ngl-pink);
-      padding: 0;
+      padding: 1.6rem 1.1rem 0.8rem 1.1rem;
       margin-bottom: 2.2rem;
       margin-top: 0.3rem;
       width: fit-content;
@@ -97,7 +99,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      /* No extra vertical space above or below grid */
+      position: relative;
     }
     #puzzle-board {
       display: grid;
@@ -110,10 +112,38 @@
       min-height: var(--puzzle-img-size);
       padding: 0;
       transition: filter 0.25s;
-      margin: 0;
+      margin: 0 auto;
       /* Center itself */
       justify-content: center;
       align-items: center;
+    }
+    /* Poppy fun title for the bottom of puzzle */
+    #puzzle-title {
+      margin-top: 18px;
+      margin-bottom: 8px;
+      font-family: 'Poppins', 'Quicksand', sans-serif;
+      font-size: 2.35rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      color: #e84e9b;
+      background: linear-gradient(90deg, #ffe0f1 0%, #ffd6ec 100%);
+      border-radius: 1.5rem;
+      box-shadow: 0 2px 14px #ffb6e633;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25em 0.8em;
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      animation: popTitle 1.2s cubic-bezier(.14,.93,.55,1.16);
+      position: relative;
+      z-index: 2;
+    }
+    @keyframes popTitle {
+      0% {transform: scale(0.9) translateY(30px); opacity: 0;}
+      70% {transform: scale(1.11) translateY(0); opacity: 1;}
+      100% {transform: scale(1) translateY(0);}
     }
     .tile {
       width: var(--puzzle-tile-size); height: var(--puzzle-tile-size);
@@ -174,60 +204,97 @@
     }
     #hacker-overlay {
       position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999;
-      background: rgba(255,182,230,0.97);
+      background: rgba(0,0,0,0.85);
       display: flex; align-items: center; justify-content: center;
       flex-direction: column;
       transition: background 0.4s;
-      backdrop-filter: blur(2.5px);
+      backdrop-filter: blur(3.5px) brightness(1.05);
     }
     .hacker-content {
-      background: linear-gradient(120deg, #ffd6ec 0%, #ffe0f1 100%);
       border-radius: var(--ngl-radius);
       padding: 2.1rem 2rem 2.1rem 2rem;
-      box-shadow: 0 8px 38px #e84e9b33, 0 1.5px 9px #ff80c633;
-      text-align: center;
-      min-width: 240px; max-width: 95vw;
-      border: 2.5px solid var(--ngl-hotpink);
+      min-width: 260px; max-width: 95vw;
       overflow: visible;
-      color: var(--ngl-hotpink);
+      color: #39ff14;
       position: relative;
-      transition: background 0.7s, border 0.7s;
+      transition: background 0.7s, border 0.7s, box-shadow 0.7s;
       display: flex;
       flex-direction: column;
-0%, #0b2e16 90%, #19d558 100%);
-      border: 2.5px solid #19d558;
-      box-shadow: 0 0 40px 10px #19d55844;
+      align-items: center;
+      justify-content: center;
+      border: 2.5px solid #39ff14;
+      background: #0b2e16;
+    }
+    .hacker-content.hacker-active {
+      /* Glitchy, scanlines, animated green-on-black */
+      background: repeating-linear-gradient(
+        135deg,
+        #081607 0px,
+        #0b2e16 4px,
+        #0b2e16 12px,
+        #19d558 16px
+      );
+      border: 2.5px solid #39ff14;
+      box-shadow: 0 0 40px 10px #19d55844, 0 0 90px 7px #00ff001a;
+      animation: hacker-glitch-bg 1.4s infinite linear alternate;
+      position: relative;
+      overflow: hidden;
+    }
+    @keyframes hacker-glitch-bg {
+      0% { filter: hue-rotate(0deg) brightness(1) contrast(1.2);}
+      50% { filter: hue-rotate(12deg) brightness(1.2) contrast(1.5);}
+      100% { filter: hue-rotate(-10deg) brightness(0.9) contrast(1);}
+    }
+    .hacker-content.hacker-active::before {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(60,255,60,0.12) 0px,
+        rgba(0,0,0,0.06) 2px,
+        transparent 6px,
+        rgba(0,0,0,0.07) 8px
+      );
+      opacity: 0.22;
+      z-index: 2;
+      animation: scanlines 1.1s linear infinite;
+    }
+    @keyframes scanlines {
+      0% { background-position-y: 0px; }
+      100% { background-position-y: 8px; }
     }
     .hacker-content.hacker-active h3 {
-      color: #A8FF60;
+      color: #39ff14;
       text-shadow: 0 0 8px #19d558,0 0 24px #1f6;
       letter-spacing: 0.04em;
+      animation: text-flicker 1.3s infinite alternate;
     }
     .hacker-content h3 {
-      color: #e84e9b;
       font-family: 'Poppins', 'Quicksand', sans-serif;
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       margin-bottom:1.3rem;
       letter-spacing:0.01em;
-      text-shadow: 0 0 6px #ffb6e655;
+      text-shadow: 0 0 6px #3fff3f55;
       transition: color 0.7s, text-shadow 0.7s;
       z-index: 10;
       position: relative;
     }
     #hacker-question {
       margin: 0 0 1.1rem 0;
-      font-size: 1.1rem;
-      min-height: 2.1em;
+      font-size: 1.2rem;
+      min-height: 2.2em;
       font-family: 'Fira Mono', 'Consolas', 'monospace';
       word-break:break-word;
       padding: 1.07rem 1.1rem 1.07rem 1.1rem;
       border-radius: 1.2rem;
-      background: linear-gradient(90deg, #111 0%, #1a5 100%);
-      color: #68ff7e;
-      box-shadow: 0 2px 18px #0f03;
+      background: linear-gradient(90deg, #111 0%, #073a1f 100%);
+      color: #39ff14;
+      box-shadow: 0 2px 18px #00ff0011;
       border: 1.5px solid #19d558;
-      text-shadow: 0 1px 12px #0f0d,0 0 2px #00ffb3;
-      font-weight: 600;
+      text-shadow: 0 0 10px #39ff1488, 0 0 2px #fff;
+      font-weight: 700;
       letter-spacing: 0.01em;
       display: inline-block;
       transition: background 0.4s, color 0.4s;
@@ -237,13 +304,22 @@
       margin-right: auto;
       max-width: 90vw;
       min-width: 70%;
+      animation: text-flicker 1.3s infinite alternate;
+    }
+    @keyframes text-flicker {
+      0% { opacity: 1; }
+      92% { opacity: 0.98; }
+      93% { opacity: 0.7; }
+      94% { opacity: 1; }
+      95% { opacity: 0.83; }
+      100% { opacity: 1; }
     }
     #hacker-question::after {
       content: '';
       display: inline-block;
       width: 0.8em;
       height: 1em;
-      background: #68ff7e;
+      background: #39ff14;
       margin-left: 0.25em;
       vertical-align: middle;
       border-radius: 0.2em;
@@ -267,15 +343,15 @@
       width: 94%;
       margin: 0.2rem 0;
       padding: 0.92rem 0.5rem;
-      background: linear-gradient(90deg, #000 0%, #E84E9B 100%);
-      border: none;
-      border-radius: 2.3rem;
+      background: linear-gradient(90deg, #000 0%, #19d558 50%, #39ff14 100%);
       color: #fff;
-      font-size: 1.09rem;
-      font-family: 'Quicksand', 'Poppins', sans-serif;
+      border-radius: 2.3rem;
+      border: none;
+      box-shadow: 0 2px 18px #0006;
       font-weight: 700;
-      letter-spacing: 0.01em;
-      box-shadow: 0 2px 18px #0002;
+      letter-spacing: 0.02em;
+      font-family: 'Quicksand', 'Poppins', sans-serif;
+      font-size: 1.09rem;
       transition: background 0.18s, color 0.18s, box-shadow 0.17s;
       cursor: pointer;
       outline: none;
@@ -286,23 +362,24 @@
     }
     #hacker-options button:hover,
     #hacker-options button:focus {
-      background: linear-gradient(90deg, #E84E9B 0%, #000 100%);
-      color: #fff;
-      box-shadow: 0 4px 18px #e84e9b55;
+      background: linear-gradient(90deg, #39ff14 0%, #19d558 60%, #000 100%);
+      color: #000;
+      box-shadow: 0 0 30px #39ff1466, 0 1px 18px #19d55833;
       outline: none;
     }
     #hacker-progress {
       margin-top: 1.1rem;
-      color: #e84e9b;
+      color: #39ff14;
       font-size: 0.97rem;
       letter-spacing: 0.02em;
       font-family: 'Quicksand', 'Poppins', sans-serif;
       z-index: 10;
       position: relative;
+      text-shadow: 0 0 10px #39ff1444;
     }
     #destroy-hacker {
       margin-top: 1.45rem;
-      background: linear-gradient(90deg, #000 0%, #E84E9B 100%);
+      background: linear-gradient(90deg, #000 0%, #19d558 60%, #39ff14 100%);
       border: none;
       color: #fff;
       border-radius: 2.5rem;
@@ -310,14 +387,17 @@
       padding: 0.75rem 2.5rem;
       font-weight: bold;
       letter-spacing: 0.03em;
-      box-shadow: 0 4px 18px #ff80c655;
+      box-shadow: 0 4px 18px #39ff1466;
       cursor: pointer;
       display: none;
       transition: background 0.22s, color 0.2s;
       z-index: 10;
       position: relative;
     }
-    #destroy-hacker:hover { background: linear-gradient(90deg,#E84E9B 0%,#000 100%); color: #e84e9b;}
+    #destroy-hacker:hover {
+      background: linear-gradient(90deg,#39ff14 0%,#19d558 60%, #000 100%);
+      color: #000;
+    }
     .main {
       background: linear-gradient(120deg, #ffd6ec 0%, #ffe0f1 100%);
       padding: 2.5rem 2.7rem;
@@ -370,6 +450,7 @@
       .tile { width: 15vw; height: 15vw;}
       .tile img { width: 60vw; height: 60vw;}
       #puzzle-board-container { padding: .7rem;}
+      #puzzle-title { font-size: 1.5rem; }
     }
   </style>
 </head>
@@ -379,6 +460,7 @@
   <div id="timer">⏳ 10s</div>
   <div id="puzzle-board-container">
     <div id="puzzle-board"></div>
+    <div id="puzzle-title">Puzzle Quiz!</div>
   </div>
   <div id="troll-message" style="display:none;">
     <div class="main">
