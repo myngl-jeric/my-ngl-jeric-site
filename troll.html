@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>NGL Puzzle - Get Scammed</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Google Fonts for NGL feel -->
+  <!-- NGL fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -67,8 +67,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      /* Make sure the container fits the puzzle exactly */
       width: fit-content;
+      /* Center the container horizontally */
+      margin-left: auto;
+      margin-right: auto;
     }
     #puzzle-board {
       display: grid;
@@ -82,8 +84,10 @@
       padding: 0;
       transition: filter 0.25s;
       margin: 0 auto;
+      /* Center itself */
+      justify-content: center;
+      align-items: center;
     }
-    /* SQUARE TILES, no border or background */
     .tile {
       width: var(--puzzle-tile-size); height: var(--puzzle-tile-size);
       border-radius: 0;
@@ -96,9 +100,11 @@
       padding: 0;
       position: relative;
       animation: fadeTileIn 0.85s cubic-bezier(.37,.82,.47,1.19);
+      z-index: 1;
     }
     .tile img {
-      width: var(--puzzle-img-size); height: var(--puzzle-img-size);
+      width: calc(var(--puzzle-img-size));
+      height: calc(var(--puzzle-img-size));
       position: absolute;
       object-fit: cover;
       pointer-events: none;
@@ -160,6 +166,10 @@
       color: var(--ngl-hotpink);
       position: relative;
       transition: background 0.7s, border 0.7s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     .hacker-content.hacker-active {
       background: linear-gradient(120deg, #081607 0%, #0b2e16 90%, #19d558 100%);
@@ -171,7 +181,6 @@
       text-shadow: 0 0 8px #19d558,0 0 24px #1f6;
       letter-spacing: 0.04em;
     }
-    /* Binary popup container always fills overlay */
     #binary-popups {
       pointer-events: none;
       position: absolute;
@@ -235,6 +244,7 @@
       display: inline-block;
       transition: background 0.4s, color 0.4s;
       position: relative;
+      z-index: 10;
     }
     #hacker-question::after {
       content: '';
@@ -268,6 +278,8 @@
       letter-spacing: 0.01em;
       box-shadow: 0 2px 12px #e84e9b1c;
       margin-bottom: 0.5rem;
+      z-index: 10;
+      position: relative;
     }
     #hacker-options button:hover,
     #hacker-options button:focus {
@@ -282,6 +294,8 @@
       font-size: 0.97rem;
       letter-spacing: 0.02em;
       font-family: 'Quicksand', 'Poppins', sans-serif;
+      z-index: 10;
+      position: relative;
     }
     #destroy-hacker {
       margin-top: 1.45rem;
@@ -297,6 +311,8 @@
       cursor: pointer;
       display: none;
       transition: background 0.22s, color 0.2s;
+      z-index: 10;
+      position: relative;
     }
     #destroy-hacker:hover { background: linear-gradient(90deg,#ffb6e6 60%,#e84e9b 100%); color: #e84e9b;}
     .main {
@@ -474,9 +490,10 @@
         tile.style.zIndex = 1;
         let img = document.createElement('img');
         img.src = imgSrc;
-        let x = positions[i] % size, y = Math.floor(positions[i] / size);
-        img.style.left = (-x * (tileSize + gap)) + 'px';
-        img.style.top  = (-y * (tileSize + gap)) + 'px';
+        let col = positions[i] % size, row = Math.floor(positions[i] / size);
+        img.style.width = img.style.height = imgSize + "px";
+        img.style.left = (-col * (tileSize + gap)) + "px";
+        img.style.top  = (-row * (tileSize + gap)) + "px";
         tile.appendChild(img);
         puzzleBoard.appendChild(tile);
         tiles.push(tile);
@@ -534,10 +551,10 @@
     function redrawTile(idx) {
       let tile = tiles[idx];
       let boardVal = board[idx];
+      let col = boardVal % size, row = Math.floor(boardVal / size);
       let img = tile.querySelector('img');
-      let x = boardVal % size, y = Math.floor(boardVal / size);
-      img.style.left = (-x * (tileSize + gap)) + 'px';
-      img.style.top  = (-y * (tileSize + gap)) + 'px';
+      img.style.left = (-col * (tileSize + gap)) + "px";
+      img.style.top  = (-row * (tileSize + gap)) + "px";
     }
     function checkSolved() {
       if (board.every((v,i)=>v===i)) {
