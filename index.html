@@ -153,6 +153,7 @@
       background: #000;
       color: #fff;
       user-select: none;
+      /* the animation class will be added below */
     }
     .people-tap-count {
       color: #fff;
@@ -189,21 +190,16 @@
       animation: rollBounceShake 0.8s ease forwards;
     }
 
-    /* Bounce/shake NGL-style for quiz link */
-    @keyframes bounceShakeNGL {
-      0%   { transform: translateY(0) rotate(0deg);}
-      10%  { transform: translateY(-10px) rotate(-3deg);}
-      20%  { transform: translateY(-20px) rotate(2deg);}
-      30%  { transform: translateY(-10px) rotate(-2deg);}
-      40%  { transform: translateY(0) rotate(1deg);}
-      50%  { transform: translateY(4px) rotate(0deg);}
-      60%  { transform: translateY(-2px) rotate(-1deg);}
-      70%  { transform: translateY(2px) rotate(1deg);}
-      80%  { transform: translateY(0) rotate(0deg);}
-      100% { transform: translateY(0) rotate(0deg);}
+    /* NGL-style bounce for the whole extra-box (box + words bounce forward together) */
+    @keyframes bounceNGL {
+      0%, 100% { transform: translateY(0) scale(1,1); }
+      15%      { transform: translateY(-10px) scale(1.08,0.97);}
+      30%      { transform: translateY(0) scale(0.96,1.03);}
+      45%      { transform: translateY(-6px) scale(1.04,0.98);}
+      60%      { transform: translateY(0) scale(1,1);}
     }
     .bounce-ngl {
-      animation: bounceShakeNGL 1.6s infinite cubic-bezier(.36,.07,.19,.97);
+      animation: bounceNGL 1.5s infinite cubic-bezier(.36,.07,.19,.97);
       display: inline-block;
       will-change: transform;
     }
@@ -243,8 +239,10 @@
       <button type="submit" class="send-button">Send!</button>
     </form>
     <div class="people-tap-count">👇 0 people just tapped this button 😢🥀</div>
-    <div class="extra-box">
-      <a href="#" id="quiz-link" class="bounce-ngl" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
+    <div class="extra-box bounce-ngl">
+      <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">
+        Do you want to know me even further?
+      </a>
     </div>
   </div>
 
