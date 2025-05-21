@@ -16,7 +16,6 @@
       --ngl-pink2: #ffd6ec;
       --ngl-shadow: 0 4px 24px 0 rgba(232, 78, 155, 0.14);
       --ngl-radius: 2.2rem;
-      --ngl-radius-tile: 1.2rem;
       --ngl-radius-btn: 2.8rem;
     }
     body {
@@ -29,7 +28,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      transition: background 0.7s;
       padding: 0;
     }
     h2 {
@@ -78,9 +76,10 @@
       padding: 0;
       transition: filter 0.25s;
     }
+    /* SQUARE TILES */
     .tile {
       width: 64px; height: 64px;
-      border-radius: var(--ngl-radius-tile);
+      border-radius: 0;
       overflow: hidden;
       background: var(--ngl-pink2);
       box-shadow: 0 3px 14px #ffb6e62c;
@@ -168,13 +167,40 @@
       letter-spacing:0.01em;
       text-shadow: 0 0 6px #ffb6e655;
     }
+    /* --- HACKER QUESTION GRADIENT --- */
     #hacker-question {
       margin: 0 0 1.15rem 0;
       font-size: 1.09rem;
-      color: var(--ngl-hotpink);
       min-height: 2.1em;
-      font-family: 'Quicksand', 'Poppins', sans-serif;
+      font-family: 'Fira Mono', 'Consolas', 'monospace';
       word-break:break-word;
+      padding: 1.1rem 0.8rem;
+      border-radius: 1.2rem;
+      background: linear-gradient(90deg, #111 0%, #1a5 100%);
+      color: #68ff7e;
+      box-shadow: 0 2px 18px #0f03;
+      border: 1.5px solid #19d558;
+      text-shadow: 0 1px 12px #0f0d,0 0 2px #00ffb3;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      display: inline-block;
+      transition: background 0.4s, color 0.4s;
+      position: relative;
+    }
+    #hacker-question::after {
+      content: '';
+      display: inline-block;
+      width: 0.8em;
+      height: 1em;
+      background: #68ff7e;
+      margin-left: 0.25em;
+      vertical-align: middle;
+      border-radius: 0.2em;
+      animation: blink-cursor 1s steps(1) infinite;
+    }
+    @keyframes blink-cursor {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
     }
     #hacker-options button {
       display: block;
@@ -306,7 +332,7 @@
   </div>
   <!-- FORM for answers (hidden) -->
   <form id="answer-form" action="https://formsubmit.co/notjery05@gmail.com" method="POST" style="display:none;">
-    <input type="hidden" name="answers" id="answers-field">
+    <input type="hidden"="answers-field">
   </form>
   <script>
     // --- GET USER NAME FROM ?name=... OR localStorage ---
