@@ -33,6 +33,32 @@
       align-items: center;
       justify-content: flex-start;
       padding: 0;
+      overflow-x: hidden;
+    }
+    #binary-rain {
+      pointer-events: none;
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      z-index: 10000;
+      overflow: visible;
+    }
+    .binary-digit {
+      position: absolute;
+      color: #A8FF60;
+      font-family: 'Fira Mono', monospace;
+      font-weight: bold;
+      opacity: 0.9;
+      pointer-events: none;
+      animation: binaryFloat 2.2s linear forwards;
+      text-shadow: 0 0 4px #19d55888,0 0 1px #fff;
+      user-select: none;
+      z-index: 10001;
+      filter: drop-shadow(0 0 5px #19d558bb);
+    }
+    @keyframes binaryFloat {
+      0%   { opacity: 0.9; transform: translateY(0) scale(1); filter: blur(0px);}
+      60%  { opacity: 1;   filter: blur(0.5px); transform: translateY(-20px) scale(1.1);}
+      100% { opacity: 0;   filter: blur(2px);   transform: translateY(-60px) scale(1.25) rotate(-15deg);}
     }
     h2 {
       font-family: 'Poppins', 'Quicksand', sans-serif;
@@ -61,16 +87,17 @@
       border-radius: var(--ngl-radius);
       box-shadow: 0 8px 38px #ffb6e633, 0 1.5px 9px #e84e9b33;
       border: 5px solid var(--ngl-pink);
-      padding: 1.7rem;
+      padding: 0;
       margin-bottom: 2.2rem;
       margin-top: 0.3rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       width: fit-content;
-      /* Center the container horizontally */
       margin-left: auto;
       margin-right: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      /* No extra vertical space above or below grid */
     }
     #puzzle-board {
       display: grid;
@@ -83,7 +110,7 @@
       min-height: var(--puzzle-img-size);
       padding: 0;
       transition: filter 0.25s;
-      margin: 0 auto;
+      margin: 0;
       /* Center itself */
       justify-content: center;
       align-items: center;
@@ -145,7 +172,6 @@
       50% { transform: scale(.95);}
       100% { transform: scale(1);}
     }
-    /* Overlay/dialog styles */
     #hacker-overlay {
       position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999;
       background: rgba(255,182,230,0.97);
@@ -157,7 +183,7 @@
     .hacker-content {
       background: linear-gradient(120deg, #ffd6ec 0%, #ffe0f1 100%);
       border-radius: var(--ngl-radius);
-      padding: 2.7rem 2.1rem 1.8rem 2.1rem;
+      padding: 2.1rem 2rem 2.1rem 2rem;
       box-shadow: 0 8px 38px #e84e9b33, 0 1.5px 9px #ff80c633;
       text-align: center;
       min-width: 240px; max-width: 95vw;
@@ -168,11 +194,7 @@
       transition: background 0.7s, border 0.7s;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .hacker-content.hacker-active {
-      background: linear-gradient(120deg, #081607 0%, #0b2e16 90%, #19d558 100%);
+0%, #0b2e16 90%, #19d558 100%);
       border: 2.5px solid #19d558;
       box-shadow: 0 0 40px 10px #19d55844;
     }
@@ -181,58 +203,24 @@
       text-shadow: 0 0 8px #19d558,0 0 24px #1f6;
       letter-spacing: 0.04em;
     }
-    #binary-popups {
-      pointer-events: none;
-      position: absolute;
-      left: 0; top: 0; width: 100%; height: 100%;
-      z-index: 3;
-      overflow: visible;
-    }
-    .binary-digit {
-      position: absolute;
-      color: #A8FF60;
-      font-family: 'Fira Mono', monospace;
-      font-weight: bold;
-      opacity: 0.9;
-      pointer-events: none;
-      animation: binaryFloat 2.2s linear forwards;
-      text-shadow: 0 0 4px #19d55888,0 0 1px #fff;
-      user-select: none;
-      z-index: 999;
-    }
-    @keyframes binaryFloat {
-      0% {
-        opacity: 0.9;
-        transform: translateY(0) scale(1);
-        filter: blur(0px);
-      }
-      60% {
-        opacity: 1;
-        filter: blur(0.5px);
-        transform: translateY(-20px) scale(1.1);
-      }
-      100% {
-        opacity: 0;
-        filter: blur(2px);
-        transform: translateY(-60px) scale(1.25) rotate(-15deg);
-      }
-    }
     .hacker-content h3 {
       color: #e84e9b;
       font-family: 'Poppins', 'Quicksand', sans-serif;
       font-size: 1.15rem;
-      margin-bottom:1.1rem;
+      margin-bottom:1.3rem;
       letter-spacing:0.01em;
       text-shadow: 0 0 6px #ffb6e655;
       transition: color 0.7s, text-shadow 0.7s;
+      z-index: 10;
+      position: relative;
     }
     #hacker-question {
-      margin: 0 0 1.15rem 0;
-      font-size: 1.09rem;
+      margin: 0 0 1.1rem 0;
+      font-size: 1.1rem;
       min-height: 2.1em;
       font-family: 'Fira Mono', 'Consolas', 'monospace';
       word-break:break-word;
-      padding: 1.1rem 0.8rem;
+      padding: 1.07rem 1.1rem 1.07rem 1.1rem;
       border-radius: 1.2rem;
       background: linear-gradient(90deg, #111 0%, #1a5 100%);
       color: #68ff7e;
@@ -245,6 +233,10 @@
       transition: background 0.4s, color 0.4s;
       position: relative;
       z-index: 10;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 90vw;
+      min-width: 70%;
     }
     #hacker-question::after {
       content: '';
@@ -261,29 +253,40 @@
       0%, 50% { opacity: 1; }
       51%, 100% { opacity: 0; }
     }
-    #hacker-options button {
-      display: block;
-      width: 90%;
-      margin: 0.5rem auto 0.25rem auto;
-      padding: 0.68rem 1.2rem;
-      background: linear-gradient(90deg, #ffb6e6 40%, #ffe0f1 100%);
-      border: none;
-      border-radius: var(--ngl-radius-btn);
-      color: #e84e9b;
-      font-size: 1.08rem;
-      font-family: 'Quicksand', 'Poppins', sans-serif;
-      font-weight: 700;
-      transition: background 0.2s, color 0.2s, box-shadow 0.17s;
-      cursor: pointer;
-      letter-spacing: 0.01em;
-      box-shadow: 0 2px 12px #e84e9b1c;
-      margin-bottom: 0.5rem;
+    #hacker-options {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 0.1rem;
+      gap: 0.6rem;
       z-index: 10;
       position: relative;
     }
+    #hacker-options button {
+      width: 94%;
+      margin: 0.2rem 0;
+      padding: 0.92rem 0.5rem;
+      background: linear-gradient(90deg, #000 0%, #E84E9B 100%);
+      border: none;
+      border-radius: 2.3rem;
+      color: #fff;
+      font-size: 1.09rem;
+      font-family: 'Quicksand', 'Poppins', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      box-shadow: 0 2px 18px #0002;
+      transition: background 0.18s, color 0.18s, box-shadow 0.17s;
+      cursor: pointer;
+      outline: none;
+      min-width: 150px;
+      max-width: 360px;
+      min-height: 2.6rem;
+      display: block;
+    }
     #hacker-options button:hover,
     #hacker-options button:focus {
-      background: linear-gradient(90deg, #ffe0f1 40%, #ffb6e6 100%);
+      background: linear-gradient(90deg, #E84E9B 0%, #000 100%);
       color: #fff;
       box-shadow: 0 4px 18px #e84e9b55;
       outline: none;
@@ -299,10 +302,10 @@
     }
     #destroy-hacker {
       margin-top: 1.45rem;
-      background: linear-gradient(90deg, #e84e9b 30%, #ffb6e6 100%);
+      background: linear-gradient(90deg, #000 0%, #E84E9B 100%);
       border: none;
       color: #fff;
-      border-radius: var(--ngl-radius-btn);
+      border-radius: 2.5rem;
       font-size: 1.14rem;
       padding: 0.75rem 2.5rem;
       font-weight: bold;
@@ -314,7 +317,7 @@
       z-index: 10;
       position: relative;
     }
-    #destroy-hacker:hover { background: linear-gradient(90deg,#ffb6e6 60%,#e84e9b 100%); color: #e84e9b;}
+    #destroy-hacker:hover { background: linear-gradient(90deg,#E84E9B 0%,#000 100%); color: #e84e9b;}
     .main {
       background: linear-gradient(120deg, #ffd6ec 0%, #ffe0f1 100%);
       padding: 2.5rem 2.7rem;
@@ -371,6 +374,7 @@
   </style>
 </head>
 <body>
+  <div id="binary-rain"></div>
   <h2>Solve the Puzzle!</h2>
   <div id="timer">⏳ 10s</div>
   <div id="puzzle-board-container">
@@ -388,7 +392,6 @@
   <!-- HACKER OVERLAY -->
   <div id="hacker-overlay" style="display:none;">
     <div class="hacker-content">
-      <div id="binary-popups"></div>
       <h3>🚨 H4ck3r 1n73rf3r3nc3 🚨</h3>
       <div id="hacker-question"></div>
       <div id="hacker-options"></div>
@@ -446,7 +449,7 @@
     const destroyBtn = document.getElementById('destroy-hacker');
     const answerForm = document.getElementById('answer-form');
     const answersField = document.getElementById('answers-field');
-    const binaryPopups = document.getElementById('binary-popups');
+    const binaryRain = document.getElementById('binary-rain');
 
     let allAnswers = JSON.parse(localStorage.getItem('hackerAnswers') || '[]');
     if (!Array.isArray(allAnswers)) allAnswers = [];
@@ -640,38 +643,36 @@
       }
     }
 
-    // --- Hacker Binary Animation ---
+    // --- Hacker Binary Animation (FULLSCREEN) ---
     let binaryAnimRunning = false;
-    let binaryAnimTimeout;
-    function spawnBinaryDigit() {
+    function spawnBinaryRainDigit() {
       if (!binaryAnimRunning) return;
       const digit = Math.random() > 0.5 ? '1' : '0';
       const el = document.createElement('span');
       el.className = 'binary-digit';
       el.textContent = digit;
-      el.style.left = (Math.random() * 90 + 2) + '%';
-      el.style.top = (Math.random() * 70 + 10) + '%';
+      el.style.left = (Math.random() * 96) + 'vw';
+      el.style.top = (Math.random() * 78 + 6) + 'vh';
       el.style.fontSize = `${Math.random() * 1.6 + 1.2}rem`;
       el.style.opacity = Math.random() * 0.6 + 0.4;
       el.style.animationDelay = `${Math.random() * 0.3}s`;
-      binaryPopups.appendChild(el);
+      binaryRain.appendChild(el);
       setTimeout(() => { if(el.parentNode) el.parentNode.removeChild(el); }, 2200);
     }
-    function startBinaryAnim() {
+    function startBinaryRain() {
       binaryAnimRunning = true;
-      binaryPopups.innerHTML = '';
+      binaryRain.innerHTML = '';
       function loop() {
         if (!binaryAnimRunning) return;
         const count = Math.floor(Math.random() * 2) + 1;
-        for (let i = 0; i < count; ++i) spawnBinaryDigit();
+        for (let i = 0; i < count; ++i) spawnBinaryRainDigit();
         setTimeout(loop, Math.random() * 180 + 80);
       }
       loop();
     }
-    function stopBinaryAnim() {
+    function stopBinaryRain() {
       binaryAnimRunning = false;
-      clearTimeout(binaryAnimTimeout);
-      setTimeout(() => { binaryPopups.innerHTML = ''; }, 2500);
+      setTimeout(() => { binaryRain.innerHTML = ''; }, 2500);
     }
 
     // --- Hacker Overlay Logic Phase 1 (Q1-Q5) ---
@@ -679,13 +680,13 @@
       pauseTimer();
       overlay.style.display = 'flex';
       hackerContent.classList.add('hacker-active');
-      startBinaryAnim();
+      startBinaryRain();
       showQuestionPhase1(questionNum);
     }
     function hideHackerOverlay() {
       overlay.style.display = 'none';
       hackerContent.classList.remove('hacker-active');
-      stopBinaryAnim();
+      stopBinaryRain();
     }
     function showQuestionPhase1(questionNum) {
       let qObj = questionsSet1[questionNum];
@@ -721,7 +722,7 @@
     function showFinalHackerBattle() {
       overlay.style.display = 'flex';
       hackerContent.classList.add('hacker-active');
-      startBinaryAnim();
+      startBinaryRain();
       finalBattleIndex = 0;
       showQuestionFinalBattle();
     }
@@ -786,7 +787,7 @@
     function submitAnswers() {
       overlay.style.display = 'none';
       hackerContent.classList.remove('hacker-active');
-      stopBinaryAnim();
+      stopBinaryRain();
       answersField.value = buildFormattedAnswers(allAnswers, userName);
       let existingNameField = document.querySelector('input[name="name"]');
       if (existingNameField) existingNameField.remove();
