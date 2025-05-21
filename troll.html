@@ -252,6 +252,7 @@
     let timeLimit = 10;
     let timeLeft = timeLimit;
     let timer = null;
+    let timerRunning = false;
     let resetCount = 0;
     let board, tiles;
     let moveCount = 0;
@@ -259,7 +260,6 @@
     let questionPhase = 1; // 1 = first 5, 2 = post-puzzle 6-10, 0 = not asking
     let interruptionIndices = [3, 2, 2, 2, 2]; // after 3, then every 2 moves for next 4 questions
     let interruptionProgress = 0; // which Q in phase 1
-    let timerPaused = false;
 
     const timerEl = document.getElementById('timer');
     const puzzleBoard = document.getElementById('puzzle-board');
@@ -288,7 +288,6 @@
       { q: "W@tch 4n!m3? 👀", options: ["Y3s )", "N0 )"] },
       { q: "Wh0... @re y0u?", options: ["Str@ng3r", "F@m!ly", "Fri3nds w/ J3r!c", "0ld cl@ssm@te?"] }
     ];
-    const allQuestions = [...questionsSet1, ...questionsSet2];
     let allAnswers = [];
 
     // PUZZLE LOGIC
@@ -366,7 +365,6 @@
       if (questionPhase === 1) {
         moveCount++;
         movesSinceLastQ++;
-        // Should we trigger overlay?
         if (interruptionProgress < 5 && movesSinceLastQ >= interruptionIndices[interruptionProgress]) {
           setTimeout(() => showHackerOverlay(interruptionProgress), 150);
         }
@@ -383,8 +381,8 @@
     function checkSolved() {
       if (board.every((v,i)=>v===i)) {
         clearInterval(timer);
+        timerRunning = false;
         puzzleBoard.style.display = 'none';
-        // Start hacker battle (phase 2)
         setTimeout(() => {
           questionPhase = 2;
           document.body.classList.add('corrupt');
@@ -398,7 +396,7 @@
     }
     function startTimer() {
       clearInterval(timer);
-      timerPaused = false;
+      timerRunning = true;
       timeLeft = timeLimit;
       updateTimerDisplay();
       timer = setInterval(() => {
@@ -406,27 +404,29 @@
         updateTimerDisplay();
         if (timeLeft <= 0) {
           clearInterval(timer);
+          timerRunning = false;
           flyOutPiecesThenReset();
         }
       }, 1000);
     }
+    function pauseTimer() {
+      if (timerRunning) {
+        clearInterval(timer);
+        timerRunning = false;
+      }
+    }
     function resumeTimer() {
-      if (timerPaused) {
-        timerPaused = false;
+      if (!timerRunning) {
+        timerRunning = true;
         timer = setInterval(() => {
           timeLeft--;
           updateTimerDisplay();
           if (timeLeft <= 0) {
             clearInterval(timer);
+            timerRunning = false;
             flyOutPiecesThenReset();
           }
         }, 1000);
-      }
-    }
-    function pauseTimer() {
-      if (!timerPaused) {
-        clearInterval(timer);
-        timerPaused = true;
       }
     }
     // Animate pieces flying out
@@ -457,13 +457,11 @@
       movesSinceLastQ = 0;
       interruptionProgress = 0;
       questionPhase = 1;
-      // They will need to answer questions again if you want to allow replay
-      // Otherwise, you can reload the page or prevent further play
     }
 
     // HACKER OVERLAY LOGIC PHASE 1 (Q1-Q5)
     function showHackerOverlay(questionNum) {
-      pauseTimer(); // pause timer without resetting timeLeft
+      pauseTimer();
       overlay.style.display = 'flex';
       showQuestionPhase1(questionNum);
     }
@@ -481,11 +479,11 @@
           overlay.style.display = 'none';
           interruptionProgress++;
           movesSinceLastQ = 0;
-          resumeTimer(); // resume timer from where it paused
+          resumeTimer();
         };
         optDiv.appendChild(btn);
       });
-      progressDiv.textContent = `Question ${questionNum+1}/5`;
+      progressDiv.innerHTML = `Question ${questionNum+1}/5`;
       destroyBtn.style.display = "none";
     }
 
@@ -511,13 +509,12 @@
           if (finalBattleIndex < 5) {
             showQuestionFinalBattle();
           } else {
-            // All 10 answered
             showDestroyHacker();
           }
         };
         optDiv.appendChild(btn);
       });
-      progressDiv.textContent = `Battle: Question ${finalBattleIndex+6}/10`;
+      progressDiv.innerHTML = `Battle: Question ${finalBattleIndex+6}/10`;
       destroyBtn.style.display = "none";
     }
     function showDestroyHacker() {
@@ -528,11 +525,9 @@
       destroyBtn.onclick = submitAnswers;
     }
     function submitAnswers() {
-      // Hide hacker, show form, submit
       overlay.style.display = 'none';
       answersField.value = JSON.stringify(allAnswers);
       answerForm.submit();
-      // Optionally show a fake "destroyed" screen here
       setTimeout(() => {
         document.body.innerHTML = `
           <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;">
