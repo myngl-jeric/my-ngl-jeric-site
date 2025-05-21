@@ -1,10 +1,10 @@
 export default async function handler(req, res) {
-  // --- CORS Headers ---
+  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // --- Handle preflight (OPTIONS) ---
+  // Handle preflight (OPTIONS) requests
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
@@ -15,8 +15,8 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Your Google Apps Script Web App endpoint
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwfN6lEfQ3I2nKwfr1ikx7q0FV9vgfXwI2NlVETlX1wX9fcjyOn2iyAVYkg9EV-ltq3/exec';
+  // Your new Google Apps Script Web App endpoint
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxiiG2eD5iw9FY1sHbWAYXDAjhAUw_TqoJEQCi73ipT6N-MsinSUtjr4pC34T-5eAXT/exec';
 
   try {
     // Forward the POST body to GAS
