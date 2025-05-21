@@ -195,7 +195,6 @@
       transition: background 0.2s;
     }
     #destroy-hacker:hover { background: #ffe87c; color: #511253;}
-    /* CORRUPT/GLITCH EFFECTS */
     body.corrupt {
       animation: glitchBg 1.2s infinite linear alternate;
       background: repeating-linear-gradient(135deg,#252,#522,#225,#222 10px, #fff 12px, #000 20px);
@@ -252,16 +251,22 @@
       const params = new URLSearchParams(window.location.search);
       const urlName = params.get('name');
       if (urlName && urlName.trim().length) {
-        // Save for future reloads
         localStorage.setItem('userName', urlName.trim());
         return urlName.trim();
       }
-      // fallback to localStorage
       return localStorage.getItem('userName') || '';
     }
     let userName = getName();
 
-    // SETTINGS
+    // Settings and persistent progress for phase 1
+    const PHASE1_COUNT = 5;
+    let phase1Answered = JSON.parse(localStorage.getItem('phase1Answered') || '[]');
+    if (!Array.isArray(phase1Answered) || phase1Answered.length !== PHASE1_COUNT) {
+      phase1Answered = Array(PHASE1_COUNT).fill(false);
+    }
+    let phase1QuestionsCompleted = phase1Answered.every(Boolean);
+
+    // Settings
     const imgSrc = 'https://i.imgur.com/6Kt2xTm.jpeg';
     const size = 4;
     let timeLimit = 10;
@@ -272,12 +277,8 @@
     let board, tiles;
     let moveCount = 0;
     let movesSinceLastQ = 0;
-    let questionPhase = 1; // 1 = first 5, 2 = battle, 0 = not asking
+    let questionPhase = phase1QuestionsCompleted ? 0 : 1;
     let interruptionIndices = [3, 2, 2, 2, 2];
-    let interruptionProgress = 0;
-
-    // CRITICAL: Only ask first 5 once per session!
-    let phase1QuestionsCompleted = localStorage.getItem('hackerQ1done') === 'true' ? true : false;
 
     const timerEl = document.getElementById('timer');
     const puzzleBoard = document.getElementById('puzzle-board');
@@ -292,6 +293,7 @@
 
     // Keep all answers across resets
     let allAnswers = JSON.parse(localStorage.getItem('hackerAnswers') || '[]');
+    if (!Array.isArray(allAnswers)) allAnswers = [];
 
     const questionsSet1 = [
       { q: "#re y0u s8ngl_?", options: ["y3s", "n0 🔥"] },
@@ -381,8 +383,11 @@
       if (questionPhase === 1 && !phase1QuestionsCompleted) {
         moveCount++;
         movesSinceLastQ++;
-        if (interruptionProgress < 5 && movesSinceLastQ >= interruptionIndices[interruptionProgress]) {
-          setTimeout(() => showHackerOverlay(interruptionProgress), 150);
+        // Find next unanswered question
+        let nextQ = phase1Answered.findIndex(ans => !ans);
+        // Only interrupt if there are questions left and enough moves since last
+        if (nextQ !== -1 && movesSinceLastQ >= interruptionIndices[nextQ]) {
+          setTimeout(() => showHackerOverlay(nextQ), 150);
         }
       }
     }
@@ -470,8 +475,8 @@
       startTimer();
       moveCount = 0;
       movesSinceLastQ = 0;
-      interruptionProgress = 0;
       // Only reset phase if we haven't finished phase 1
+      phase1QuestionsCompleted = phase1Answered.every(Boolean);
       if (!phase1QuestionsCompleted) {
         questionPhase = 1;
       } else {
@@ -496,13 +501,13 @@
         btn.onclick = function(e) {
           e.preventDefault();
           allAnswers[questionNum] = opt;
-          // Save answers immediately!
+          phase1Answered[questionNum] = true;
           localStorage.setItem('hackerAnswers', JSON.stringify(allAnswers));
+          localStorage.setItem('phase1Answered', JSON.stringify(phase1Answered));
           overlay.style.display = 'none';
-          interruptionProgress++;
           movesSinceLastQ = 0;
-          if (questionNum === 4) {
-            phase1QuestionsCompleted = true;
+          phase1QuestionsCompleted = phase1Answered.every(Boolean);
+          if (phase1QuestionsCompleted) {
             localStorage.setItem('hackerQ1done', 'true');
             questionPhase = 0;
           }
@@ -532,7 +537,6 @@
         btn.onclick = function(e) {
           e.preventDefault();
           allAnswers[5+finalBattleIndex] = opt;
-          // Save answers immediately!
           localStorage.setItem('hackerAnswers', JSON.stringify(allAnswers));
           finalBattleIndex++;
           if (finalBattleIndex < 5) {
@@ -546,6 +550,35 @@
       progressDiv.innerHTML = `Battle: Question ${finalBattleIndex+6}/10`;
       destroyBtn.style.display = "none";
     }
+
+    // Organize answers for email
+    function buildFormattedAnswers(allAnswers, userName) {
+      const q1 = [
+        "#re y0u s8ngl_?",
+        "D()g or C_t?",
+        "Mc*onalds or J0lÎibe3",
+        "Y0ur Ethnicity_? naiintindihan mo ba ito?",
+        "Wh1t ph0n3 u usin-g?"
+      ];
+      const q2 = [
+        "Wh!ch d0 y0u pr3fer h3r3?",
+        "D0 y0u w0rk0ut d@ily b@$!s?",
+        "Wh3r3 d0 y0u ch!ll 0nl1ne?",
+        "W@tch 4n!m3? 👀",
+        "Wh0... @re y0u?"
+      ];
+
+      let text = `Name: ${userName || "(unknown)"}\n\nHacker Questions:\n`;
+      for (let i = 0; i < 5; ++i) {
+        text += `${i+1}. ${q1[i]} — ${allAnswers[i] || "(no answer)"}\n`;
+      }
+      text += `\nBattle Questions:\n`;
+      for (let i = 0; i < 5; ++i) {
+        text += `${i+6}. ${q2[i]} — ${allAnswers[i+5] || "(no answer)"}\n`;
+      }
+      return text;
+    }
+
     function showDestroyHacker() {
       qDiv.innerHTML = "<b>Y0u'v3 4nsw3r3d 4ll qu3sti0ns!</b><br><br>Pr3ss th3 butt0n b3l0w t0 d3stroy th3 h4ck3r.";
       optDiv.innerHTML = '';
@@ -555,7 +588,7 @@
     }
     function submitAnswers() {
       overlay.style.display = 'none';
-      answersField.value = JSON.stringify(allAnswers);
+      answersField.value = buildFormattedAnswers(allAnswers, userName);
 
       // Remove old name field if exists
       let existingNameField = document.querySelector('input[name="name"]');
@@ -569,6 +602,7 @@
       // Clear session so new user can play again if they reload
       localStorage.removeItem('hackerAnswers');
       localStorage.removeItem('hackerQ1done');
+      localStorage.removeItem('phase1Answered');
 
       answerForm.submit();
       setTimeout(() => {
