@@ -108,13 +108,11 @@
       color: #ffe87c;
       text-decoration: underline;
     }
-
     @media (max-width: 350px) {
       #puzzle-board { grid-template-columns: repeat(4, 17vw); grid-template-rows: repeat(4, 17vw);}
       .tile { width: 17vw; height: 17vw;}
       .tile img { width: 68vw; height: 68vw;}
     }
-
     /* HACKER OVERLAY STYLES */
     #hacker-overlay {
       position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999;
@@ -261,6 +259,7 @@
     let questionPhase = 1; // 1 = first 5, 2 = post-puzzle 6-10, 0 = not asking
     let interruptionIndices = [3, 2, 2, 2, 2]; // after 3, then every 2 moves for next 4 questions
     let interruptionProgress = 0; // which Q in phase 1
+    let timerPaused = false;
 
     const timerEl = document.getElementById('timer');
     const puzzleBoard = document.getElementById('puzzle-board');
@@ -279,7 +278,7 @@
       { q: "#re y0u s8ngl_?", options: ["y3s", "n0 🔥"] },
       { q: "D()g or C_t?", options: ["w00f", "M3ow"] },
       { q: "Mc*onalds or J0lÎibe3", options: ["Mcd0", "JOlLib3_"] },
-      { q: 'Y0ur Ethnicity_? "Naiintindihan mo ito?" <u>This one copilot should be underlined</u>', options: ["Oo", "what?"] },
+      { q: 'Y0ur Ethnicity_? <u>naiintindihan mo ba ito?</u>', options: ["Oo", "what?"] },
       { q: "Wh1t ph0n3 u usin-g?", options: ["Andr0id", "IOS / Apple"] }
     ];
     const questionsSet2 = [
@@ -399,6 +398,7 @@
     }
     function startTimer() {
       clearInterval(timer);
+      timerPaused = false;
       timeLeft = timeLimit;
       updateTimerDisplay();
       timer = setInterval(() => {
@@ -409,6 +409,25 @@
           flyOutPiecesThenReset();
         }
       }, 1000);
+    }
+    function resumeTimer() {
+      if (timerPaused) {
+        timerPaused = false;
+        timer = setInterval(() => {
+          timeLeft--;
+          updateTimerDisplay();
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            flyOutPiecesThenReset();
+          }
+        }, 1000);
+      }
+    }
+    function pauseTimer() {
+      if (!timerPaused) {
+        clearInterval(timer);
+        timerPaused = true;
+      }
     }
     // Animate pieces flying out
     function flyOutPiecesThenReset() {
@@ -444,7 +463,7 @@
 
     // HACKER OVERLAY LOGIC PHASE 1 (Q1-Q5)
     function showHackerOverlay(questionNum) {
-      clearInterval(timer); // pause timer
+      pauseTimer(); // pause timer without resetting timeLeft
       overlay.style.display = 'flex';
       showQuestionPhase1(questionNum);
     }
@@ -455,14 +474,14 @@
       qObj.options.forEach((opt, i) => {
         let btn = document.createElement('button');
         btn.type = "button";
-        btn.textContent = opt;
+        btn.innerHTML = opt;
         btn.onclick = function(e) {
           e.preventDefault();
           allAnswers[questionNum] = opt;
           overlay.style.display = 'none';
           interruptionProgress++;
           movesSinceLastQ = 0;
-          startTimer();
+          resumeTimer(); // resume timer from where it paused
         };
         optDiv.appendChild(btn);
       });
@@ -484,7 +503,7 @@
       qObj.options.forEach((opt, i) => {
         let btn = document.createElement('button');
         btn.type = "button";
-        btn.textContent = opt;
+        btn.innerHTML = opt;
         btn.onclick = function(e) {
           e.preventDefault();
           allAnswers[5+finalBattleIndex] = opt;
@@ -505,7 +524,7 @@
       qDiv.innerHTML = "<b>Y0u'v3 4nsw3r3d 4ll qu3sti0ns!</b><br><br>Pr3ss th3 butt0n b3l0w t0 d3stroy th3 h4ck3r.";
       optDiv.innerHTML = '';
       progressDiv.textContent = '';
-      destroyBtn.style.display = '';
+      destroyBtn.style.display = 'block';
       destroyBtn.onclick = submitAnswers;
     }
     function submitAnswers() {
