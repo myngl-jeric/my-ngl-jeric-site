@@ -84,21 +84,63 @@
       margin-top: 20px;
       position: relative;
     }
-    input[type="text"], textarea {
+
+    /* NGL-style connected fields */
+    input[type="text"].ngl-connect {
+      background: #fff;
+      border-radius: 10px 10px 0 0;
+      border: none;
+      border-bottom: 1.5px solid #ececec;
+      margin-bottom: 0;
       width: 80%;
       max-width: 300px;
       padding: 10px 15px;
-      border-radius: 10px;
-      border: none;
       font-size: 16px;
-      margin-bottom: 12px;
       box-sizing: border-box;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      outline: none;
+      transition: border-color 0.18s;
     }
-    textarea {
+    input[type="text"].ngl-connect:focus {
+      border-bottom: 1.5px solid #f43f5e;
+    }
+    input[type="text"].ngl-connect::placeholder {
+      color: #bdbdbd;
+      font-weight: 500;
+      opacity: 1;
+    }
+    textarea.ngl-glassy {
+      background: rgba(255,255,255,0.54);
+      border-radius: 0 0 10px 10px;
+      border: none;
+      box-shadow: 0 8px 32px 0 rgba(244,63,94,0.08);
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+      margin-top: 0;
+      width: 80%;
+      max-width: 300px;
+      padding: 10px 15px;
+      font-size: 16px;
+      box-sizing: border-box;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
       height: 100px;
-      padding-right: 45px;
       resize: none;
+      color: #222;
+      margin-bottom: 12px;
     }
+    textarea.ngl-glassy:focus {
+      box-shadow: 0 4px 18px 0 #f43f5e33;
+    }
+    textarea.ngl-glassy::placeholder {
+      color: #bdbdbd;
+      font-weight: 500;
+      opacity: 1;
+    }
+
     .dice-button {
       position: absolute;
       right: 40px;
@@ -148,25 +190,6 @@
       user-select: none;
       box-sizing: border-box;
     }
-    /* NGL-style infinite shake+pop for the quiz box */
-    @keyframes nglBounceShake {
-      0%   { transform: scale(1.08) translateX(0); }
-      10%  { transform: scale(1.12) translateX(-2px);}
-      20%  { transform: scale(1.10) translateX(3px);}
-      30%  { transform: scale(1.13) translateX(-4px);}
-      40%  { transform: scale(1.12) translateX(4px);}
-      50%  { transform: scale(1.13) translateX(-3px);}
-      60%  { transform: scale(1.12) translateX(3px);}
-      70%  { transform: scale(1.11) translateX(-2px);}
-      80%  { transform: scale(1.09) translateX(2px);}
-      90%  { transform: scale(1.08) translateX(-1px);}
-      100% { transform: scale(1.08) translateX(0);}
-    }
-    @keyframes clickPulse {
-      0%   { box-shadow: 0 4px 18px -8px #f43f5e70; }
-      40%  { box-shadow: 0 0px 40px 0px #ff355aee; }
-      100% { box-shadow: 0 4px 18px -8px #f43f5e70; }
-    }
     .extra-box {
       margin: 15px auto 0;
       padding: 15px 20px;
@@ -177,22 +200,11 @@
       background: #000;
       color: #fff;
       user-select: none;
+      transition: box-shadow 0.2s;
+      box-shadow: 0 4px 18px -8px #f43f5e70;
       font-weight: 700;
       letter-spacing: 0.02em;
       cursor: pointer;
-      outline: none;
-      box-shadow: 0 4px 18px -8px #f43f5e70;
-      transition: background 0.2s, color 0.2s;
-      will-change: transform, box-shadow;
-      position: relative;
-      animation: nglBounceShake 0.85s infinite cubic-bezier(.36,.07,.19,.97);
-    }
-    .extra-box.clicked {
-      animation: clickPulse 0.5s !important;
-      /* temporarily override shake with pulse */
-    }
-    .extra-box:focus {
-      outline: 2px solid #fff5b7;
     }
     .people-tap-count {
       color: #fff;
@@ -397,6 +409,7 @@
         type="text"
         name="name"
         id="name"
+        class="ngl-connect"
         placeholder="Your name (4-20 characters)"
         minlength="4"
         maxlength="20"
@@ -408,6 +421,7 @@
       <textarea
         name="message"
         id="message"
+        class="ngl-glassy"
         placeholder="Send me anonymous messages..."
         required
         spellcheck="false"
@@ -416,7 +430,7 @@
       <button type="submit" class="send-button">Send!</button>
     </form>
     <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
-    <div class="extra-box" id="mainQuizBox" tabindex="0">
+    <div class="extra-box" id="mainQuizBox">
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
     </div>
   </div>
@@ -466,26 +480,6 @@
   </div>
 
   <script>
-    // --- NGL Box Animation ---
-    const extraBox = document.getElementById('mainQuizBox');
-    extraBox.addEventListener('click', function(e) {
-      // Prevent navigation if clicking the link
-      if (e.target.tagName.toLowerCase() === "a") e.preventDefault();
-      extraBox.classList.remove('clicked');
-      void extraBox.offsetWidth; // restart animation
-      extraBox.classList.add('clicked');
-      setTimeout(() => {
-        extraBox.classList.remove('clicked');
-      }, 500);
-    });
-    // Keyboard activation for accessibility
-    extraBox.addEventListener('keydown', function(e) {
-      if (e.key === "Enter" || e.key === " ") {
-        extraBox.click();
-      }
-    });
-
-    // --- Existing JS from your file ---
     const phrases = [
       "I like u, do u like me too?",
       "I'm still not over u",
@@ -708,6 +702,7 @@
     document.getElementById('name').addEventListener('input', function() {
       updateMessagesLeftUI(this.value.trim());
     });
+
   </script>
 </body>
 </html>
