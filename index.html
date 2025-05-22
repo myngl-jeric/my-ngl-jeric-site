@@ -264,22 +264,18 @@
   <div id="sentOverlay">
     <div class="sent-circle">
       <svg class="sent-check" viewBox="0 0 92 92">
-        <!-- White circle -->
-        <circle cx="46" cy="46" r="46" fill="#fff"/>
-        <!-- Transparent check "cutout" using masking -->
-        <mask id="check-cutout" maskUnits="userSpaceOnUse">
-          <!-- Everything visible by default -->
-          <rect width="92" height="92" fill="white"/>
-          <!-- Draw the check: black cuts out (transparent) -->
-          <path d="M28 50L42 64L66 34"
-            stroke="black"
-            stroke-width="8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            fill="none"/>
-        </mask>
-        <!-- The circle, with the check cut out -->
-        <circle cx="46" cy="46" r="46" fill="#fff" mask="url(#check-cutout)"/>
+        <defs>
+          <mask id="mask-check">
+            <rect width="92" height="92" fill="white"/>
+            <path d="M28 48L42 62L66 34"
+                  stroke="black"
+                  stroke-width="8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  fill="none"/>
+          </mask>
+        </defs>
+        <circle cx="46" cy="46" r="46" fill="#fff" mask="url(#mask-check)"/>
       </svg>
     </div>
     <div class="sent-text">Sent!</div>
