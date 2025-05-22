@@ -9,7 +9,7 @@
     body {
       margin: 0;
       font-family: 'Montserrat', Arial, sans-serif;
-      background: linear-gradient(to bottom right, #f43f5e, #f97316);
+      background: linear-gradient(135deg, #ff3c7e 0%, #ffb86c 100%);
       color: #fff;
       text-align: center;
     }
@@ -234,7 +234,8 @@
       position: fixed;
       z-index: 100;
       inset: 0;
-      background: rgba(0,0,0,0.12);
+      /* Match NGL gradient background with opacity */
+      background: linear-gradient(135deg, #ff3c7eCC 0%, #ffb86cCC 100%);
       display: none;
       flex-direction: column;
       align-items: center;
@@ -344,7 +345,8 @@
       position: fixed;
       z-index: 200;
       inset: 0;
-      background: rgba(255,255,255,0.20);
+      /* Match NGL gradient background with opacity */
+      background: linear-gradient(135deg, #ff3c7eCC 0%, #ffb86cCC 100%);
       display: flex;
       align-items: center;
       justify-content: center;
