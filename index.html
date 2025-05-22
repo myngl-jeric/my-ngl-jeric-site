@@ -125,7 +125,10 @@
     @keyframes rollBounceShake {
       0% { transform: translateY(0) rotate(0deg); }
       20% { transform: translateY(-10px) rotate(45deg); }
-      40% { transform: translateY(5px): translateY(0) rotate(0deg); }
+      40% { transform: translateY(5px) rotate(-30deg); }
+      60% { transform: translateY(-5px) rotate(30deg); }
+      80% { transform: translateY(2px) rotate(-15deg); }
+      100% { transform: translateY(0) rotate(0deg); }
     }
     .rolling {
       animation: rollBounceShake 0.8s ease forwards;
@@ -253,16 +256,16 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 16px;
+      margin-top: 12px;
       margin-bottom: 0;
       width: 100%;
     }
     .send-another-link {
-      font-size: 1.28rem;
-      font-weight: 700;
+      font-size: 1rem;
+      font-weight: 500;
       text-decoration: underline;
       color: #fff;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
       cursor: pointer;
       text-align: center;
       display: block;
@@ -275,15 +278,19 @@
       pointer-events: none;
     }
     .messages-left-text {
-      font-size: 0.98rem;
+      font-size: 0.93rem;
       color: #fff;
       text-align: center;
       margin: 0;
       margin-bottom: 0;
-      font-weight: 500;
+      font-weight: 400;
       line-height: 1.25;
       max-width: 95vw;
       word-break: keep-all;
+      letter-spacing: 0.01em;
+    }
+    .messages-left-text b {
+      font-weight: 700;
     }
     /* NGL loading spinner styles */
     .ngl-loading-spinner {
@@ -321,17 +328,12 @@
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #f43f5e 40%, #f97316 100%);
-      box-shadow: 0 2px 18px #f43f5e66;
-      animation: ngl-spinner-bounce 1.5s infinite cubic-bezier(.4,0,.2,1);
-    }
-    .ngl-spinner-dot:nth-child(1) { left: 50%; top: 0%; transform: translate(-50%, -50%); animation-delay: 0s; }
-    .ngl-spinner-dot:nth-child(2) { right: 0%; top: 50%; transform: translate(50%, -50%); animation-delay: 0.3s; }
+      background: linear-gradient(135deg, #f43f5e 40%, #f973163s; }
     .ngl-spinner-dot:nth-child(3) { left: 50%; bottom: 0%; transform: translate(-50%, 50%); animation-delay: 0.6s; }
     .ngl-spinner-dot:nth-child(4) { left: 0%; top: 50%; transform: translate(-50%, -50%); animation-delay: 0.9s; }
     @keyframes ngl-spinner-bounce {
       0%   { box-shadow: 0 2px 18px #f43f5e66; transform: scale(1) translate(0,0);}
-      25%  { box-shadow: 0 6px 28px #f9731666; transform: scale(1.25) translate(0,0);}
+      25%  { box-shadow: 0 6px 28px #f9731666; transform: scale);}
       50%  { box-shadow: 0 2px 18px #f43f5e66; transform: scale(1) translate(0,0);}
       100% { box-shadow: 0 2px 18px #f43f5e66; transform: scale(1) translate(0,0);}
     }
@@ -424,7 +426,7 @@
         Send me Another message?
       </a>
       <div id="messagesLeftText" class="messages-left-text">
-        You have <span id="messagesLeftNum">3</span> more messages to send before the <b>DAILY MESSAGES</b> resets
+        You have <span id="messagesLeftNum">3</span> more <b>DAILY</b> messages to send
       </div>
     </div>
   </div>
