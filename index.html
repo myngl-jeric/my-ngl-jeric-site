@@ -21,17 +21,13 @@
     .profile {
       background: #fff;
       border-radius: 15px;
-      padding: 20px 20px 0 20px;
+      padding: 20px;
       color: #000;
       max-width: 400px;
       margin: 20px auto 10px;
       position: relative;
       font-weight: 600;
       user-select: none;
-      box-shadow: 0 6px 32px 0 #f43f5e22;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
     }
     .profile::before {
       content: "🔒";
@@ -75,84 +71,80 @@
       user-select: none;
     }
     .prompt {
-      background: rgba(244,63,94,0.09);
+      background: rgba(255, 255, 255, 0.15);
       color: #000;
-      padding: 18px 20px 14px 20px;
-      border-radius: 13px;
-      margin-top: 8px;
-      font-size: 17px;
+      padding: 22px 25px;
+      border-radius: 15px;
+      margin-top: 10px;
+      font-size: 18px;
       font-weight: 600;
       user-select: none;
-      margin-bottom: 10px;
     }
     form {
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0;
-      padding: 0;
-      background: none;
+      margin-top: 20px;
       position: relative;
     }
-    .ngl-input {
-      background: transparent;
+
+    /* NGL-style connected fields */
+    input[type="text"].ngl-connect {
+      background: #fff;
+      border-radius: 10px 10px 0 0;
       border: none;
-      border-radius: 0;
-      color: #222;
-      font-size: 1.09rem;
-      font-family: inherit;
-      outline: none;
-      margin: 0;
-      padding: 14px 0 11px 0;
+      border-bottom: 1.5px solid #ececec;
+      margin-bottom: 0;
+      width: 80%;
+      max-width: 300px;
+      padding: 10px 15px;
+      font-size: 16px;
       box-sizing: border-box;
-      width: 100%;
       display: block;
-      border-bottom: 1.5px solid #eeeeee;
+      margin-left: auto;
+      margin-right: auto;
+      outline: none;
       transition: border-color 0.18s;
     }
-    .ngl-input:focus {
+    input[type="text"].ngl-connect:focus {
       border-bottom: 1.5px solid #f43f5e;
     }
-    .ngl-input::placeholder {
+    input[type="text"].ngl-connect::placeholder {
       color: #bdbdbd;
       font-weight: 500;
       opacity: 1;
     }
-    .ngl-textarea {
-      background: rgba(255,255,255,0.52);
+    textarea.ngl-glassy {
+      background: rgba(255,255,255,0.54);
+      border-radius: 0 0 10px 10px;
       border: none;
-      border-radius: 0 0 13px 13px;
-      color: #222;
-      font-size: 1.09rem;
-      font-family: inherit;
-      outline: none;
-      margin: 0;
-      padding: 13px 0 13px 0;
-      box-sizing: border-box;
-      width: 100%;
-      display: block;
-      min-height: 92px;
-      height: 92px;
-      resize: none;
       box-shadow: 0 8px 32px 0 rgba(244,63,94,0.08);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border-bottom: none;
-      margin-bottom: 10px;
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+      margin-top: 0;
+      width: 80%;
+      max-width: 300px;
+      padding: 10px 15px;
+      font-size: 16px;
+      box-sizing: border-box;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      height: 100px;
+      resize: none;
+      color: #222;
+      margin-bottom: 12px;
     }
-    .ngl-textarea:focus {
+    textarea.ngl-glassy:focus {
       box-shadow: 0 4px 18px 0 #f43f5e33;
     }
-    .ngl-textarea::placeholder {
+    textarea.ngl-glassy::placeholder {
       color: #bdbdbd;
       font-weight: 500;
       opacity: 1;
     }
+
     .dice-button {
       position: absolute;
-      right: 34px;
-      bottom: 60px;
+      right: 40px;
+      bottom: 73px;
       width: 38px;
       height: 38px;
       border-radius: 50%;
@@ -168,18 +160,28 @@
       font-size: 24px;
       line-height: 1;
       color: white;
-      z-index: 3;
     }
     .dice-button:active {
       transform: rotate(360deg);
     }
+    @keyframes rollBounceShake {
+      0% { transform: translateY(0) rotate(0deg); }
+      20% { transform: translateY(-10px) rotate(45deg); }
+      40% { transform: translateY(5px) rotate(-30deg); }
+      60% { transform: translateY(-5px) rotate(30deg); }
+      80% { transform: translateY(2px) rotate(-15deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+    .rolling {
+      animation: rollBounceShake 0.8s ease forwards;
+    }
     .send-button {
-      margin: 16px auto 12px auto;
-      padding: 13px 20px;
+      margin: 20px auto 0;
+      padding: 15px 20px;
       font-size: 18px;
       border: none;
       border-radius: 30px;
-      width: 100%;
+      width: 80%;
       max-width: 300px;
       background: #000;
       color: #fff;
@@ -187,8 +189,6 @@
       font-weight: 600;
       user-select: none;
       box-sizing: border-box;
-      letter-spacing: 0.01em;
-      box-shadow: 0 2px 18px 0 #f43f5e33;
     }
     .extra-box {
       margin: 15px auto 0;
@@ -224,15 +224,126 @@
         transform: scale(0.95);
       }
     }
-    /* Spinner overlay always fixed on top */
-    .ngl-loading-spinner {
+    /* Sent overlay styles */
+    #sentOverlay {
       position: fixed;
-      z-index: 999;
+      z-index: 100;
       inset: 0;
-      background: rgba(255,255,255,0.27);
+      background: rgba(0,0,0,0.12);
       display: none;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      pointer-events: all;
+      animation: fadeInSent 0.38s;
+    }
+    @keyframes fadeInSent {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .sent-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: none;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 48px 0 rgba(0,0,0,0.13);
+    }
+    .sent-check {
+      width: 140px;
+      height: 140px;
+      display: block;
+    }
+    .sent-text {
+      color: #fff;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.16);
+      user-select: none;
+    }
+    .sent-extra-box {
+      margin: 18px auto 0;
+      padding: 15px 20px;
+      font-size: 20px;
+      border-radius: 30px;
+      width: 80%;
+      max-width: 340px;
+      background: #000;
+      color: #fff;
+      user-select: none;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: box-shadow 0.2s;
+      box-shadow: 0 4px 18px -8px #f43f5e70;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+    .sent-people-tap {
+      color: #fff;
+      margin: 14px auto 0;
+      font-size: 1.13rem;
+      max-width: 420px;
+      user-select: none;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+    .sent-another-message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 12px;
+      margin-bottom: 0;
+      width: 100%;
+    }
+    .send-another-link {
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: underline;
+      color: #fff;
+      margin-bottom: 2px;
+      cursor: pointer;
+      text-align: center;
+      display: block;
+      transition: color 0.18s;
+    }
+    .send-another-link[disabled] {
+      color: #999;
+      text-decoration: none;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .messages-left-text {
+      font-size: 0.93rem;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      margin-bottom: 0;
+      font-weight: 400;
+      line-height: 1.25;
+      max-width: 95vw;
+      word-break: keep-all;
+      letter-spacing: 0.01em;
+    }
+    .messages-left-text b {
+      font-weight: 700;
+    }
+    /* NGL loading spinner styles - FIXED */
+    .ngl-loading-spinner {
+      position: fixed;
+      z-index: 200;
+      inset: 0;
+      background: rgba(255,255,255,0.20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s;
     }
     .ngl-spinner {
       display: flex;
@@ -292,32 +403,32 @@
         Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
       </div>
       <div class="prompt">send me anonymous messages...</div>
-      <form onsubmit="return dualSubmit(event)">
-        <input
-          type="text"
-          name="name"
-          id="name"
-          placeholder="Your name (4-20 characters)"
-          minlength="4"
-          maxlength="20"
-          pattern=".{4,20}|TEST0004"
-          title="Name must be between 4 and 20 characters."
-          autocomplete="off"
-          required
-          class="ngl-input"
-        />
-        <textarea
-          name="message"
-          id="message"
-          placeholder="Send me anonymous messages..."
-          required
-          spellcheck="false"
-          class="ngl-textarea"
-        ></textarea>
-        <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
-        <button type="submit" class="send-button">Send!</button>
-      </form>
     </div>
+    <form onsubmit="return dualSubmit(event)">
+      <input
+        type="text"
+        name="name"
+        id="name"
+        class="ngl-connect"
+        placeholder="Your name (4-20 characters)"
+        minlength="4"
+        maxlength="20"
+        pattern=".{4,20}|TEST0004"
+        title="Name must be between 4 and 20 characters."
+        autocomplete="off"
+        required
+      />
+      <textarea
+        name="message"
+        id="message"
+        class="ngl-glassy"
+        placeholder="Send me anonymous messages..."
+        required
+        spellcheck="false"
+      ></textarea>
+      <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
+      <button type="submit" class="send-button">Send!</button>
+    </form>
     <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
     <div class="extra-box" id="mainQuizBox">
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
@@ -338,7 +449,7 @@
   </div>
 
   <!-- Sent overlay -->
-  <div id="sentOverlay" style="display:none">
+  <div id="sentOverlay">
     <div class="sent-circle">
       <svg class="sent-check" viewBox="0 0 140 140">
         <defs>
