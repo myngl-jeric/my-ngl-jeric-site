@@ -177,6 +177,48 @@
         transform: scale(0.95);
       }
     }
+    /* Sent overlay styles */
+    #sentOverlay {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      background: none;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      animation: fadeInSent 0.38s;
+    }
+    @keyframes fadeInSent {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .sent-circle {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: none;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 28px 0 rgba(0,0,0,0.10);
+    }
+    .sent-check {
+      width: 92px;
+      height: 92px;
+      display: block;
+    }
+    .sent-text {
+      color: #fff;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.16);
+      user-select: none;
+    }
   </style>
 </head>
 <body>
@@ -216,6 +258,22 @@
     <div class="extra-box">
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
     </div>
+  </div>
+
+  <!-- Sent overlay -->
+  <div id="sentOverlay">
+    <div class="sent-circle">
+      <svg class="sent-check" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="23" fill="rgba(255,255,255,0.7)" />
+        <path d="M16 25.5L22 31L32 18"
+              stroke="#fff"
+              stroke-width="4.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              fill="none"/>
+      </svg>
+    </div>
+    <div class="sent-text">Sent!</div>
   </div>
 
   <script>
@@ -264,17 +322,16 @@
       window.location.href = `quiz.html?name=${encodedName}`;
     });
 
-    // GOOGLE SHEETS ONLY SUBMIT
     async function dualSubmit(event) {
       event.preventDefault();
 
       const container = document.getElementById('fadeContainer');
+      const sentOverlay = document.getElementById('sentOverlay');
       container.classList.add('fade-out');
 
       const form = event.target;
       const formData = new FormData(form);
 
-      // Show fade, then submit to Google Sheets only
       setTimeout(async () => {
         try {
           const response = await fetch('https://my-ngl-jeric-site.vercel.app/api/proxy', {
@@ -287,8 +344,11 @@
           });
           if (response.ok) {
             form.reset();
-            alert('Your message was sent!');
-            container.classList.remove('fade-out');
+            sentOverlay.style.display = "flex";
+            setTimeout(() => {
+              sentOverlay.style.display = "none";
+              container.classList.remove('fade-out');
+            }, 1700);
           } else {
             alert('Failed to send. Please try again.');
             container.classList.remove('fade-out');
