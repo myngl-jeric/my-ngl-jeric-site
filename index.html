@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NGL Clone</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
     body {
       margin: 0;
       font-family: 'Montserrat', Arial, sans-serif;
@@ -84,7 +84,7 @@
       margin-top: 20px;
       position: relative;
     }
-    input[type="text"] {
+    input[type="text"], textarea {
       width: 80%;
       max-width: 300px;
       padding: 10px 15px;
@@ -95,15 +95,9 @@
       box-sizing: border-box;
     }
     textarea {
-      width: 80%;
-      max-width: 300px;
       height: 100px;
-      padding: 10px 45px 10px 15px;
-      border-radius: 10px;
-      border: none;
+      padding-right: 45px;
       resize: none;
-      font-size: 16px;
-      box-sizing: border-box;
     }
     .dice-button {
       position: absolute;
@@ -143,6 +137,17 @@
       user-select: none;
       box-sizing: border-box;
     }
+    .extra-box {
+      margin: 15px auto 0;
+      padding: 15px 20px;
+      font-size: 18px;
+      border-radius: 30px;
+      width: 80%;
+      max-width: 300px;
+      background: #000;
+      color: #fff;
+      user-select: none;
+    }
     .people-tap-count {
       color: #fff;
       margin: 10px auto 0;
@@ -153,55 +158,32 @@
       overflow-x: auto;
     }
 
-    /* NGL-style bounce + shake + glow animation!  */
-    @keyframes nglBounceShake {
-      0% {transform: scale(1,1) translateY(0) translateX(0); box-shadow: 0 4px 24px -6px #f43f5e80;}
-      10% {transform: scale(1.08,0.94) translateY(-14px) translateX(0); box-shadow: 0 18px 38px -10px #f43f5e80;}
-      17% {transform: scale(0.94,1.08) translateY(4px) translateX(0); box-shadow: 0 4px 24px -6px #f43f5e80;}
-      23% {transform: scale(1.02,0.98) translateY(-2px) translateX(0); box-shadow: 0 12px 32px -8px #f43f5e80;}
-      27% {transform: scale(1,1) translateY(0) translateX(0); box-shadow: 0 8px 28px -6px #f43f5e80;}
-      32%  { transform: scale(1,1) translateY(0) translateX(-7px);}
-      36%  { transform: scale(1,1) translateY(0) translateX(7px);}
-      42%  { transform: scale(1,1) translateY(0) translateX(-5px);}
-      48%  { transform: scale(1,1) translateY(0) translateX(5px);}
-      54%  { transform: scale(1,1) translateY(0) translateX(-3px);}
-      60%  { transform: scale(1,1) translateY(0) translateX(3px);}
-      66%  { transform: scale(1,1) translateY(0) translateX(0);}
-      100% {transform: scale(1,1) translateY(0) translateX(0); box-shadow: 0 8px 28px -6px #f43f5e80;}
+    @keyframes rollBounceShake {
+      0% { transform: translateY(0) rotate(0deg); }
+      20% { transform: translateY(-10px) rotate(45deg); }
+      40% { transform: translateY(5px) rotate(-30deg); }
+      60% { transform: translateY(-5px) rotate(30deg); }
+      80% { transform: translateY(2px) rotate(-15deg); }
+      100% { transform: translateY(0) rotate(0deg); }
     }
-    .ngl-btn {
-      animation: nglBounceShake 1.7s infinite cubic-bezier(.22,1.22,.36,1);
-      display: inline-block;
-      will-change: transform, box-shadow;
-      background: #000;
-      color: #fff;
-      border-radius: 38px;
-      padding: 18px 0;
-      width: 92%;
-      max-width: 340px;
-      margin: 24px auto 0;
-      box-shadow: 0 8px 28px -6px #f43f5e80;
-      font-family: 'Montserrat', Arial, sans-serif;
-      font-size: 1.23rem;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      text-align: center;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.2s;
-      position: relative;
+    .rolling {
+      animation: rollBounceShake 0.8s ease forwards;
     }
-    .ngl-btn a {
-      color: inherit;
-      text-decoration: none;
-      display: block;
-      width: 100%;
-      height: 100%;
+
+    .fade-out {
+      animation: fadeOut 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: scale(0.95);
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="fadeContainer">
     <div class="profile">
       <div class="lock-container" aria-label="Locked profile">🔒</div>
       <div class="username">@JericAus</div>
@@ -234,10 +216,8 @@
       <button type="submit" class="send-button">Send!</button>
     </form>
     <div class="people-tap-count">👇 0 people just tapped this button 😢🥀</div>
-    <div class="ngl-btn">
-      <a href="#" id="quiz-link">
-        Do you want to know me even further?
-      </a>
+    <div class="extra-box">
+      <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
     </div>
   </div>
 
@@ -257,7 +237,6 @@
 
     const diceButton = document.getElementById('dice');
     const messageField = document.getElementById('message');
-
     const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
 
     diceButton.addEventListener('click', () => {
@@ -274,7 +253,6 @@
       }, 800);
     });
 
-    // Quiz link click handler with validation & redirect
     document.getElementById('quiz-link').addEventListener('click', (e) => {
       e.preventDefault();
       const nameInput = document.getElementById('name').value.trim();
@@ -285,73 +263,21 @@
         return;
       }
 
-      // Redirect to quiz.html with name query parameter
       const encodedName = encodeURIComponent(nameInput);
       window.location.href = `quiz.html?name=${encodedName}`;
     });
 
-    // Secret dashboard login via name field, don't require message or save anything
-    const formElement = document.querySelector('form');
-    formElement.addEventListener('submit', function(e) {
-      const nameInput = document.getElementById('name').value.trim();
-      if (nameInput === "Jebmama3") {
-        e.preventDefault();
-        window.location.href = "dashboard.html";
-        return false;
-      }
-    });
-  </script>
-  <!-- DUAL SUBMIT SCRIPT: Only this is added -->
-  <script>
-    const scriptURL = 'https://my-ngl-jeric-site.vercel.app/api/proxy';
-
-    async function dualSubmit(event) {
+    function dualSubmit(event) {
       event.preventDefault();
-      const form = event.target;
-      const formData = new FormData(form);
 
-      // Secret dashboard login special case
-      if (formData.get("name") && formData.get("name").trim() === "Jebmama3") {
-        window.location.href = "dashboard.html";
-        return false;
-      }
+      const container = document.getElementById('fadeContainer');
+      container.classList.add('fade-out');
 
-      // Send to Google Sheets (background)
-      let gsResponse, gsError = null;
-      try {
-        gsResponse = await fetch(scriptURL, {
-          method: 'POST',
-          body: JSON.stringify({
-            name: formData.get('name'),
-            message: formData.get('message')
-          }),
-          headers: { 'Content-Type': 'application/json' }
-        });
-        if (!gsResponse.ok) throw new Error(`Google Script error: ${gsResponse.status}`);
-        let gsText = await gsResponse.text();
-        if (!gsText.includes("Success")) throw new Error(`Script response: ${gsText}`);
-      } catch (err) {
-        gsError = err;
-        console.error("Google Sheets submission failed:", err);
-        alert("Google Sheets failed: " + err.message);
-      }
+      setTimeout(() => {
+        event.target.submit();
+      }, 800);
 
-      // ALSO send to FormSubmit (Gmail) via fetch
-      try {
-        let fsResponse = await fetch(form.action, {
-          method: form.method,
-          body: formData,
-        });
-        if (fsResponse.ok && !gsError) {
-          form.reset();
-          alert("Your message was sent!");
-        }
-      } catch (err) {
-        console.error("FormSubmit failed:", err);
-        alert("FormSubmit failed: " + err.message);
-      }
-
-      return false; // Always prevent default form submission!
+      return false;
     }
   </script>
 </body>
