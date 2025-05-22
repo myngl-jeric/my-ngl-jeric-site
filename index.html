@@ -84,63 +84,21 @@
       margin-top: 20px;
       position: relative;
     }
-
-    /* NGL-style connected fields */
-    input[type="text"].ngl-connect {
-      background: #fff;
-      border-radius: 10px 10px 0 0;
-      border: none;
-      border-bottom: 1.5px solid #ececec;
-      margin-bottom: 0;
+    input[type="text"], textarea {
       width: 80%;
       max-width: 300px;
       padding: 10px 15px;
-      font-size: 16px;
-      box-sizing: border-box;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      outline: none;
-      transition: border-color 0.18s;
-    }
-    input[type="text"].ngl-connect:focus {
-      border-bottom: 1.5px solid #f43f5e;
-    }
-    input[type="text"].ngl-connect::placeholder {
-      color: #bdbdbd;
-      font-weight: 500;
-      opacity: 1;
-    }
-    textarea.ngl-glassy {
-      background: rgba(255,255,255,0.54);
-      border-radius: 0 0 10px 10px;
+      border-radius: 10px;
       border: none;
-      box-shadow: 0 8px 32px 0 rgba(244,63,94,0.08);
-      backdrop-filter: blur(7px);
-      -webkit-backdrop-filter: blur(7px);
-      margin-top: 0;
-      width: 80%;
-      max-width: 300px;
-      padding: 10px 15px;
       font-size: 16px;
-      box-sizing: border-box;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      height: 100px;
-      resize: none;
-      color: #222;
       margin-bottom: 12px;
+      box-sizing: border-box;
     }
-    textarea.ngl-glassy:focus {
-      box-shadow: 0 4px 18px 0 #f43f5e33;
+    textarea {
+      height: 100px;
+      padding-right: 45px;
+      resize: none;
     }
-    textarea.ngl-glassy::placeholder {
-      color: #bdbdbd;
-      font-weight: 500;
-      opacity: 1;
-    }
-
     .dice-button {
       position: absolute;
       right: 40px;
@@ -409,7 +367,6 @@
         type="text"
         name="name"
         id="name"
-        class="ngl-connect"
         placeholder="Your name (4-20 characters)"
         minlength="4"
         maxlength="20"
@@ -421,7 +378,6 @@
       <textarea
         name="message"
         id="message"
-        class="ngl-glassy"
         placeholder="Send me anonymous messages..."
         required
         spellcheck="false"
