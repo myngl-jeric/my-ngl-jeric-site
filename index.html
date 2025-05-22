@@ -148,15 +148,24 @@
       user-select: none;
       box-sizing: border-box;
     }
-    /* Pop & Shake Animation for the Extra Box */
-    @keyframes boxPopShake {
-      0%   { transform: scale(1) translateX(0); }
-      15%  { transform: scale(1.10) translateX(-3px);}
-      30%  { transform: scale(1.12) translateX(4px);}
-      45%  { transform: scale(1.11) translateX(-2px);}
-      60%  { transform: scale(1.13) translateX(2px);}
-      75%  { transform: scale(1.11) translateX(-1px);}
-      100% { transform: scale(1.10) translateX(0);}
+    /* NGL-style infinite shake+pop for the quiz box */
+    @keyframes nglBounceShake {
+      0%   { transform: scale(1.08) translateX(0); }
+      10%  { transform: scale(1.12) translateX(-2px);}
+      20%  { transform: scale(1.10) translateX(3px);}
+      30%  { transform: scale(1.13) translateX(-4px);}
+      40%  { transform: scale(1.12) translateX(4px);}
+      50%  { transform: scale(1.13) translateX(-3px);}
+      60%  { transform: scale(1.12) translateX(3px);}
+      70%  { transform: scale(1.11) translateX(-2px);}
+      80%  { transform: scale(1.09) translateX(2px);}
+      90%  { transform: scale(1.08) translateX(-1px);}
+      100% { transform: scale(1.08) translateX(0);}
+    }
+    @keyframes clickPulse {
+      0%   { box-shadow: 0 4px 18px -8px #f43f5e70; }
+      40%  { box-shadow: 0 0px 40px 0px #ff355aee; }
+      100% { box-shadow: 0 4px 18px -8px #f43f5e70; }
     }
     .extra-box {
       margin: 15px auto 0;
@@ -168,21 +177,22 @@
       background: #000;
       color: #fff;
       user-select: none;
-      transition: box-shadow 0.2s, background 0.2s, color 0.2s;
-      box-shadow: 0 4px 18px -8px #f43f5e70;
       font-weight: 700;
       letter-spacing: 0.02em;
       cursor: pointer;
       outline: none;
-      /* Make the box focusable by keyboard if needed */
+      box-shadow: 0 4px 18px -8px #f43f5e70;
+      transition: background 0.2s, color 0.2s;
+      will-change: transform, box-shadow;
+      position: relative;
+      animation: nglBounceShake 0.85s infinite cubic-bezier(.36,.07,.19,.97);
     }
-    .extra-box:hover,
+    .extra-box.clicked {
+      animation: clickPulse 0.5s !important;
+      /* temporarily override shake with pulse */
+    }
     .extra-box:focus {
-      animation: boxPopShake 0.55s cubic-bezier(.36,.07,.19,.97) both;
-      background: #ff355a;
-      color: #fff;
-      box-shadow: 0 6px 24px -6px #ff355a80;
-      outline: none;
+      outline: 2px solid #fff5b7;
     }
     .people-tap-count {
       color: #fff;
@@ -274,7 +284,8 @@
     }
     .sent-another-message {
       display: flex;
-      flex center;
+      flex-direction: column;
+      align-items: center;
       margin-top: 12px;
       margin-bottom: 0;
       width: 100%;
@@ -284,7 +295,9 @@
       font-weight: 500;
       text-decoration: underline;
       color: #fff;
-      margin-bottom: 2px: center;
+      margin-bottom: 2px;
+      cursor: pointer;
+      text-align: center;
       display: block;
       transition: color 0.18s;
     }
@@ -453,6 +466,26 @@
   </div>
 
   <script>
+    // --- NGL Box Animation ---
+    const extraBox = document.getElementById('mainQuizBox');
+    extraBox.addEventListener('click', function(e) {
+      // Prevent navigation if clicking the link
+      if (e.target.tagName.toLowerCase() === "a") e.preventDefault();
+      extraBox.classList.remove('clicked');
+      void extraBox.offsetWidth; // restart animation
+      extraBox.classList.add('clicked');
+      setTimeout(() => {
+        extraBox.classList.remove('clicked');
+      }, 500);
+    });
+    // Keyboard activation for accessibility
+    extraBox.addEventListener('keydown', function(e) {
+      if (e.key === "Enter" || e.key === " ") {
+        extraBox.click();
+      }
+    });
+
+    // --- Existing JS from your file ---
     const phrases = [
       "I like u, do u like me too?",
       "I'm still not over u",
@@ -675,7 +708,6 @@
     document.getElementById('name').addEventListener('input', function() {
       updateMessagesLeftUI(this.value.trim());
     });
-
   </script>
 </body>
 </html>
