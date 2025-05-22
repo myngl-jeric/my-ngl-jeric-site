@@ -154,7 +154,7 @@
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.85); /* white, more opaque than textarea */
+      background: rgba(255,255,255,0.85);
       box-shadow:
         0 0 12px 2px rgba(255,0,122,0.10),
         0 1px 8px 0 rgba(0,0,0,0.04);
@@ -183,21 +183,35 @@
       line-height: 1;
       color: white;
       z-index: 2;
+      /* For disabled look */
+      opacity: 1;
+      pointer-events: auto;
     }
-    .dice-button:active {
-      transform: rotate(360deg);
+    .dice-button:disabled {
+      opacity: 0.65;
+      pointer-events: none;
     }
-    @keyframes rollBounceShake {
-      0% { transform: translateY(0) rotate(0deg); }
-      20% { transform: translateY(-10px) rotate(45deg); }
-      40% { transform: translateY(5px) rotate(-30deg); }
-      60% { transform: translateY(-5px) rotate(30deg); }
-      80% { transform: translateY(2px) rotate(-15deg); }
-      100% { transform: translateY(0) rotate(0deg); }
+
+    /* --- Random Roll Animations --- */
+    @keyframes diceRoll1 {
+      0%   { transform: rotate(0deg) scale(1);}
+      80%  { transform: rotate(320deg) scale(1.08);}
+      100% { transform: rotate(360deg) scale(1);}
     }
-    .rolling {
-      animation: rollBounceShake 0.8s ease forwards;
+    @keyframes diceRoll2 {
+      0%   { transform: rotate(0deg) scale(1);}
+      85%  { transform: rotate(-320deg) scale(1.12);}
+      100% { transform: rotate(-360deg) scale(1);}
     }
+    @keyframes diceRoll3 {
+      0%   { transform: rotate(0deg) scale(1);}
+      50%  { transform: rotate(180deg) scale(1.14, 0.93);}
+      100% { transform: rotate(360deg) scale(1);}
+    }
+    .dice-button.rolling1 { animation: diceRoll1 0.55s cubic-bezier(.53,1.32,.72,1) forwards; }
+    .dice-button.rolling2 { animation: diceRoll2 0.55s cubic-bezier(.53,1.32,.72,1) forwards; }
+    .dice-button.rolling3 { animation: diceRoll3 0.55s cubic-bezier(.53,1.32,.72,1) forwards; }
+
     .send-button {
       margin: 20px auto 0;
       padding: 15px 20px;
@@ -519,19 +533,29 @@
       return name === "TEST0004" || name === "Jebmama3";
     }
 
+    // --- DICE BUTTON LOGIC WITH RANDOM ROLL ANIMATIONS AND ANTI-SPAM ---
     const diceButton = document.getElementById('dice');
     const messageField = document.getElementById('message');
     const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
+    const rollClasses = ['rolling1', 'rolling2', 'rolling3'];
+    let diceRolling = false;
+
     diceButton.addEventListener('click', () => {
-      if (diceButton.classList.contains('rolling')) return;
-      diceButton.classList.add('rolling');
+      if (diceRolling || rollClasses.some(cls => diceButton.classList.contains(cls))) return;
+      diceRolling = true;
+      diceButton.disabled = true; // Prevent spam
+      // Randomly choose a roll animation
+      const randomRoll = rollClasses[Math.floor(Math.random() * rollClasses.length)];
+      diceButton.classList.add(randomRoll);
       diceSound.currentTime = 0;
       diceSound.play();
       setTimeout(() => {
         const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
         messageField.value = randomPhrase;
-        diceButton.classList.remove('rolling');
-      }, 800);
+        diceButton.classList.remove(...rollClasses);
+        diceButton.disabled = false;
+        diceRolling = false;
+      }, 550); // matches animation duration
     });
 
     // Message limit logic
