@@ -9,7 +9,8 @@
     body {
       margin: 0;
       font-family: 'Montserrat', Arial, sans-serif;
-      background: linear-gradient(to bottom right, #f43f5e, #f97316);
+      /* Updated to NGL's real gradient: */
+      background: linear-gradient(134deg, #ff355a 0%, #ff8c42 50%, #fff5b7 100%);
       color: #fff;
       text-align: center;
     }
@@ -84,67 +85,20 @@
       margin-top: 20px;
       position: relative;
     }
-    /* NGL-style connected fields */
-    input[type="text"].ngl-connect {
-      background: #fff;
-      border-radius: 10px 10px 0 0;
-      border: none;
-      border-bottom: 1.5px solid #ececec;
-      margin-bottom: 0;
+    input[type="text"], textarea {
       width: 80%;
       max-width: 300px;
       padding: 10px 15px;
-      font-size: 16px;
-      box-sizing: border-box;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      outline: none;
-      transition: border-color 0.18s;
-    }
-    input[type="text"].ngl-connect:focus {
-      border-bottom: 1.5px solid #f43f5e;
-      outline: none;
-    }
-    input[type="text"].ngl-connect::placeholder {
-      color: rgba(30,30,30,0.66) !important;
-      font-weight: 500;
-      opacity: 1;
-    }
-    textarea.ngl-glassy {
-      background: rgba(255,255,255,0.54);
-      border-radius: 0 0 10px 10px;
+      border-radius: 10px;
       border: none;
-      box-shadow: 0 8px 32px 0 rgba(244,63,94,0.08);
-      backdrop-filter: blur(7px);
-      -webkit-backdrop-filter: blur(7px);
-      margin-top: 0;
-      width: 80%;
-      max-width: 300px;
-      padding: 10px 15px;
       font-size: 16px;
-      box-sizing: border-box;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      height: 100px;
-      resize: none;
-      color: #222;
       margin-bottom: 12px;
-      outline: none;
+      box-sizing: border-box;
     }
-    textarea.ngl-glassy:focus {
-      box-shadow: 0 4px 18px 0 #f43f5e33;
-      outline: none;
-    }
-    textarea.ngl-glassy::placeholder {
-      color: rgba(30,30,30,0.66) !important;
-      font-weight: 500;
-      opacity: 1;
-    }
-    input[type="text"]:focus,
-    textarea:focus {
-      outline: none;
+    textarea {
+      height: 100px;
+      padding-right: 45px;
+      resize: none;
     }
     .dice-button {
       position: absolute;
@@ -234,7 +188,8 @@
       position: fixed;
       z-index: 100;
       inset: 0;
-      background: rgba(0,0,0,0.12);
+      /* Updated overlay background for NGL style: */
+      background: linear-gradient(134deg, #ff355a88 0%, #ff8c4288 100%);
       display: none;
       flex-direction: column;
       align-items: center;
@@ -344,7 +299,8 @@
       position: fixed;
       z-index: 200;
       inset: 0;
-      background: rgba(255,255,255,0.20);
+      /* Updated spinner overlay background for NGL style: */
+      background: linear-gradient(134deg, #ff355a88 0%, #ff8c4288 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -414,11 +370,10 @@
         type="text"
         name="name"
         id="name"
-        class="ngl-connect"
         placeholder="Your name (4-20 characters)"
         minlength="4"
         maxlength="20"
-        pattern=".{4,20}|TEST0004|Jebmama3"
+        pattern=".{4,20}|TEST0004"
         title="Name must be between 4 and 20 characters."
         autocomplete="off"
         required
@@ -426,7 +381,6 @@
       <textarea
         name="message"
         id="message"
-        class="ngl-glassy"
         placeholder="Send me anonymous messages..."
         required
         spellcheck="false"
@@ -498,10 +452,6 @@
       "ur aesthetic >"
     ];
 
-    function isBypassName(name) {
-      return name === "TEST0004" || name === "Jebmama3";
-    }
-
     const diceButton = document.getElementById('dice');
     const messageField = document.getElementById('message');
     const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
@@ -528,7 +478,7 @@
     }
 
     function getMessagesLeft(name) {
-      if (isBypassName(name)) return Infinity;
+      if (name === "TEST0004") return Infinity;
       const savedDate = localStorage.getItem(MSG_DATE_KEY);
       const today = getTodayStr();
       if(savedDate !== today) {
@@ -550,7 +500,7 @@
       const left = getMessagesLeft(name);
       const leftNum = document.getElementById('messagesLeftNum');
       const link = document.getElementById('sendAnotherLink');
-      if(isBypassName(name)) {
+      if(name === "TEST0004") {
         leftNum.textContent = "∞";
         link.removeAttribute('disabled');
         link.style.pointerEvents = 'auto';
@@ -588,7 +538,7 @@
 
     // Shared function for quiz redirect
     function goToQuizPage(nameValue) {
-      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
+      if (nameValue !== "TEST0004" && (nameValue.length < 4 || nameValue.length > 20)) {
         alert('Please enter your name between 4 and 20 characters before proceeding.');
         document.getElementById('name').focus();
         return false;
@@ -609,7 +559,7 @@
     document.getElementById('sentQuizLink').addEventListener('click', function(e) {
       e.preventDefault();
       const nameValue = window._lastSubmittedName || '';
-      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
+      if (nameValue !== "TEST0004" && (nameValue.length < 4 || nameValue.length > 20)) {
         alert('Please enter your name between 4 and 20 characters before proceeding.');
         document.getElementById('sentOverlay').style.display = 'none';
         document.getElementById('fadeContainer').classList.remove('fade-out');
@@ -634,24 +584,17 @@
       const form = event.target;
       const formData = new FormData(form);
       const nameValue = formData.get('name').trim();
-
-      // Unlimited bypass (dashboard shortcut)
-      if (nameValue === "Jebmama3") {
-        window.location.href = "dashboard.html";
-        return false;
-      }
-
       const msgLeft = getMessagesLeft(nameValue);
 
       // Validate name
-      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
+      if (nameValue !== "TEST0004" && (nameValue.length < 4 || nameValue.length > 20)) {
         alert('Please enter your name between 4 and 20 characters before proceeding.');
         document.getElementById('name').focus();
         return false;
       }
 
-      // Enforce daily limit except for bypass codes
-      if (!isBypassName(nameValue) && msgLeft <= 0) {
+      // Enforce daily limit except for TEST0004
+      if (nameValue !== "TEST0004" && msgLeft <= 0) {
         alert("You've reached your daily message limit. Please try again tomorrow!");
         return false;
       }
@@ -672,8 +615,8 @@
           });
           loadingSpinner.style.display = "none"; // HIDE SPINNER
           if (response.ok) {
-            // Decrement message count except bypass codes
-            if (!isBypassName(nameValue)) {
+            // Decrement message count except TEST0004
+            if (nameValue !== "TEST0004") {
               let left = getMessagesLeft(nameValue);
               setMessagesLeft(left - 1);
             }
@@ -703,7 +646,7 @@
       e.preventDefault();
       const nameValue = window._lastSubmittedName || document.getElementById('name').value.trim();
       const msgLeft = getMessagesLeft(nameValue);
-      if (!isBypassName(nameValue) && msgLeft <= 0) {
+      if (nameValue !== "TEST0004" && msgLeft <= 0) {
         alert("You've reached your daily message limit. Please try again tomorrow!");
         return;
       }
