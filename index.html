@@ -158,6 +158,11 @@
       background: #000;
       color: #fff;
       user-select: none;
+      transition: box-shadow 0.2s;
+      box-shadow: 0 4px 18px -8px #f43f5e70;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
     }
     .people-tap-count {
       color: #fff;
@@ -195,29 +200,57 @@
       to { opacity: 1; }
     }
     .sent-circle {
-      width: 92px;
-      height: 92px;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
       background: none;
-      margin-bottom: 18px;
+      margin-bottom: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 28px 0 rgba(0,0,0,0.10);
+      box-shadow: 0 0 48px 0 rgba(0,0,0,0.13);
     }
     .sent-check {
-      width: 92px;
-      height: 92px;
+      width: 140px;
+      height: 140px;
       display: block;
     }
     .sent-text {
       color: #fff;
       font-family: 'Montserrat', Arial, sans-serif;
-      font-size: 1.6rem;
+      font-size: 2.2rem;
       font-weight: 700;
       letter-spacing: 0.01em;
       text-shadow: 0 2px 8px rgba(0,0,0,0.16);
       user-select: none;
+    }
+    .sent-extra-box {
+      margin: 18px auto 0;
+      padding: 15px 20px;
+      font-size: 20px;
+      border-radius: 30px;
+      width: 80%;
+      max-width: 340px;
+      background: #000;
+      color: #fff;
+      user-select: none;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: box-shadow 0.2s;
+      box-shadow: 0 4px 18px -8px #f43f5e70;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+    .sent-people-tap {
+      color: #fff;
+      margin: 14px auto 0;
+      font-size: 1.13rem;
+      max-width: 420px;
+      user-select: none;
+      white-space: nowrap;
+      overflow-x: auto;
     }
   </style>
 </head>
@@ -254,8 +287,8 @@
       <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
       <button type="submit" class="send-button">Send!</button>
     </form>
-    <div class="people-tap-count">👇 0 people just tapped this button 😢🥀</div>
-    <div class="extra-box">
+    <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
+    <div class="extra-box" id="mainQuizBox">
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
     </div>
   </div>
@@ -263,22 +296,24 @@
   <!-- Sent overlay -->
   <div id="sentOverlay">
     <div class="sent-circle">
-      <svg class="sent-check" viewBox="0 0 92 92">
+      <svg class="sent-check" viewBox="0 0 140 140">
         <defs>
           <mask id="mask-check">
-            <rect width="92" height="92" fill="white"/>
-            <path d="M28 48L42 62L66 34"
+            <rect width="140" height="140" fill="white"/>
+            <path d="M42 76L68 102L106 46"
                   stroke="black"
-                  stroke-width="8"
+                  stroke-width="12"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   fill="none"/>
           </mask>
         </defs>
-        <circle cx="46" cy="46" r="46" fill="#fff" mask="url(#mask-check)"/>
+        <circle cx="70" cy="70" r="70" fill="#fff" mask="url(#mask-check)"/>
       </svg>
     </div>
     <div class="sent-text">Sent!</div>
+    <a href="#" class="sent-extra-box" id="sentQuizLink">Do you want to know me even further?</a>
+    <div class="sent-people-tap" id="sentPeopleTapCount">👇 0 people just tapped this button 😢🥀</div>
   </div>
 
   <script>
@@ -298,14 +333,11 @@
     const diceButton = document.getElementById('dice');
     const messageField = document.getElementById('message');
     const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
-
     diceButton.addEventListener('click', () => {
       if (diceButton.classList.contains('rolling')) return;
-
       diceButton.classList.add('rolling');
       diceSound.currentTime = 0;
       diceSound.play();
-
       setTimeout(() => {
         const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
         messageField.value = randomPhrase;
@@ -313,29 +345,58 @@
       }, 800);
     });
 
+    // Shared function for quiz redirect
+    function goToQuizPage(nameValue) {
+      if (nameValue.length < 4 || nameValue.length > 20) {
+        alert('Please enter your name between 4 and 20 characters before proceeding.');
+        document.getElementById('name').focus();
+        return false;
+      }
+      const encodedName = encodeURIComponent(nameValue);
+      window.location.href = `quiz.html?name=${encodedName}`;
+      return false;
+    }
+
+    // Quiz link in main page
     document.getElementById('quiz-link').addEventListener('click', (e) => {
       e.preventDefault();
       const nameInput = document.getElementById('name').value.trim();
-
-      if (nameInput.length < 4 || nameInput.length > 20) {
-        alert('Please enter your name between 4 and 20 characters before proceeding.');
-        document.getElementById('name').focus();
-        return;
-      }
-
-      const encodedName = encodeURIComponent(nameInput);
-      window.location.href = `quiz.html?name=${encodedName}`;
+      goToQuizPage(nameInput);
     });
 
+    // Sent overlay quiz link
+    document.getElementById('sentQuizLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      // Use the last submitted name
+      if (window._lastSubmittedName) {
+        goToQuizPage(window._lastSubmittedName);
+      } else {
+        // fallback, ask for name again
+        alert('Name not found. Please enter your name again.');
+        document.getElementById('sentOverlay').style.display = 'none';
+        document.getElementById('fadeContainer').classList.remove('fade-out');
+      }
+    });
+
+    // Tap count mirroring
+    function updateSentOverlayTapCount() {
+      document.getElementById('sentPeopleTapCount').textContent =
+        document.getElementById('peopleTapCount').textContent;
+    }
+
+    // Main submission logic
     async function dualSubmit(event) {
       event.preventDefault();
-
       const container = document.getElementById('fadeContainer');
       const sentOverlay = document.getElementById('sentOverlay');
-      container.classList.add('fade-out');
+      const peopleTapCount = document.getElementById('peopleTapCount');
+      const sentPeopleTapCount = document.getElementById('sentPeopleTapCount');
 
+      container.classList.add('fade-out');
       const form = event.target;
       const formData = new FormData(form);
+      const nameValue = formData.get('name').trim();
+      window._lastSubmittedName = nameValue; // Store for quiz overlay
 
       setTimeout(async () => {
         try {
@@ -349,11 +410,13 @@
           });
           if (response.ok) {
             form.reset();
+            updateSentOverlayTapCount();
             sentOverlay.style.display = "flex";
+            // Hide overlay after 5s if not clicked
             setTimeout(() => {
               sentOverlay.style.display = "none";
               container.classList.remove('fade-out');
-            }, 1700);
+            }, 5000);
           } else {
             alert('Failed to send. Please try again.');
             container.classList.remove('fade-out');
