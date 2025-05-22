@@ -187,12 +187,12 @@
       position: fixed;
       z-index: 100;
       inset: 0;
-      background: none;
+      background: rgba(0,0,0,0.12); /* semi-transparent overlay */
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      pointer-events: none;
+      pointer-events: all; /* block all interactions below */
       animation: fadeInSent 0.38s;
     }
     @keyframes fadeInSent {
