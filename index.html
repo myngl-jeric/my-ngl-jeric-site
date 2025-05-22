@@ -552,12 +552,8 @@
     // --- DICE BUTTON LOGIC WITH RANDOM ROLL ANIMATIONS AND ANTI-SPAM ---
     const diceButton = document.getElementById('dice');
     const messageField = document.getElementById('message');
-    // Use 3 free MP3 dice rolling sounds
-    const diceSounds = [
-      new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_115b9e4d80.mp3'),
-      new Audio('https://assets.mixkit.co/sfx/preview/mixkit-dice-roll-568.mp3'),
-      new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_115b9e4d81.mp3')
-    ];
+    // Use your self-hosted dice sound
+    const diceSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/dice.mp3');
     const rollClasses = ['rolling1', 'rolling2', 'rolling3'];
     let diceRolling = false;
 
@@ -568,10 +564,9 @@
       // Randomly choose a roll animation
       const randomRoll = rollClasses[Math.floor(Math.random() * rollClasses.length)];
       diceButton.classList.add(randomRoll);
-      // Randomly pick a dice sound
-      const sound = diceSounds[Math.floor(Math.random() * diceSounds.length)];
-      sound.currentTime = 0;
-      sound.play();
+      // Play your hosted dice sound
+      diceSound.currentTime = 0;
+      diceSound.play();
       setTimeout(() => {
         const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
         messageField.value = randomPhrase;
