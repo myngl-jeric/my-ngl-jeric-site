@@ -125,10 +125,7 @@
     @keyframes rollBounceShake {
       0% { transform: translateY(0) rotate(0deg); }
       20% { transform: translateY(-10px) rotate(45deg); }
-      40% { transform: translateY(5px) rotate(-30deg); }
-      60% { transform: translateY(-5px) rotate(30deg); }
-      80% { transform: translateY(2px) rotate(-15deg); }
-      100% { transform: translateY(0) rotate(0deg); }
+      40% { transform: translateY(5px): translateY(0) rotate(0deg); }
     }
     .rolling {
       animation: rollBounceShake 0.8s ease forwards;
@@ -156,7 +153,12 @@
       width: 80%;
       max-width: 300px;
       background: #000;
-      color: #-spacing: 0.02em;
+      color: #fff;
+      user-select: none;
+      transition: box-shadow 0.2s;
+      box-shadow: 0 4px 18px -8px #f43f5e70;
+      font-weight: 700;
+      letter-spacing: 0.02em;
       cursor: pointer;
     }
     .people-tap-count {
@@ -248,15 +250,99 @@
       overflow-x: auto;
     }
     .sent-another-message {
-      margin-top: 18px;
-      color: #fff;
-      font-size: 1.08rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 16px;
+      margin-bottom: 0;
+      width: 100%;
     }
-    .sent-another-message a[disabled] {
-      pointer-events: none;
+    .send-another-link {
+      font-size: 1.28rem;
+      font-weight: 700;
+      text-decoration: underline;
+      color: #fff;
+      margin-bottom: 4px;
+      cursor: pointer;
+      text-align: center;
+      display: block;
+      transition: color 0.18s;
+    }
+    .send-another-link[disabled] {
       color: #999;
       text-decoration: none;
       cursor: not-allowed;
+      pointer-events: none;
+    }
+    .messages-left-text {
+      font-size: 0.98rem;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      margin-bottom: 0;
+      font-weight: 500;
+      line-height: 1.25;
+      max-width: 95vw;
+      word-break: keep-all;
+    }
+    /* NGL loading spinner styles */
+    .ngl-loading-spinner {
+      position: fixed;
+      z-index: 200;
+      inset: 0;
+      background: rgba(255,255,255,0.20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s;
+    }
+    .ngl-spinner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 36px 38px 30px 38px;
+      background: rgba(255,255,255,0.94);
+      border-radius: 32px;
+      box-shadow: 0 4px 32px 0 #f43f5e66;
+      min-width: 120px;
+    }
+    .ngl-spinner-inner {
+      position: relative;
+      width: 70px;
+      height: 70px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ngl-spinner-dot {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f43f5e 40%, #f97316 100%);
+      box-shadow: 0 2px 18px #f43f5e66;
+      animation: ngl-spinner-bounce 1.5s infinite cubic-bezier(.4,0,.2,1);
+    }
+    .ngl-spinner-dot:nth-child(1) { left: 50%; top: 0%; transform: translate(-50%, -50%); animation-delay: 0s; }
+    .ngl-spinner-dot:nth-child(2) { right: 0%; top: 50%; transform: translate(50%, -50%); animation-delay: 0.3s; }
+    .ngl-spinner-dot:nth-child(3) { left: 50%; bottom: 0%; transform: translate(-50%, 50%); animation-delay: 0.6s; }
+    .ngl-spinner-dot:nth-child(4) { left: 0%; top: 50%; transform: translate(-50%, -50%); animation-delay: 0.9s; }
+    @keyframes ngl-spinner-bounce {
+      0%   { box-shadow: 0 2px 18px #f43f5e66; transform: scale(1) translate(0,0);}
+      25%  { box-shadow: 0 6px 28px #f9731666; transform: scale(1.25) translate(0,0);}
+      50%  { box-shadow: 0 2px 18px #f43f5e66; transform: scale(1) translate(0,0);}
+      100% { box-shadow: 0 2px 18px #f43f5e66; transform: scale(1) translate(0,0);}
+    }
+    .ngl-spinner-label {
+      color: #f43f5e;
+      font-size: 1.15rem;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-shadow: 0 1px 4px rgba(244,63,94,0.12);
+      margin-top: 2px;
     }
   </style>
 </head>
@@ -299,6 +385,19 @@
     </div>
   </div>
 
+  <!-- NGL loading spinner -->
+  <div id="nglLoading" class="ngl-loading-spinner" style="display:none;">
+    <div class="ngl-spinner">
+      <div class="ngl-spinner-inner">
+        <span class="ngl-spinner-dot"></span>
+        <span class="ngl-spinner-dot"></span>
+        <span class="ngl-spinner-dot"></span>
+        <span class="ngl-spinner-dot"></span>
+      </div>
+      <div class="ngl-spinner-label">Sending...</div>
+    </div>
+  </div>
+
   <!-- Sent overlay -->
   <div id="sentOverlay">
     <div class="sent-circle">
@@ -321,12 +420,12 @@
     <div class="sent-people-tap" id="sentPeopleTapCount">👇 0 people just tapped this button 😢🥀</div>
     <a href="#" class="sent-extra-box" id="sentQuizLink">Do you want to know me even further?</a>
     <div class="sent-another-message">
-      <a href="#" id="sendAnotherLink" style="text-decoration:underline; cursor:pointer;">
+      <a href="#" id="sendAnotherLink" class="send-another-link">
         Send me Another message?
       </a>
-      <span id="messagesLeftText" style="margin-left:4px;">
+      <div id="messagesLeftText" class="messages-left-text">
         You have <span id="messagesLeftNum">3</span> more messages to send before the <b>DAILY MESSAGES</b> resets
-      </span>
+      </div>
     </div>
   </div>
 
@@ -472,6 +571,7 @@
       event.preventDefault();
       const container = document.getElementById('fadeContainer');
       const sentOverlay = document.getElementById('sentOverlay');
+      const loadingSpinner = document.getElementById('nglLoading');
       const form = event.target;
       const formData = new FormData(form);
       const nameValue = formData.get('name').trim();
@@ -492,6 +592,7 @@
       window._lastSubmittedName = nameValue;
 
       container.classList.add('fade-out');
+      loadingSpinner.style.display = "flex"; // SHOW SPINNER
 
       setTimeout(async () => {
         try {
@@ -503,6 +604,7 @@
               message: formData.get('message')
             })
           });
+          loadingSpinner.style.display = "none"; // HIDE SPINNER
           if (response.ok) {
             // Decrement message count except TEST0004
             if (nameValue !== "TEST0004") {
@@ -515,16 +617,13 @@
             form.reset();
             form.name.value = currentName;
             showSentOverlay(currentName);
-            // Hide overlay after 5s if not clicked
-            setTimeout(() => {
-              sentOverlay.style.display = "none";
-              container.classList.remove('fade-out');
-            }, 5000);
+            // Do NOT auto-hide overlay
           } else {
             alert('Failed to send. Please try again.');
             container.classList.remove('fade-out');
           }
         } catch (err) {
+          loadingSpinner.style.display = "none"; // HIDE SPINNER
           alert('There was an error. Please try again.');
           container.classList.remove('fade-out');
         }
