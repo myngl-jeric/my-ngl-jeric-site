@@ -21,13 +21,17 @@
     .profile {
       background: #fff;
       border-radius: 15px;
-      padding: 20px;
+      padding: 20px 20px 0 20px;
       color: #000;
       max-width: 400px;
       margin: 20px auto 10px;
       position: relative;
       font-weight: 600;
       user-select: none;
+      box-shadow: 0 6px 32px 0 #f43f5e22;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
     }
     .profile::before {
       content: "🔒";
@@ -71,68 +75,61 @@
       user-select: none;
     }
     .prompt {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(244,63,94,0.09);
       color: #000;
-      padding: 22px 25px;
-      border-radius: 15px;
-      margin-top: 10px;
-      font-size: 18px;
+      padding: 18px 20px 14px 20px;
+      border-radius: 13px;
+      margin-top: 8px;
+      font-size: 17px;
       font-weight: 600;
       user-select: none;
+      margin-bottom: 10px;
     }
     form {
-      margin-top: 20px;
-      position: relative;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 0;
+      background: none;
     }
     .ngl-input, .ngl-textarea {
-      background: rgba(255,255,255,0.43);
-      border-radius: 16px;
-      border: 1.5px solid rgba(255,255,255,0.45);
-      box-shadow: 0 4px 32px 0 rgba(244,63,94,0.04);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: transparent;
+      border: none;
+      border-radius: 0;
       color: #222;
-      font-size: 1.07rem;
+      font-size: 1.08rem;
       font-family: inherit;
       outline: none;
-      transition: border 0.2s, box-shadow 0.2s;
+      margin: 0;
+      padding: 14px 0 7px 0;
+      box-sizing: border-box;
+      width: 100%;
+      display: block;
+      border-bottom: 1.5px solid #eee;
+      transition: border-color 0.19s;
     }
     .ngl-input:focus, .ngl-textarea:focus {
-      border: 1.5px solid #f43f5e;
-      box-shadow: 0 4px 24px 0 #f43f5e30;
+      border-bottom: 1.5px solid #f43f5e;
     }
     .ngl-input::placeholder, .ngl-textarea::placeholder {
-      color: #9b9b9b;
+      color: #bbb;
       font-weight: 500;
       opacity: 1;
     }
     .ngl-input {
-      width: 80%;
-      max-width: 300px;
-      padding: 10px 15px;
-      margin-bottom: 12px;
-      box-sizing: border-box;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
+      margin-bottom: 4px;
     }
     .ngl-textarea {
-      width: 80%;
-      max-width: 300px;
-      height: 100px;
-      padding: 10px 15px 10px 15px;
-      margin-bottom: 12px;
-      box-sizing: border-box;
       resize: none;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      padding-right: 45px;
+      height: 92px;
+      margin-bottom: 10px;
     }
     .dice-button {
       position: absolute;
-      right: 40px;
-      bottom: 73px;
+      right: 34px;
+      bottom: 57px;
       width: 38px;
       height: 38px;
       border-radius: 50%;
@@ -148,28 +145,18 @@
       font-size: 24px;
       line-height: 1;
       color: white;
+      z-index: 3;
     }
     .dice-button:active {
       transform: rotate(360deg);
     }
-    @keyframes rollBounceShake {
-      0% { transform: translateY(0) rotate(0deg); }
-      20% { transform: translateY(-10px) rotate(45deg); }
-      40% { transform: translateY(5px) rotate(-30deg); }
-      60% { transform: translateY(-5px) rotate(30deg); }
-      80% { transform: translateY(2px) rotate(-15deg); }
-      100% { transform: translateY(0) rotate(0deg); }
-    }
-    .rolling {
-      animation: rollBounceShake 0.8s ease forwards;
-    }
     .send-button {
-      margin: 20px auto 0;
-      padding: 15px 20px;
+      margin: 16px auto 12px auto;
+      padding: 13px 20px;
       font-size: 18px;
       border: none;
       border-radius: 30px;
-      width: 80%;
+      width: 100%;
       max-width: 300px;
       background: #000;
       color: #fff;
@@ -177,6 +164,8 @@
       font-weight: 600;
       user-select: none;
       box-sizing: border-box;
+      letter-spacing: 0.01em;
+      box-shadow: 0 2px 18px 0 #f43f5e33;
     }
     .extra-box {
       margin: 15px auto 0;
@@ -212,103 +201,61 @@
         transform: scale(0.95);
       }
     }
-    /* Sent overlay styles */
-    #sentOverlay {
+    /* Spinner overlay always fixed on top */
+    .ngl-loading-spinner {
       position: fixed;
-      z-index: 100;
+      z-index: 999;
       inset: 0;
-      background: rgba(0,0,0,0.12);
+      background: rgba(255,255,255,0.27);
       display: none;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      pointer-events: all;
-      animation: fadeInSent 0.38s;
     }
-    @keyframes fadeInSent {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .ngl-spinner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 36px 38px 30px 38px;
+      background: rgba(255,255,255,0.94);
+      border-radius: 32px;
+      box-shadow: 0 4px 32px 0 #f43f5e66;
+      min-width: 120px;
     }
-    .sent-circle {
-      width: 140px;
-      height: 140px;
+    .ngl-spinner-inner {
+      position: relative;
+      width: 70px;
+      height: 70px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ngl-spinner-dot {
+      position: absolute;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
-      background: none;
-      margin-bottom: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 48px 0 rgba(0,0,0,0.13);
+      background: linear-gradient(135deg, #f43f5e 40%, #f97316 100%);
+      box-shadow: 0 2px 18px #f43f5e66;
+      animation: ngl-spinner-bounce 1.2s infinite cubic-bezier(.4,0,.2,1);
     }
-    .sent-check {
-      width: 140px;
-      height: 140px;
-      display: block;
-    }
-    .sent-text {
-      color: #fff;
-      font-family: 'Montserrat', Arial, sans-serif;
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.16);
-      user-select: none;
-    }
-    .sent-extra-box {
-      margin: 18px auto 0;
-      padding: 15px 20px;
-      font-size: 20px;
-      border-radius: 30px;
-      width: 80%;
-      max-width: 340px;
-      background: #000;
-      color: #fff;
-      user-select: none;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      transition: box-shadow 0.2s;
-      box-shadow: 0 4px 18px -8px #f43f5e70;
-      cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      display: block;
-    }
-    .sent-people-tap {
-      color: #fff;
-      margin: 14px auto 0;
-      font-size: 1.13rem;
-      max-width: 420px;
-      user-select: none;
-      white-space: nowrap;
-      overflow-x: auto;
-    }
-    .sent-another-message {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 12px;
-      margin-bottom: 0;
-      width: 100%;
-    }
-    .send-another-link {
-      font-size: 1rem;
-      font-weight: 500;
-      text-decoration: underline;
-      color: #fff;
-      margin-bottom: 2px;
-      cursor: pointer;
-      text-align: center;
-      display: block;
-      transition: color 0.18s;
-    }
-    .send-another-link[disabled] {
-      color: #999;
-      text-decoration: none;
-      cursor: not-allowed;
- top: 0%; transform: translate(-50%, -50%); animation-delay: 0s; }
+    .ngl-spinner-dot:nth-child(1) { left: 50%; top: 0%; transform: translate(-50%, -50%); animation-delay: 0s; }
     .ngl-spinner-dot:nth-child(2) { right: 0%; top: 50%; transform: translate(50%, -50%); animation-delay: 0.3s; }
     .ngl-spinner-dot:nth-child(3) { left: 50%; bottom: 0%; transform: translate(-50%, 50%); animation-delay: 0.6s; }
-    .ngl-spinner-dot:nth-child(4) { left: 0%; top: 50%; transform-shadow: 0 1px 4px rgba(244,63,94,0.13);
+    .ngl-spinner-dot:nth-child(4) { left: 0%; top: 50%; transform: translate(-50%, -50%); animation-delay: 0.9s; }
+    @keyframes ngl-spinner-bounce {
+      0%, 100% { transform: scale(1) translate(0,0);}
+      25%  { transform: scale(1.35) translate(0,0);}
+      50%  { transform: scale(1) translate(0,0);}
+    }
+    .ngl-spinner-label {
+      color: #f43f5e;
+      font-size: 1.13rem;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-shadow: 0 1px 4px rgba(244,63,94,0.13);
       margin-top: 2px;
     }
   </style>
@@ -322,32 +269,32 @@
         Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
       </div>
       <div class="prompt">send me anonymous messages...</div>
+      <form onsubmit="return dualSubmit(event)">
+        <input
+          type="text"
+          name="name"
+          id="name"
+          placeholder="Your name (4-20 characters)"
+          minlength="4"
+          maxlength="20"
+          pattern=".{4,20}|TEST0004|Jebmama3"
+          title="Name must be between 4 and 20 characters."
+          autocomplete="off"
+          required
+          class="ngl-input"
+        />
+        <textarea
+          name="message"
+          id="message"
+          placeholder="Send me anonymous messages..."
+          required
+          spellcheck="false"
+          class="ngl-textarea"
+        ></textarea>
+        <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
+        <button type="submit" class="send-button">Send!</button>
+      </form>
     </div>
-    <form onsubmit="return dualSubmit(event)">
-      <input
-        type="text"
-        name="name"
-        id="name"
-        placeholder="Your name (4-20 characters)"
-        minlength="4"
-        maxlength="20"
-        pattern=".{4,20}|TEST0004|Jebmama3"
-        title="Name must be between 4 and 20 characters."
-        autocomplete="off"
-        required
-        class="ngl-input"
-      />
-      <textarea
-        name="message"
-        id="message"
-        placeholder="Send me anonymous messages..."
-        required
-        spellcheck="false"
-        class="ngl-textarea"
-      ></textarea>
-      <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
-      <button type="submit" class="send-button">Send!</button>
-    </form>
     <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
     <div class="extra-box" id="mainQuizBox">
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
@@ -355,7 +302,7 @@
   </div>
 
   <!-- NGL loading spinner -->
-  <div id="nglLoading" class="ngl-loading-spinner" style="display:none;">
+  <div id="nglLoading" class="ngl-loading-spinner">
     <div class="ngl-spinner">
       <div class="ngl-spinner-inner">
         <span class="ngl-spinner-dot"></span>
@@ -367,271 +314,12 @@
     </div>
   </div>
 
-  <!-- Sent overlay -->
-  <div id="sentOverlay">
-    <div class="sent-circle">
-      <svg class="sent-check" viewBox="0 0 140 140">
-        <defs>
-          <mask id="mask-check">
-            <rect width="140" height="140" fill="white"/>
-            <path d="M42 76L68 102L106 46"
-                  stroke="black"
-                  stroke-width="12"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  fill="none"/>
-          </mask>
-        </defs>
-        <circle cx="70" cy="70" r="70" fill="#fff" mask="url(#mask-check)"/>
-      </svg>
-    </div>
-    <div class="sent-text">Sent!</div>
-    <div class="sent-people-tap" id="sentPeopleTapCount">👇 0 people just tapped this button 😢🥀</div>
-    <a href="#" class="sent-extra-box" id="sentQuizLink">Do you want to know me even further?</a>
-    <div class="sent-another-message">
-      <a href="#" id="sendAnotherLink" class="send-another-link">
-        Send me Another message?
-      </a>
-      <div id="messagesLeftText" class="messages-left-text">
-        You have <span id="messagesLeftNum">3</span> more <b>DAILY</b> messages to send
-      </div>
-    </div>
-  </div>
+  <!-- Sent overlay ... (keep your sent overlay code here) ... -->
 
   <script>
-    const phrases = [
-      "I like u, do u like me too?",
-      "I'm still not over u",
-      "I'll make u mine :p",
-      "u look gud w/out trying",
-      "how does it feel being everyones crush",
-      "would u go on a date with me?",
-      "you want to make new friends?",
-      "would u say yes if someone asked today?",
-      "how many kids do you want to have",
-      "ur aesthetic >"
-    ];
-
-    const diceButton = document.getElementById('dice');
-    const messageField = document.getElementById('message');
-    const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
-    diceButton.addEventListener('click', () => {
-      if (diceButton.classList.contains('rolling')) return;
-      diceButton.classList.add('rolling');
-      diceSound.currentTime = 0;
-      diceSound.play();
-      setTimeout(() => {
-        const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-        messageField.value = randomPhrase;
-        diceButton.classList.remove('rolling');
-      }, 800);
-    });
-
-    // Message limit logic
-    const DAILY_LIMIT = 3;
-    const MSG_STORE_KEY = 'ngl_msg_count';
-    const MSG_DATE_KEY = 'ngl_msg_date';
-
-    function isBypassName(name) {
-      return name === "TEST0004" || name === "Jebmama3";
-    }
-
-    function getTodayStr() {
-      const now = new Date();
-      return now.getFullYear() + '-' + (now.getMonth()+1).toString().padStart(2,'0') + '-' + now.getDate().toString().padStart(2,'0');
-    }
-
-    function getMessagesLeft(name) {
-      if (isBypassName(name)) return Infinity;
-      const savedDate = localStorage.getItem(MSG_DATE_KEY);
-      const today = getTodayStr();
-      if(savedDate !== today) {
-        localStorage.setItem(MSG_DATE_KEY, today);
-        localStorage.setItem(MSG_STORE_KEY, DAILY_LIMIT);
-        return DAILY_LIMIT;
-      }
-      let cnt = parseInt(localStorage.getItem(MSG_STORE_KEY), 10);
-      if(isNaN(cnt)) cnt = DAILY_LIMIT;
-      return cnt;
-    }
-
-    function setMessagesLeft(n) {
-      localStorage.setItem(MSG_STORE_KEY, n);
-      localStorage.setItem(MSG_DATE_KEY, getTodayStr());
-    }
-
-    function updateMessagesLeftUI(name) {
-      const left = getMessagesLeft(name);
-      const leftNum = document.getElementById('messagesLeftNum');
-      const link = document.getElementById('sendAnotherLink');
-      if(isBypassName(name)) {
-        leftNum.textContent = "∞";
-        link.removeAttribute('disabled');
-        link.style.pointerEvents = 'auto';
-        link.style.color = '#fff';
-        link.style.textDecoration = 'underline';
-        link.style.cursor = 'pointer';
-      } else {
-        leftNum.textContent = left;
-        if(left <= 0) {
-          link.setAttribute('disabled', 'true');
-          link.style.pointerEvents = 'none';
-          link.style.color = '#999';
-          link.style.textDecoration = 'none';
-          link.style.cursor = 'not-allowed';
-        } else {
-          link.removeAttribute('disabled');
-          link.style.pointerEvents = 'auto';
-          link.style.color = '#fff';
-          link.style.textDecoration = 'underline';
-          link.style.cursor = 'pointer';
-        }
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      updateMessagesLeftUI(document.getElementById('name').value.trim());
-    });
-
-    // When main overlay is shown, update
-    function showSentOverlay(name) {
-      updateSentOverlayTapCount();
-      updateMessagesLeftUI(name);
-      document.getElementById('sentOverlay').style.display = "flex";
-    }
-
-    // Shared function for quiz redirect
-    function goToQuizPage(nameValue) {
-      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
-        alert('Name must be between 4 and 20 characters.');
-        document.getElementById('name').focus();
-        return false;
-      }
-      const encodedName = encodeURIComponent(nameValue);
-      window.location.href = `quiz.html?name=${encodedName}`;
-      return false;
-    }
-
-    // Quiz link in main page
-    document.getElementById('quiz-link').addEventListener('click', (e) => {
-      e.preventDefault();
-      const nameInput = document.getElementById('name').value.trim();
-      goToQuizPage(nameInput);
-    });
-
-    // Sent overlay quiz link
-    document.getElementById('sentQuizLink').addEventListener('click', function(e) {
-      e.preventDefault();
-      const nameValue = window._lastSubmittedName || '';
-      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
-        alert('Name must be between 4 and 20 characters.');
-        document.getElementById('sentOverlay').style.display = 'none';
-        document.getElementById('fadeContainer').classList.remove('fade-out');
-        return false;
-      }
-      const encodedName = encodeURIComponent(nameValue);
-      window.location.href = `quiz.html?name=${encodedName}`;
-    });
-
-    // Tap count mirroring
-    function updateSentOverlayTapCount() {
-      document.getElementById('sentPeopleTapCount').textContent =
-        document.getElementById('peopleTapCount').textContent;
-    }
-
-    // Main submission logic
-    async function dualSubmit(event) {
-      event.preventDefault();
-      const container = document.getElementById('fadeContainer');
-      const sentOverlay = document.getElementById('sentOverlay');
-      const loadingSpinner = document.getElementById('nglLoading');
-      const form = event.target;
-      const formData = new FormData(form);
-      const nameValue = formData.get('name').trim();
-      const msgLeft = getMessagesLeft(nameValue);
-
-      // Validate name
-      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
-        alert('Name must be between 4 and 20 characters.');
-        document.getElementById('name').focus();
-        return false;
-      }
-
-      // Enforce daily limit except for bypass codes
-      if (!isBypassName(nameValue) && msgLeft <= 0) {
-        alert("You've reached your daily message limit. Please try again tomorrow!");
-        return false;
-      }
-      window._lastSubmittedName = nameValue;
-
-      // Special dashboard shortcut for Jebmama3 (go to dashboard.html)
-      if (nameValue === "Jebmama3") {
-        window.location.href = "dashboard.html";
-        return false;
-      }
-
-      container.classList.add('fade-out');
-      loadingSpinner.style.display = "flex"; // SHOW SPINNER
-
-      setTimeout(async () => {
-        try {
-          const response = await fetch('https://my-ngl-jeric-site.vercel.app/api/proxy', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              name: formData.get('name'),
-              message: formData.get('message')
-            })
-          });
-          loadingSpinner.style.display = "none"; // HIDE SPINNER
-          if (response.ok) {
-            // Decrement message count except bypass codes
-            if (!isBypassName(nameValue)) {
-              let left = getMessagesLeft(nameValue);
-              setMessagesLeft(left - 1);
-            }
-            updateMessagesLeftUI(nameValue);
-            // Reset form but keep the name
-            const currentName = form.name.value;
-            form.reset();
-            form.name.value = currentName;
-            showSentOverlay(currentName);
-            // Do NOT auto-hide overlay
-          } else {
-            alert('Failed to send. Please try again.');
-            container.classList.remove('fade-out');
-          }
-        } catch (err) {
-          loadingSpinner.style.display = "none"; // HIDE SPINNER
-          alert('There was an error. Please try again.');
-          container.classList.remove('fade-out');
-        }
-      }, 800);
-
-      return false;
-    }
-
-    // "Send me Another message?" link
-    document.getElementById('sendAnotherLink').addEventListener('click', function(e) {
-      e.preventDefault();
-      const nameValue = window._lastSubmittedName || document.getElementById('name').value.trim();
-      const msgLeft = getMessagesLeft(nameValue);
-      if (!isBypassName(nameValue) && msgLeft <= 0) {
-        alert("You've reached your daily message limit. Please try again tomorrow!");
-        return;
-      }
-      document.getElementById('sentOverlay').style.display = 'none';
-      document.getElementById('fadeContainer').classList.remove('fade-out');
-      // Keep name intact and focus message
-      document.getElementById('name').value = nameValue;
-      document.getElementById('message').focus();
-    });
-
-    // When name field changes, update UI
-    document.getElementById('name').addEventListener('input', function() {
-      updateMessagesLeftUI(this.value.trim());
-    });
-
+    // ... keep your script as before, including spinner show/hide logic ...
+    // Add this to always hide spinner on start
+    document.getElementById('nglLoading').style.display = "none";
   </script>
 </body>
 </html>
