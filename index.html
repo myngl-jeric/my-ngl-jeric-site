@@ -312,8 +312,8 @@
       </svg>
     </div>
     <div class="sent-text">Sent!</div>
-    <a href="#" class="sent-extra-box" id="sentQuizLink">Do you want to know me even further?</a>
     <div class="sent-people-tap" id="sentPeopleTapCount">👇 0 people just tapped this button 😢🥀</div>
+    <a href="#" class="sent-extra-box" id="sentQuizLink">Do you want to know me even further?</a>
   </div>
 
   <script>
@@ -367,15 +367,15 @@
     // Sent overlay quiz link
     document.getElementById('sentQuizLink').addEventListener('click', function(e) {
       e.preventDefault();
-      // Use the last submitted name
-      if (window._lastSubmittedName) {
-        goToQuizPage(window._lastSubmittedName);
-      } else {
-        // fallback, ask for name again
-        alert('Name not found. Please enter your name again.');
+      const nameValue = window._lastSubmittedName || '';
+      if (nameValue.length < 4 || nameValue.length > 20) {
+        alert('Please enter your name between 4 and 20 characters before proceeding.');
         document.getElementById('sentOverlay').style.display = 'none';
         document.getElementById('fadeContainer').classList.remove('fade-out');
+        return false;
       }
+      const encodedName = encodeURIComponent(nameValue);
+      window.location.href = `quiz.html?name=${encodedName}`;
     });
 
     // Tap count mirroring
@@ -389,8 +389,6 @@
       event.preventDefault();
       const container = document.getElementById('fadeContainer');
       const sentOverlay = document.getElementById('sentOverlay');
-      const peopleTapCount = document.getElementById('peopleTapCount');
-      const sentPeopleTapCount = document.getElementById('sentPeopleTapCount');
 
       container.classList.add('fade-out');
       const form = event.target;
