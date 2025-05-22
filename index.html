@@ -48,7 +48,7 @@
       justify-content: center;
       align-items: center;
       z-index: 2;
-      border: 6px solid #ff007a; /* Thicker hot pink border */
+      border: 6px solid #ff007a;
     }
     .profile-img {
       width: 100%;
@@ -552,7 +552,12 @@
     // --- DICE BUTTON LOGIC WITH RANDOM ROLL ANIMATIONS AND ANTI-SPAM ---
     const diceButton = document.getElementById('dice');
     const messageField = document.getElementById('message');
-    const diceSound = new Audio('https://actions.google.com/sounds/v1/dice/dice_roll.ogg');
+    // Use 3 free MP3 dice rolling sounds
+    const diceSounds = [
+      new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_115b9e4d80.mp3'),
+      new Audio('https://assets.mixkit.co/sfx/preview/mixkit-dice-roll-568.mp3'),
+      new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_115b9e4d81.mp3')
+    ];
     const rollClasses = ['rolling1', 'rolling2', 'rolling3'];
     let diceRolling = false;
 
@@ -563,8 +568,10 @@
       // Randomly choose a roll animation
       const randomRoll = rollClasses[Math.floor(Math.random() * rollClasses.length)];
       diceButton.classList.add(randomRoll);
-      diceSound.currentTime = 0;
-      diceSound.play();
+      // Randomly pick a dice sound
+      const sound = diceSounds[Math.floor(Math.random() * diceSounds.length)];
+      sound.currentTime = 0;
+      sound.play();
       setTimeout(() => {
         const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
         messageField.value = randomPhrase;
