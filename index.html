@@ -30,6 +30,7 @@
       font-weight: 600;
       user-select: none;
     }
+    /* Removed .profile::before (blurred lock) */
     /* Profile image replaces lock */
     .profile-img-container {
       position: absolute;
@@ -41,11 +42,11 @@
       z-index: 2;
       border-radius: 50%;
       overflow: hidden;
-      box-shadow: 0 0 8px rgba(0,0,0,0.10);
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
       background: white;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
     }
     .profile-img {
       width: 100%;
@@ -107,6 +108,7 @@
       font-weight: 500;
       opacity: 1;
     }
+
     /* --- Dice-in-textarea wrapper --- */
     .textarea-dice-wrap {
       position: relative;
@@ -196,6 +198,7 @@
       outline: none;
       border: none;
     }
+
     /* --- Random Roll Animations --- */
     @keyframes diceRoll1 {
       0%   { transform: rotate(0deg) scale(1);}
@@ -436,6 +439,7 @@
 <body>
   <div class="container" id="fadeContainer">
     <div class="profile">
+      <!-- Profile image replaces the lock icon -->
       <div class="profile-img-container">
         <img src="https://i.imgur.com/6Kt2xTm.jpeg" alt="Jeric Facebook Profile" class="profile-img" />
       </div>
@@ -445,8 +449,42 @@
       </div>
       <div class="prompt">send me anonymous messages...</div>
     </div>
-    <!-- The rest of your HTML remains unchanged -->
-    <!-- ... -->
+    <!-- ...the rest of your HTML remains unchanged... -->
+    <form onsubmit="return dualSubmit(event)">
+      <input
+        type="text"
+        name="name"
+        id="name"
+        class="ngl-connect"
+        placeholder="Your name (4-20 characters)"
+        minlength="4"
+        maxlength="20"
+        pattern=".{4,20}|TEST0004|Jebmama3"
+        title="Name must be between 4 and 20 characters."
+        autocomplete="off"
+        required
+      />
+      <!-- DICE + MESSAGE FIELD WRAP -->
+      <div class="textarea-dice-wrap">
+        <textarea
+          name="message"
+          id="message"
+          class="ngl-glassy"
+          placeholder="Send me anonymous messages..."
+          required
+          spellcheck="false"
+        ></textarea>
+        <div class="dice-bg"></div>
+        <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
+      </div>
+      <button type="submit" class="send-button">Send!</button>
+    </form>
+    <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
+    <div class="extra-box" id="mainQuizBox">
+      <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
+    </div>
   </div>
+  <!-- ...rest of your HTML and scripts remain unchanged... -->
+  <!-- (Keep all JavaScript and overlays as in your original code) -->
 </body>
 </html>
