@@ -9,9 +9,11 @@
     body {
       margin: 0;
       font-family: 'Montserrat', Arial, sans-serif;
-      background: linear-gradient(135deg, #ff3c7e 0%, #ffb86c 100%);
+      /* SUPER VIBRANT NGL BACKGROUND */
+      background: linear-gradient(135deg, #ff007a 0%, #ff6a00 55%, #ffe066 100%);
       color: #fff;
       text-align: center;
+      min-height: 100vh;
     }
     .container {
       padding: 30px 15px;
@@ -84,7 +86,6 @@
       margin-top: 20px;
       position: relative;
     }
-    /* NGL-style connected fields */
     input[type="text"].ngl-connect {
       background: #fff;
       border-radius: 10px 10px 0 0;
@@ -229,7 +230,6 @@
         transform: scale(0.95);
       }
     }
-    /* Sent overlay styles */
     #sentOverlay {
       position: fixed;
       z-index: 100;
@@ -339,7 +339,6 @@
     .messages-left-text b {
       font-weight: 700;
     }
-    /* NGL loading spinner styles - FIXED */
     .ngl-loading-spinner {
       position: fixed;
       z-index: 200;
@@ -439,7 +438,6 @@
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
     </div>
   </div>
-
   <!-- NGL loading spinner -->
   <div id="nglLoading" class="ngl-loading-spinner" style="display:none;">
     <div class="ngl-spinner">
@@ -452,7 +450,6 @@
       <div class="ngl-spinner-label">Sending...</div>
     </div>
   </div>
-
   <!-- Sent overlay -->
   <div id="sentOverlay">
     <div class="sent-circle">
@@ -483,7 +480,6 @@
       </div>
     </div>
   </div>
-
   <script>
     const phrases = [
       "I like u, do u like me too?",
