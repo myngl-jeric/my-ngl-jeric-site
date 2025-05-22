@@ -9,7 +9,6 @@
     body {
       margin: 0;
       font-family: 'Montserrat', Arial, sans-serif;
-      /* HOT PINK to NGL ORANGE */
       background: linear-gradient(135deg, #ff007a 0%, #f43f5e 55%, #f97316 100%);
       color: #fff;
       text-align: center;
@@ -112,6 +111,14 @@
       font-weight: 500;
       opacity: 1;
     }
+
+    /* --- Dice-in-textarea wrapper --- */
+    .textarea-dice-wrap {
+      position: relative;
+      width: 80%;
+      max-width: 300px;
+      margin: 0 auto 12px auto;
+    }
     textarea.ngl-glassy {
       background: rgba(255,255,255,0.54);
       border-radius: 0 0 10px 10px;
@@ -120,18 +127,15 @@
       backdrop-filter: blur(7px);
       -webkit-backdrop-filter: blur(7px);
       margin-top: 0;
-      width: 80%;
-      max-width: 300px;
+      width: 100%;
       padding: 10px 15px;
       font-size: 16px;
       box-sizing: border-box;
       display: block;
-      margin-left: auto;
-      margin-right: auto;
       height: 100px;
       resize: none;
       color: #222;
-      margin-bottom: 12px;
+      margin-bottom: 0;
       outline: none;
     }
     textarea.ngl-glassy:focus {
@@ -143,16 +147,29 @@
       font-weight: 500;
       opacity: 1;
     }
-    input[type="text"]:focus,
-    textarea:focus {
-      outline: none;
+    .dice-bg {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.82);
+      box-shadow:
+        0 0 18px 6px rgba(255,0,122,0.14),
+        0 0 1px 0 #fff,
+        0 2px 12px 0 rgba(244,63,94,0.08);
+      backdrop-filter: blur(2.5px);
+      -webkit-backdrop-filter: blur(2.5px);
+      z-index: 1;
+      pointer-events: none;
     }
     .dice-button {
       position: absolute;
-      right: 40px;
-      bottom: 73px;
-      width: 38px;
-      height: 38px;
+      bottom: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: #f43f5e;
       border: none;
@@ -162,10 +179,11 @@
       align-items: center;
       transition: transform 0.6s ease;
       user-select: none;
-      box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
-      font-size: 24px;
+      box-shadow: 0 2px 8px 0 #ff007a44, 0 0 2px #fff6;
+      font-size: 20px;
       line-height: 1;
       color: white;
+      z-index: 2;
     }
     .dice-button:active {
       transform: rotate(360deg);
@@ -422,15 +440,19 @@
         autocomplete="off"
         required
       />
-      <textarea
-        name="message"
-        id="message"
-        class="ngl-glassy"
-        placeholder="Send me anonymous messages..."
-        required
-        spellcheck="false"
-      ></textarea>
-      <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
+      <!-- DICE + MESSAGE FIELD WRAP -->
+      <div class="textarea-dice-wrap">
+        <textarea
+          name="message"
+          id="message"
+          class="ngl-glassy"
+          placeholder="Send me anonymous messages..."
+          required
+          spellcheck="false"
+        ></textarea>
+        <div class="dice-bg"></div>
+        <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
+      </div>
       <button type="submit" class="send-button">Send!</button>
     </form>
     <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
