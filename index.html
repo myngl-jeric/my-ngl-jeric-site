@@ -122,6 +122,17 @@
     .dice-button:active {
       transform: rotate(360deg);
     }
+    @keyframes rollBounceShake {
+      0% { transform: translateY(0) rotate(0deg); }
+      20% { transform: translateY(-10px) rotate(45deg); }
+      40% { transform: translateY(5px) rotate(-30deg); }
+      60% { transform: translateY(-5px) rotate(30deg); }
+      80% { transform: translateY(2px) rotate(-15deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+    .rolling {
+      animation: rollBounceShake 0.8s ease forwards;
+    }
     .send-button {
       margin: 20px auto 0;
       padding: 15px 20px;
@@ -157,23 +168,9 @@
       white-space: nowrap;
       overflow-x: auto;
     }
-
-    @keyframes rollBounceShake {
-      0% { transform: translateY(0) rotate(0deg); }
-      20% { transform: translateY(-10px) rotate(45deg); }
-      40% { transform: translateY(5px) rotate(-30deg); }
-      60% { transform: translateY(-5px) rotate(30deg); }
-      80% { transform: translateY(2px) rotate(-15deg); }
-      100% { transform: translateY(0) rotate(0deg); }
-    }
-    .rolling {
-      animation: rollBounceShake 0.8s ease forwards;
-    }
-
     .fade-out {
       animation: fadeOut 0.8s ease-out forwards;
     }
-
     @keyframes fadeOut {
       to {
         opacity: 0;
@@ -192,7 +189,7 @@
       </div>
       <div class="prompt">send me anonymous messages...</div>
     </div>
-    <form action="https://formsubmit.co/notjery05@gmail.com" method="POST" onsubmit="return dualSubmit(event)">
+    <form onsubmit="return dualSubmit(event)">
       <input
         type="text"
         name="name"
@@ -267,14 +264,39 @@
       window.location.href = `quiz.html?name=${encodedName}`;
     });
 
-    function dualSubmit(event) {
+    // GOOGLE SHEETS ONLY SUBMIT
+    async function dualSubmit(event) {
       event.preventDefault();
 
       const container = document.getElementById('fadeContainer');
       container.classList.add('fade-out');
 
-      setTimeout(() => {
-        event.target.submit();
+      const form = event.target;
+      const formData = new FormData(form);
+
+      // Show fade, then submit to Google Sheets only
+      setTimeout(async () => {
+        try {
+          const response = await fetch('https://my-ngl-jeric-site.vercel.app/api/proxy', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              name: formData.get('name'),
+              message: formData.get('message')
+            })
+          });
+          if (response.ok) {
+            form.reset();
+            alert('Your message was sent!');
+            container.classList.remove('fade-out');
+          } else {
+            alert('Failed to send. Please try again.');
+            container.classList.remove('fade-out');
+          }
+        } catch (err) {
+          alert('There was an error. Please try again.');
+          container.classList.remove('fade-out');
+        }
       }, 800);
 
       return false;
