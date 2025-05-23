@@ -15,18 +15,37 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Your new Google Apps Script Web App endpoint
+  // Your Google Apps Script Web App endpoint
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbzKg6fQI_IWAJwOP_JhDjFXPWoDxv_iukIis_qPqS_DsoIWwvXfPQBNFSP5N-c3vxSm/exec';
 
+  // Function to get real client IP
+  function getClientIp(req) {
+    const forwarded = req.headers['x-forwarded-for'];
+    if (forwarded) {
+      return forwarded.split(',')[0].trim();
+    }
+    return req.connection?.remoteAddress || req.socket?.remoteAddress || '';
+  }
+
   try {
-    // Forward the POST body to GAS
+    let body = req.body;
+    // If body is a string, parse it
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    // Add IP address and default event if not present
+    const dataWithIp = {
+      ...body,
+      ip: getClientIp(req),
+      event: body?.event || 'message'
+    };
+
     const forwardRes = await fetch(GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify(dataWithIp)
     });
 
-    // GAS may return text or JSON; handle both
     const contentType = forwardRes.headers.get('content-type') || '';
     if (contentType.includes('application/json')) {
       const data = await forwardRes.json();
