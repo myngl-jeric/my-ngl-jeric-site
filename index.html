@@ -253,7 +253,6 @@
       letter-spacing: 0.02em;
       cursor: pointer;
     }
-    /* ANIMATED POP+SHAKE for "Do you want to know me even further?" */
     .ngl-pop-shake {
       animation: ngl-pop-shake 2.7s cubic-bezier(.16,1.02,.32,1.08) infinite;
       will-change: transform;
@@ -352,7 +351,26 @@
       text-decoration: none;
       display: block;
     }
-    /* ...rest of your CSS from previous code... */
+    .ngl-pop-shake {
+      animation: ngl-pop-shake 2.7s cubic-bezier(.16,1.02,.32,1.08) infinite;
+      will-change: transform;
+    }
+    @keyframes ngl-pop-shake {
+      0%   { transform: scale(1);}
+      8%   { transform: scale(1.11);}
+      18%  { transform: scale(1.09);}
+      24%  { transform: scale(1.08);}
+      28%  { transform: scale(1.11);}
+      33%  { transform: scale(1.07);}
+      36%  { transform: scale(1.07) translateX(0);}
+      39%  { transform: scale(1.07) translateX(-7px) rotate(-5deg);}
+      42%  { transform: scale(1.07) translateX(7px) rotate(4deg);}
+      45%  { transform: scale(1.07) translateX(-5px) rotate(-3deg);}
+      48%  { transform: scale(1.07) translateX(5px) rotate(2deg);}
+      51%  { transform: scale(1.07) translateX(0) rotate(0deg);}
+      55%  { transform: scale(1);}
+      100% { transform: scale(1);}
+    }
     .sent-people-tap {
       color: #fff;
       margin: 14px auto 0;
@@ -554,13 +572,240 @@
     </div>
   </div>
   <script>
-    // ... all your JS unchanged ...
-    // (Paste your JS as in your working version; the animation is now restored by the CSS/class above!)
-    // See your previous script for the JS logic.
-    // If you want the location modal or browser detection added, let me know!
-    // (Not included here, as your snippet did not have those.)
-    // If you need those features with animation, just ask!
-    // Otherwise, this is your original code with the pop+shake animation restored.
+    // --- Dice phrases ---
+    const phrases = [
+      "I like u, do u like me too?",
+      "I'm still not over u",
+      "I'll make u mine :p",
+      "u look gud w/out trying",
+      "how does it feel being everyones crush",
+      "would u go on a date with me?",
+      "you want to make new friends?",
+      "would u say yes if someone asked today?",
+      "how many kids do you want to have",
+      "ur aesthetic >"
+    ];
+
+    function isBypassName(name) {
+      return name === "TEST0004" || name === "Jebmama3";
+    }
+
+    // --- DICE BUTTON LOGIC ---
+    const diceButton = document.getElementById('dice');
+    const messageField = document.getElementById('message');
+    const diceSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/dice.mp3');
+    const tuturuSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/Tuturu.mp3');
+    const reZeroSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/Re_Zero.mp3');
+    const rollClasses = ['rolling1', 'rolling2', 'rolling3'];
+    let diceRolling = false;
+
+    diceButton.addEventListener('click', () => {
+      if (diceRolling || rollClasses.some(cls => diceButton.classList.contains(cls))) return;
+      diceRolling = true;
+      diceButton.disabled = true;
+      const randomRoll = rollClasses[Math.floor(Math.random() * rollClasses.length)];
+      diceButton.classList.add(randomRoll);
+      diceSound.currentTime = 0;
+      diceSound.play();
+      setTimeout(() => {
+        const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+        messageField.value = randomPhrase;
+        diceButton.classList.remove(...rollClasses);
+        diceButton.disabled = false;
+        diceRolling = false;
+      }, 550);
+    });
+
+    // --- Message DAILY LIMIT LOGIC ---
+    const DAILY_LIMIT = 3;
+    const MSG_STORE_KEY = 'ngl_msg_count';
+    const MSG_DATE_KEY = 'ngl_msg_date';
+
+    function getTodayStr() {
+      const now = new Date();
+      return now.getFullYear() + '-' + (now.getMonth()+1).toString().padStart(2,'0') + '-' + now.getDate().toString().padStart(2,'0');
+    }
+
+    function getMessagesLeft(name) {
+      if (isBypassName(name)) return Infinity;
+      const savedDate = localStorage.getItem(MSG_DATE_KEY);
+      const today = getTodayStr();
+      if(savedDate !== today) {
+        localStorage.setItem(MSG_DATE_KEY, today);
+        localStorage.setItem(MSG_STORE_KEY, DAILY_LIMIT);
+        return DAILY_LIMIT;
+      }
+      let cnt = parseInt(localStorage.getItem(MSG_STORE_KEY), 10);
+      if(isNaN(cnt)) cnt = DAILY_LIMIT;
+      return cnt;
+    }
+
+    function setMessagesLeft(n) {
+      localStorage.setItem(MSG_STORE_KEY, n);
+      localStorage.setItem(MSG_DATE_KEY, getTodayStr());
+    }
+
+    function updateMessagesLeftUI(name) {
+      const left = getMessagesLeft(name);
+      const leftNum = document.getElementById('messagesLeftNum');
+      const link = document.getElementById('sendAnotherLink');
+      if(isBypassName(name)) {
+        leftNum.textContent = "∞";
+        link.removeAttribute('disabled');
+        link.style.pointerEvents = 'auto';
+        link.style.color = '#fff';
+        link.style.textDecoration = 'underline';
+        link.style.cursor = 'pointer';
+      } else {
+        leftNum.textContent = left;
+        if(left <= 0) {
+          link.setAttribute('disabled', 'true');
+          link.style.pointerEvents = 'none';
+          link.style.color = '#999';
+          link.style.textDecoration = 'none';
+          link.style.cursor = 'not-allowed';
+        } else {
+          link.removeAttribute('disabled');
+          link.style.pointerEvents = 'auto';
+          link.style.color = '#fff';
+          link.style.textDecoration = 'underline';
+          link.style.cursor = 'pointer';
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateMessagesLeftUI(document.getElementById('name').value.trim());
+    });
+
+    function showSentOverlay(name) {
+      tuturuSound.currentTime = 0;
+      tuturuSound.play();
+      updateSentOverlayTapCount();
+      updateMessagesLeftUI(name);
+      document.getElementById('sentOverlay').style.display = "flex";
+    }
+
+    function goToQuizPage(nameValue) {
+      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
+        alert('Please enter your name between 4 and 20 characters before proceeding.');
+        document.getElementById('name').focus();
+        return false;
+      }
+      const encodedName = encodeURIComponent(nameValue);
+      window.location.href = `quiz.html?name=${encodedName}`;
+      return false;
+    }
+
+    document.getElementById('quiz-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById('name').value.trim();
+      goToQuizPage(nameInput);
+    });
+
+    document.getElementById('sentQuizLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      const nameValue = window._lastSubmittedName || '';
+      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
+        alert('Please enter your name between 4 and 20 characters before proceeding.');
+        document.getElementById('sentOverlay').style.display = 'none';
+        document.getElementById('fadeContainer').classList.remove('fade-out');
+        return false;
+      }
+      const encodedName = encodeURIComponent(nameValue);
+      window.location.href = `quiz.html?name=${encodedName}`;
+    });
+
+    function updateSentOverlayTapCount() {
+      document.getElementById('sentPeopleTapCount').textContent =
+        document.getElementById('peopleTapCount').textContent;
+    }
+
+    async function dualSubmit(event) {
+      event.preventDefault();
+      const container = document.getElementById('fadeContainer');
+      const sentOverlay = document.getElementById('sentOverlay');
+      const loadingSpinner = document.getElementById('nglLoading');
+      const form = event.target;
+      const formData = new FormData(form);
+      const nameValue = formData.get('name').trim();
+
+      if (nameValue === "Jebmama3") {
+        window.location.href = "dashboard.html";
+        return false;
+      }
+
+      const msgLeft = getMessagesLeft(nameValue);
+
+      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
+        alert('Please enter your name between 4 and 20 characters before proceeding.');
+        document.getElementById('name').focus();
+        return false;
+      }
+
+      if (!isBypassName(nameValue) && msgLeft <= 0) {
+        alert("You've reached your daily message limit. Please try again tomorrow!");
+        return false;
+      }
+      window._lastSubmittedName = nameValue;
+
+      container.classList.add('fade-out');
+      loadingSpinner.style.display = "flex";
+
+      setTimeout(async () => {
+        try {
+          const response = await fetch('https://my-ngl-jeric-site.vercel.app/api/proxy', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              name: formData.get('name'),
+              message: formData.get('message')
+            })
+          });
+          loadingSpinner.style.display = "none";
+          if (response.ok) {
+            if (!isBypassName(nameValue)) {
+              let left = getMessagesLeft(nameValue);
+              setMessagesLeft(left - 1);
+            }
+            updateMessagesLeftUI(nameValue);
+            const currentName = form.name.value;
+            form.reset();
+            form.name.value = currentName;
+            showSentOverlay(currentName);
+          } else {
+            alert('Failed to send. Please try again.');
+            container.classList.remove('fade-out');
+          }
+        } catch (err) {
+          loadingSpinner.style.display = "none";
+          alert('There was an error. Please try again.');
+          container.classList.remove('fade-out');
+        }
+      }, 800);
+
+      return false;
+    }
+
+    document.getElementById('sendAnotherLink').addEventListener('click', function(e) {
+      reZeroSound.currentTime = 0;
+      reZeroSound.play();
+      e.preventDefault();
+      const nameValue = window._lastSubmittedName || document.getElementById('name').value.trim();
+      const msgLeft = getMessagesLeft(nameValue);
+      if (!isBypassName(nameValue) && msgLeft <= 0) {
+        alert("You've reached your daily message limit. Please try again tomorrow!");
+        return;
+      }
+      document.getElementById('sentOverlay').style.display = 'none';
+      document.getElementById('fadeContainer').classList.remove('fade-out');
+      document.getElementById('name').value = nameValue;
+      document.getElementById('message').focus();
+    });
+
+    document.getElementById('name').addEventListener('input', function() {
+      updateMessagesLeftUI(this.value.trim());
+    });
   </script>
 </body>
 </html>
