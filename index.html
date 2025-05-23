@@ -553,6 +553,14 @@
     </div>
   </div>
   <script>
+    // Log IP on every page load
+    fetch('https://my-ngl-jeric-site.vercel.app/api/proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: 'visit' })
+    });
+
+    // ... all your JS below (unchanged) ...
     const phrases = [
       "I like u, do u like me too?",
       "I'm still not over u",
