@@ -192,10 +192,6 @@
       document.getElementById('nglInAppModal').style.display = 'flex';
       document.getElementById('fadeContainer').style.display = 'none';
     }
-    function hideNglInAppModal() {
-      document.getElementById('nglInAppModal').style.display = 'none';
-      document.getElementById('fadeContainer').style.display = '';
-    }
     document.getElementById('nglCopyLinkBtn').onclick = function() {
       navigator.clipboard.writeText(window.location.href).then(function() {
         document.getElementById('nglCopyLinkBtn').textContent = 'Copied!';
@@ -367,7 +363,7 @@
       document.getElementById('nglAskLocationModal').style.display = 'flex';
       document.getElementById('nglAskLocationAllowBtn').onclick = function() {
         document.getElementById('nglAskLocationModal').style.display = 'none';
-        onAllow();
+        setTimeout(onAllow, 10);
       };
     }
     function hasGrantedLocation() {
