@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   }
 
   // Your updated Google Apps Script Web App endpoint:
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxRov5u8_P8BNbLrQ0t_LfgOrjD266ZoVxeKZk94A1lE7QZ7SkmXkEaJrpBRIP1X_kY/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRjK694JMtp50tPnAczR4yb8CYG3Mp237r8HuuZJATqw6K5VkV6OHxIUdZoOSUmnIj/exec';
 
   function getClientIp(req) {
     const forwarded = req.headers['x-forwarded-for'];
