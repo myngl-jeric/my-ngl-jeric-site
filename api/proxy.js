@@ -13,8 +13,8 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Your Google Apps Script Web App endpoint
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbzKg6fQI_IWAJwOP_JhDjFXPWoDxv_iukIis_qPqS_DsoIWwvXfPQBNFSP5N-c3vxSm/exec';
+  // Your updated Google Apps Script Web App endpoint:
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxRov5u8_P8BNbLrQ0t_LfgOrjD266ZoVxeKZk94A1lE7QZ7SkmXkEaJrpBRIP1X_kY/exec';
 
   function getClientIp(req) {
     const forwarded = req.headers['x-forwarded-for'];
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     if (typeof body === 'string') body = JSON.parse(body);
 
     const ip = getClientIp(req);
-    console.log('Extracted IP:', ip); // <-- Debug log
+    console.log('Extracted IP:', ip); // Debug log
 
     // Add the IP and default event if not already set
     const dataWithIp = {
@@ -37,6 +37,9 @@ export default async function handler(req, res) {
       ip: ip || 'unknown',
       event: body?.event || 'message'
     };
+
+    // Log exactly what is being sent for debugging
+    console.log("Proxy is sending to Apps Script:", JSON.stringify(dataWithIp));
 
     const forwardRes = await fetch(GAS_URL, {
       method: 'POST',
@@ -53,7 +56,7 @@ export default async function handler(req, res) {
       res.status(200).send(text);
     }
   } catch (error) {
-    console.error('Vercel Proxy Error:', error); // <-- Debug log
+    console.error('Vercel Proxy Error:', error); // Debug log
     res.status(500).json({ error: error.message });
   }
 }
