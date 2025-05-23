@@ -434,21 +434,12 @@
       font-family: 'Montserrat', Arial, sans-serif;
       font-weight: 700;
       letter-spacing: 0.01em;
-      text-shadow: 0 1px 4px rgba(244,63,94,0.13);
-      margin-top: 2px;
-    }
-    .ngl-pop-shake {
-      animation: ngl-pop-shake 2.7s cubic-bezier(.16,1.02,.32,1.08) infinite;
-      will-change: transform;
-    }
-    @keyframes ngl-pop-shake {
+      text-shadow: 0 1px l-pop-shake {
       0%   { transform: scale(1);}
       8%   { transform: scale(1.11);}
       18%  { transform: scale(1.09);}
       24%  { transform: scale(1.08);}
-      28%  { transform: scale(1.11);}
-      33%  { transform: scale(1.07);}
-      36%  { transform: scale(1.07) translateX(0);}
+      28%  { transformX(0);}
       39%  { transform: scale(1.07) translateX(-7px) rotate(-5deg);}
       42%  { transform: scale(1.07) translateX(7px) rotate(4deg);}
       45%  { transform: scale(1.07) translateX(-5px) rotate(-3deg);}
@@ -488,7 +479,6 @@
       border: none;
       cursor: pointer;
     }
-    /* In-app browser modal styles (reuse modal pattern) */
     #inAppBrowserModal {
       display:none;
       position:fixed;
@@ -908,7 +898,7 @@
       setTimeout(async () => {
         try {
           const payload = {
-           ('name'),
+            name: formData.get('name'),
             message: formData.get('message'),
             latitude,
             longitude
