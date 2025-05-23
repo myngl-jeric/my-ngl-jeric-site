@@ -28,10 +28,13 @@ export default async function handler(req, res) {
     let body = req.body;
     if (typeof body === 'string') body = JSON.parse(body);
 
+    const ip = getClientIp(req);
+    console.log('Extracted IP:', ip); // <-- Debug log
+
     // Add the IP and default event if not already set
     const dataWithIp = {
       ...body,
-      ip: getClientIp(req),
+      ip: ip || 'unknown',
       event: body?.event || 'message'
     };
 
@@ -50,6 +53,7 @@ export default async function handler(req, res) {
       res.status(200).send(text);
     }
   } catch (error) {
+    console.error('Vercel Proxy Error:', error); // <-- Debug log
     res.status(500).json({ error: error.message });
   }
 }
