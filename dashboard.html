@@ -2,65 +2,223 @@
 <html>
 <head>
   <title>Message Dashboard</title>
-  <meta charset="UTF-8">
-  <style>
-    body { font-family: Arial, sans-serif; margin: 2em; background: #f8f8f8; }
-    h1 { color: #333; }
-    ul { list-style: none; padding: 0; }
-    li { background: #fff; margin-bottom: 1em; padding: 1em; border-radius: 5px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);}
-    .timestamp { color: #888; font-size: 0.9em; }
-    .email { color: #0077cc; font-size: 0.97em; }
-    .name { font-weight: bold; }
-    .message { margin-top: 0.5em; }
-  </style>
-</head>
-<body>
-  <h1>📬 Message Dashboard</h1>
-  <ul id="messages">
-    <li>Loading messages...</li>
-  </ul>
+<!-- Add this to your dashboard.html -->
+<div class="admin-dashboard">
+  <h1>Secret Admin Dashboard</h1>
+  
+  <div class="admin-controls">
+    <button id="refreshLeaderboard">Refresh Data</button>
+    <div class="search-box">
+      <input type="text" id="searchAnonymous" placeholder="Search Anonymous IDs...">
+    </div>
+  </div>
+  
+  <div class="leaderboard-container">
+    <h2>Anonymous Message Stats</h2>
+    <table id="secretLeaderboard">
+      <thead>
+        <tr>
+          <th>Anonymous ID</th>
+          <th>Messages Sent</th>
+          <th>Actual Name</th>
+          <th>Last Active</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Filled by JavaScript -->
+      </tbody>
+    </table>
+  </div>
+</div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-  <script>
-    // Your actual Firebase config!
-    const firebaseConfig = {
-      apiKey: "AIzaSyA6b1tHlDB5o-9fZxUsJDHLQIst_3WXIsQ",
-      authDomain: "contantfromdashboard.firebaseapp.com",
-      projectId: "contantfromdashboard",
-      storageBucket: "contantfromdashboard.appspot.com",
-      messagingSenderId: "240404258017",
-      appId: "1:240404258017:web:96122fc756f80bba446ba0",
-      measurementId: "G-0K2E2VRM11"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+<style>
+.admin-dashboard {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Montserrat', sans-serif;
+}
 
-    // Load messages from Firestore, newest first
-    db.collection("messages").orderBy("timestamp", "desc")
-      .onSnapshot((querySnapshot) => {
-        const list = document.getElementById('messages');
-        list.innerHTML = '';
-        if (querySnapshot.empty) {
-          list.innerHTML = '<li>No messages yet.</li>';
-        } else {
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : "pending";
-            const name = data.name || "Anonymous";
-            const email = data.email ? `<span class="email">&lt;${data.email}&gt;</span>` : "";
-            const message = data.message || "";
-            const li = document.createElement('li');
-            li.innerHTML = `
-              <span class="timestamp">${date}</span><br>
-              <span class="name">${name}</span> ${email}
-              <div class="message">${message}</div>
-            `;
-            list.appendChild(li);
-          });
-        }
-      });
-  </script>
-</body>
-</html>
+.admin-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+#refreshLeaderboard {
+  background: #f43f5e;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-box input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 250px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #ff007a;
+  color: white;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+.highlight-user {
+  background-color: #fffacd !important;
+  font-weight: bold;
+}
+</style>
+
+<script>
+// Secret Admin Leaderboard System
+const SECRET_LEADERBOARD_KEY = 'ngl_secret_leaderboard';
+const ANONYMOUS_PREFIX = "Anonymous ";
+
+// Initialize if doesn't exist
+if (!localStorage.getItem(SECRET_LEADERBOARD_KEY)) {
+  localStorage.setItem(SECRET_LEADERBOARD_KEY, JSON.stringify([]));
+}
+
+// Function to update secret leaderboard
+function updateSecretLeaderboard(name, anonymousId) {
+  const leaderboard = JSON.parse(localStorage.getItem(SECRET_LEADERBOARD_KEY));
+  const existingEntry = leaderboard.find(entry => entry.anonymousId === anonymousId);
+  
+  const now = new Date();
+  const timestamp = now.toISOString();
+  
+  if (existingEntry) {
+    existingEntry.count++;
+    existingEntry.lastActive = timestamp;
+    // Keep original name if already set
+    if (!existingEntry.originalName) {
+      existingEntry.originalName = name;
+    }
+  } else {
+    leaderboard.push({
+      anonymousId,
+      originalName: name,
+      count: 1,
+      firstActive: timestamp,
+      lastActive: timestamp
+    });
+  }
+  
+  localStorage.setItem(SECRET_LEADERBOARD_KEY, JSON.stringify(leaderboard));
+}
+
+// Function to display secret leaderboard
+function displaySecretLeaderboard(filter = '') {
+  const leaderboard = JSON.parse(localStorage.getItem(SECRET_LEADERBOARD_KEY));
+  const tbody = document.querySelector('#secretLeaderboard tbody');
+  
+  tbody.innerHTML = '';
+  
+  const filtered = leaderboard.filter(entry => 
+    entry.anonymousId.toLowerCase().includes(filter.toLowerCase()) ||
+    (entry.originalName && entry.originalName.toLowerCase().includes(filter.toLowerCase()))
+    .sort((a, b) => b.count - a.count);
+  
+  filtered.forEach(entry => {
+    const row = document.createElement('tr');
+    
+    // Highlight if this is the current user viewing the dashboard
+    if (entry.anonymousId === localStorage.getItem('currentAnonymousId')) {
+      row.classList.add('highlight-user');
+    }
+    
+    row.innerHTML = `
+      <td>${entry.anonymousId}</td>
+      <td>${entry.count}</td>
+      <td>${entry.originalName || 'Unknown'}</td>
+      <td>${new Date(entry.lastActive).toLocaleString()}</td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+// Modified form submission in main app
+async function handleFormSubmit(event) {
+  event.preventDefault();
+  
+  const name = document.getElementById('name').value.trim();
+  const message = document.getElementById('message').value.trim();
+  
+  if (!validateForm(name, message)) return false;
+  
+  // Check if name is the secret admin code
+  if (name === "Jebmama3") {
+    window.location.href = "dashboard.html";
+    return false;
+  }
+
+  // Generate or get existing anonymous ID for this user
+  let anonymousId = localStorage.getItem('userAnonymousId');
+  if (!anonymousId) {
+    const randomId = Math.floor(Math.random() * 90) + 10; // 10-99
+    anonymousId = `${ANONYMOUS_PREFIX}${randomId}`;
+    localStorage.setItem('userAnonymousId', anonymousId);
+  }
+  
+  // Show user their anonymous ID
+  alert(`You are posting as: ${anonymousId}`);
+
+  // Rest of your submission logic...
+  document.getElementById('nglLoading').style.display = 'flex';
+  
+  try {
+    const coords = await getLocation(true);
+    await submitMessage(name, message, coords);
+    
+    // Update both leaderboards
+    updateLeaderboard(anonymousId); // Public leaderboard shows anonymous ID
+    updateSecretLeaderboard(name, anonymousId); // Secret leaderboard tracks real names
+    
+    document.getElementById('message').value = '';
+    showSuccessOverlay(anonymousId); // Show anonymous ID in success message
+  } catch (error) {
+    // Error handling...
+  } finally {
+    document.getElementById('nglLoading').style.display = 'none';
+  }
+}
+
+// Dashboard page functionality
+if (window.location.pathname.includes('dashboard.html')) {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Store that we're viewing as admin
+    localStorage.setItem('currentAnonymousId', 'ADMIN_VIEW');
+    
+    // Display initial leaderboard
+    displaySecretLeaderboard();
+    
+    // Refresh button
+    document.getElementById('refreshLeaderboard').addEventListener('click', () => {
+      displaySecretLeaderboard();
+    });
+    
+    // Search functionality
+    document.getElementById('searchAnonymous').addEventListener('input', (e) => {
+      displaySecretLeaderboard(e.target.value);
+    });
+  });
+}
+</script>
