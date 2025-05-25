@@ -42,7 +42,7 @@
     .fade-out { animation: fadeOut 0.8s ease-out forwards; }
     @keyframes fadeOut {to {opacity: 0; transform: scale(0.95);}}
     
-    /* UPDATED SENT OVERLAY WITH NGL BACKGROUND */
+    /* UPDATED SENT OVERLAY WITH PROPER CHECKMARK */
     #sentOverlay { 
       position: fixed; 
       z-index: 100; 
@@ -60,7 +60,6 @@
       width: 140px; 
       height: 140px; 
       border-radius: 50%; 
-      background: white;
       margin-bottom: 22px; 
       display: flex; 
       align-items: center; 
@@ -316,6 +315,7 @@
     </div>
   </div>
 
+  <!-- Corrected Sent Overlay with Checkmark -->
   <div id="sentOverlay">
     <div class="sent-circle">
       <svg class="sent-check" viewBox="0 0 140 140">
