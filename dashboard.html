@@ -1,219 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Anonymous Messages</title>
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f5f5f5; /* This is just for the demo page */
-        }
-        
-        .message-container {
-            width: 320px;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header {
-            padding: 24px;
-            background-color: white;
-            text-align: center;
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .solid-divider {
-            height: 1px;
-            background-color: #e5e7eb;
-        }
-        
-        .gradient-divider {
-            height: 4px;
-            background: linear-gradient(90deg, #ff007a 0%, #f43f5e 50%, #f97316 100%);
-        }
-        
-        .message-content {
-            padding: 24px;
-            background-color: #1f2937; /* Message background color */
-            color: white;
-            text-align: center;
-        }
-        
-        .message-text {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            line-height: 1.4;
-        }
-        
-        /* Customization options */
-        .customization-panel {
-            margin-top: 30px;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 320px;
-        }
-        
-        .customization-panel h3 {
-            margin-top: 0;
-            color: #1f2937;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            color: #4b5563;
-        }
-        
-        input, textarea, select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-family: inherit;
-        }
-        
-        textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        
-        .color-options {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .color-option {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-        
-        .color-option.selected {
-            border-color: #1f2937;
-        }
-        
-        .gradient-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .gradient-controls input {
-            flex: 1;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom NGL Template</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e; /* Default dark gray (can be swapped with green/blue for chroma key) */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }.ngl-card {
+  width: 350px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.ngl-header {
+  padding: 20px;
+  background: linear-gradient(135deg, #ff007a, #f43f5e, #f97316);
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.ngl-body {
+  padding: 40px 20px;
+  background-color: white;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #000;
+}
+
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="message-container" id="message-box">
-            <div class="header" id="header">send me anonymous messages!</div>
-            <div class="solid-divider"></div>
-            <div class="gradient-divider" id="gradient-divider"></div>
-            <div class="message-content" id="message-content">
-                <div class="message-text" id="message-text">u got good taste in music</div>
-            </div>
-        </div>
-        
-        <div class="customization-panel">
-            <h3>Customize Your Message</h3>
-            
-            <div class="form-group">
-                <label for="header-text">Header Text</label>
-                <input type="text" id="header-text" value="send me anonymous messages!">
-            </div>
-            
-            <div class="form-group">
-                <label for="message">Message Text</label>
-                <textarea id="message">u got good taste in music</textarea>
-            </div>
-            
-            <div class="form-group">
-                <label>Message Background Color</label>
-                <div class="color-options">
-                    <div class="color-option selected" style="background-color: #1f2937;" data-color="#1f2937"></div>
-                    <div class="color-option" style="background-color: #00ff00;" data-color="#00ff00"></div>
-                    <div class="color-option" style="background-color: #0000aa;" data-color="#0000aa"></div>
-                    <div class="color-option" style="background-color: #000000;" data-color="#000000"></div>
-                    <input type="color" id="custom-color" style="width: 30px; height: 30px; padding: 0; border: none;">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Gradient Colors</label>
-                <div class="gradient-controls">
-                    <input type="color" id="gradient-color1" value="#ff007a">
-                    <input type="color" id="gradient-color2" value="#f43f5e">
-                    <input type="color" id="gradient-color3" value="#f97316">
-                </div>
-            </div>
-        </div>
+  <div class="ngl-card">
+    <div class="ngl-header">
+      send me anonymous<br />messages!
     </div>
-
-    <script>
-        // Get DOM elements
-        const headerText = document.getElementById('header');
-        const headerInput = document.getElementById('header-text');
-        const messageText = document.getElementById('message-text');
-        const messageInput = document.getElementById('message');
-        const messageContent = document.getElementById('message-content');
-        const colorOptions = document.querySelectorAll('.color-option');
-        const customColor = document.getElementById('custom-color');
-        const gradientDivider = document.getElementById('gradient-divider');
-        const gradientColor1 = document.getElementById('gradient-color1');
-        const gradientColor2 = document.getElementById('gradient-color2');
-        const gradientColor3 = document.getElementById('gradient-color3');
-        
-        // Set initial custom color to match default
-        customColor.value = '#1f2937';
-        
-        // Event listeners
-        headerInput.addEventListener('input', () => {
-            headerText.textContent = headerInput.value;
-        });
-        
-        messageInput.addEventListener('input', () => {
-            messageText.textContent = messageInput.value;
-        });
-        
-        colorOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                colorOptions.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                messageContent.style.backgroundColor = option.dataset.color;
-                customColor.value = option.dataset.color;
-            });
-        });
-        
-        customColor.addEventListener('input', () => {
-            colorOptions.forEach(opt => opt.classList.remove('selected'));
-            messageContent.style.backgroundColor = customColor.value;
-        });
-        
-        function updateGradient() {
-            gradientDivider.style.background = `linear-gradient(90deg, ${gradientColor1.value} 0%, ${gradientColor2.value} 50%, ${gradientColor3.value} 100%)`;
-        }
-        
-        gradientColor1.addEventListener('input', updateGradient);
-        gradientColor2.addEventListener('input', updateGradient);
-        gradientColor3.addEventListener('input', updateGradient);
-    </script>
+    <div class="ngl-body" contenteditable="true">
+      u got good taste in music
+    </div>
+  </div>
 </body>
 </html>
