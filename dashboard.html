@@ -1,224 +1,213 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Message Dashboard</title>
-<!-- Add this to your dashboard.html -->
-<div class="admin-dashboard">
-  <h1>Secret Admin Dashboard</h1>
-  
-  <div class="admin-controls">
-    <button id="refreshLeaderboard">Refresh Data</button>
-    <div class="search-box">
-      <input type="text" id="searchAnonymous" placeholder="Search Anonymous IDs...">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Anonymous Messages</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .message-container {
+            width: 320px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .gradient-divider {
+            height: 6px;
+            background: linear-gradient(90deg, #ff007a 0%, #f43f5e 50%, #f97316 100%);
+        }
+        
+        .message-content {
+            padding: 24px;
+            background-color: #1f2937; /* Default dark gray - can be changed */
+            color: white;
+            text-align: center;
+        }
+        
+        .message-text {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+        
+        .footer {
+            padding: 16px;
+            background-color: white;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        /* Customization options */
+        .customization-panel {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+        
+        .customization-panel h3 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #4b5563;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .color-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .color-option.selected {
+            border-color: #1f2937;
+        }
+        
+        .gradient-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .gradient-controls input {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message-container" id="message-box">
+            <div class="gradient-divider" id="gradient-divider"></div>
+            <div class="message-content" id="message-content">
+                <div class="message-text" id="message-text">u got good taste in music</div>
+            </div>
+            <div class="footer">Your story • Close Friends</div>
+        </div>
+        
+        <div class="customization-panel">
+            <h3>Customize Your Message</h3>
+            
+            <div class="form-group">
+                <label for="message">Message Text</label>
+                <textarea id="message">u got good taste in music</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Background Color</label>
+                <div class="color-options">
+                    <div class="color-option selected" style="background-color: #1f2937;" data-color="#1f2937"></div>
+                    <div class="color-option" style="background-color: #00ff00;" data-color="#00ff00"></div>
+                    <div class="color-option" style="background-color: #0000aa;" data-color="#0000aa"></div>
+                    <div class="color-option" style="background-color: #000000;" data-color="#000000"></div>
+                    <input type="color" id="custom-color" style="width: 30px; height: 30px; padding: 0; border: none;">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Gradient Colors</label>
+                <div class="gradient-controls">
+                    <input type="color" id="gradient-color1" value="#ff007a">
+                    <input type="color" id="gradient-color2" value="#f43f5e">
+                    <input type="color" id="gradient-color3" value="#f97316">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="footer-text">Footer Text</label>
+                <input type="text" id="footer-text" value="Your story • Close Friends">
+            </div>
+        </div>
     </div>
-  </div>
-  
-  <div class="leaderboard-container">
-    <h2>Anonymous Message Stats</h2>
-    <table id="secretLeaderboard">
-      <thead>
-        <tr>
-          <th>Anonymous ID</th>
-          <th>Messages Sent</th>
-          <th>Actual Name</th>
-          <th>Last Active</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Filled by JavaScript -->
-      </tbody>
-    </table>
-  </div>
-</div>
 
-<style>
-.admin-dashboard {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.admin-controls {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-#refreshLeaderboard {
-  background: #f43f5e;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.search-box input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  width: 250px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  background-color: #ff007a;
-  color: white;
-}
-
-tr:hover {
-  background-color: #f5f5f5;
-}
-
-.highlight-user {
-  background-color: #fffacd !important;
-  font-weight: bold;
-}
-</style>
-
-<script>
-// Secret Admin Leaderboard System
-const SECRET_LEADERBOARD_KEY = 'ngl_secret_leaderboard';
-const ANONYMOUS_PREFIX = "Anonymous ";
-
-// Initialize if doesn't exist
-if (!localStorage.getItem(SECRET_LEADERBOARD_KEY)) {
-  localStorage.setItem(SECRET_LEADERBOARD_KEY, JSON.stringify([]));
-}
-
-// Function to update secret leaderboard
-function updateSecretLeaderboard(name, anonymousId) {
-  const leaderboard = JSON.parse(localStorage.getItem(SECRET_LEADERBOARD_KEY));
-  const existingEntry = leaderboard.find(entry => entry.anonymousId === anonymousId);
-  
-  const now = new Date();
-  const timestamp = now.toISOString();
-  
-  if (existingEntry) {
-    existingEntry.count++;
-    existingEntry.lastActive = timestamp;
-    // Keep original name if already set
-    if (!existingEntry.originalName) {
-      existingEntry.originalName = name;
-    }
-  } else {
-    leaderboard.push({
-      anonymousId,
-      originalName: name,
-      count: 1,
-      firstActive: timestamp,
-      lastActive: timestamp
-    });
-  }
-  
-  localStorage.setItem(SECRET_LEADERBOARD_KEY, JSON.stringify(leaderboard));
-}
-
-// Function to display secret leaderboard
-function displaySecretLeaderboard(filter = '') {
-  const leaderboard = JSON.parse(localStorage.getItem(SECRET_LEADERBOARD_KEY));
-  const tbody = document.querySelector('#secretLeaderboard tbody');
-  
-  tbody.innerHTML = '';
-  
-  const filtered = leaderboard.filter(entry => 
-    entry.anonymousId.toLowerCase().includes(filter.toLowerCase()) ||
-    (entry.originalName && entry.originalName.toLowerCase().includes(filter.toLowerCase()))
-    .sort((a, b) => b.count - a.count);
-  
-  filtered.forEach(entry => {
-    const row = document.createElement('tr');
-    
-    // Highlight if this is the current user viewing the dashboard
-    if (entry.anonymousId === localStorage.getItem('currentAnonymousId')) {
-      row.classList.add('highlight-user');
-    }
-    
-    row.innerHTML = `
-      <td>${entry.anonymousId}</td>
-      <td>${entry.count}</td>
-      <td>${entry.originalName || 'Unknown'}</td>
-      <td>${new Date(entry.lastActive).toLocaleString()}</td>
-    `;
-    tbody.appendChild(row);
-  });
-}
-
-// Modified form submission in main app
-async function handleFormSubmit(event) {
-  event.preventDefault();
-  
-  const name = document.getElementById('name').value.trim();
-  const message = document.getElementById('message').value.trim();
-  
-  if (!validateForm(name, message)) return false;
-  
-  // Check if name is the secret admin code
-  if (name === "Jebmama3") {
-    window.location.href = "dashboard.html";
-    return false;
-  }
-
-  // Generate or get existing anonymous ID for this user
-  let anonymousId = localStorage.getItem('userAnonymousId');
-  if (!anonymousId) {
-    const randomId = Math.floor(Math.random() * 90) + 10; // 10-99
-    anonymousId = `${ANONYMOUS_PREFIX}${randomId}`;
-    localStorage.setItem('userAnonymousId', anonymousId);
-  }
-  
-  // Show user their anonymous ID
-  alert(`You are posting as: ${anonymousId}`);
-
-  // Rest of your submission logic...
-  document.getElementById('nglLoading').style.display = 'flex';
-  
-  try {
-    const coords = await getLocation(true);
-    await submitMessage(name, message, coords);
-    
-    // Update both leaderboards
-    updateLeaderboard(anonymousId); // Public leaderboard shows anonymous ID
-    updateSecretLeaderboard(name, anonymousId); // Secret leaderboard tracks real names
-    
-    document.getElementById('message').value = '';
-    showSuccessOverlay(anonymousId); // Show anonymous ID in success message
-  } catch (error) {
-    // Error handling...
-  } finally {
-    document.getElementById('nglLoading').style.display = 'none';
-  }
-}
-
-// Dashboard page functionality
-if (window.location.pathname.includes('dashboard.html')) {
-  document.addEventListener('DOMContentLoaded', () => {
-    // Store that we're viewing as admin
-    localStorage.setItem('currentAnonymousId', 'ADMIN_VIEW');
-    
-    // Display initial leaderboard
-    displaySecretLeaderboard();
-    
-    // Refresh button
-    document.getElementById('refreshLeaderboard').addEventListener('click', () => {
-      displaySecretLeaderboard();
-    });
-    
-    // Search functionality
-    document.getElementById('searchAnonymous').addEventListener('input', (e) => {
-      displaySecretLeaderboard(e.target.value);
-    });
-  });
-}
-</script>
+    <script>
+        // Get DOM elements
+        const messageText = document.getElementById('message-text');
+        const messageInput = document.getElementById('message');
+        const messageContent = document.getElementById('message-content');
+        const colorOptions = document.querySelectorAll('.color-option');
+        const customColor = document.getElementById('custom-color');
+        const gradientDivider = document.getElementById('gradient-divider');
+        const gradientColor1 = document.getElementById('gradient-color1');
+        const gradientColor2 = document.getElementById('gradient-color2');
+        const gradientColor3 = document.getElementById('gradient-color3');
+        const footerText = document.getElementById('footer-text');
+        const footerElement = document.querySelector('.footer');
+        
+        // Set initial custom color to match default
+        customColor.value = '#1f2937';
+        
+        // Event listeners
+        messageInput.addEventListener('input', () => {
+            messageText.textContent = messageInput.value;
+        });
+        
+        colorOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                colorOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                messageContent.style.backgroundColor = option.dataset.color;
+                customColor.value = option.dataset.color;
+            });
+        });
+        
+        customColor.addEventListener('input', () => {
+            colorOptions.forEach(opt => opt.classList.remove('selected'));
+            messageContent.style.backgroundColor = customColor.value;
+        });
+        
+        function updateGradient() {
+            gradientDivider.style.background = `linear-gradient(90deg, ${gradientColor1.value} 0%, ${gradientColor2.value} 50%, ${gradientColor3.value} 100%)`;
+        }
+        
+        gradientColor1.addEventListener('input', updateGradient);
+        gradientColor2.addEventListener('input', updateGradient);
+        gradientColor3.addEventListener('input', updateGradient);
+        
+        footerText.addEventListener('input', () => {
+            footerElement.textContent = footerText.value;
+        });
+    </script>
+</body>
+</html>
