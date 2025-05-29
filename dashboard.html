@@ -39,7 +39,6 @@
 
     .ngl-card {
       width: 320px;
-      height: 170px;
       border-radius: 20px;
       overflow: hidden;
       background-color: transparent;
@@ -50,7 +49,7 @@
     }
 
     .ngl-header {
-      flex: 1;
+      min-height: 80px;
       background: linear-gradient(135deg, #ff007a 0%, #f43f5e 50%, #f97316 100%);
       color: white;
       font-size: 1.1rem;
@@ -68,10 +67,10 @@
     .ngl-header.background-image {
       background-size: cover;
       background-position: center;
+      background-repeat: no-repeat;
     }
 
     .ngl-body {
-      flex: 1;
       background-color: white;
       color: black;
       font-size: 1rem;
@@ -80,7 +79,10 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 0 12px;
+      padding: 12px;
+      min-height: 90px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
     }
 
     .btn {
@@ -134,6 +136,15 @@
       text-align: center;
       margin-top: 8px;
     }
+
+    #angleInput {
+      width: 100%;
+      margin-top: 6px;
+      padding: 8px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body>
@@ -145,6 +156,7 @@
         <input type="color" id="color2" value="#f43f5e" title="Middle color">
         <input type="color" id="color3" value="#f97316" title="Last color">
       </div>
+      <input type="number" id="angleInput" min="0" max="360" value="135" title="Gradient angle" />
       <div class="upload-btn" onclick="document.getElementById('bgImageUpload').click()">or Upload Image</div>
       <input type="file" id="bgImageUpload" accept="image/*">
     </div>
@@ -160,58 +172,55 @@
 
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script>
-    // Update gradient when color pickers change
     const colorInputs = document.querySelectorAll('input[type="color"]');
+    const angleInput = document.getElementById('angleInput');
+    
     colorInputs.forEach(input => {
       input.addEventListener('input', updateGradient);
     });
+    angleInput.addEventListener('input', updateGradient);
 
     function updateGradient() {
       const color1 = document.getElementById('color1').value;
       const color2 = document.getElementById('color2').value;
       const color3 = document.getElementById('color3').value;
-      document.getElementById('nglHeader').style.background = 
-        `linear-gradient(135deg, ${color1} 0%, ${color2} 50%, ${color3} 100%)`;
-      document.getElementById('nglHeader').classList.remove('background-image');
+      const angle = angleInput.value || 135;
+
+      const header = document.getElementById('nglHeader');
+      header.style.background = `linear-gradient(${angle}deg, ${color1} 0%, ${color2} 50%, ${color3} 100%)`;
+      header.classList.remove('background-image');
     }
 
-    // Handle image upload
     document.getElementById('bgImageUpload').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(event) {
-          document.getElementById('nglHeader').style.background = 
-            `url('${event.target.result}') center/cover`;
-          document.getElementById('nglHeader').classList.add('background-image');
+          const header = document.getElementById('nglHeader');
+          header.style.background = `url('${event.target.result}')`;
+          header.classList.add('background-image');
         };
         reader.readAsDataURL(file);
       }
     });
 
-    // Update message text
     function updateMessage() {
       const msg = document.getElementById('inputMsg').value;
       document.getElementById('message').innerText = msg;
     }
 
-    // Save as image with transparent background
     function saveAsImage() {
       const card = document.querySelector("#card");
       const originalBodyBg = document.body.style.backgroundColor;
-      
-      // Temporarily make body transparent for capture
       document.body.style.backgroundColor = 'transparent';
-      
+
       html2canvas(card, {
         backgroundColor: null,
-        scale: 2, // Higher quality
+        scale: 2,
         logging: false,
         useCORS: true
       }).then(canvas => {
-        // Restore original background
         document.body.style.backgroundColor = originalBodyBg;
-        
         const link = document.createElement('a');
         link.download = 'ngl-card.png';
         link.href = canvas.toDataURL('image/png');
