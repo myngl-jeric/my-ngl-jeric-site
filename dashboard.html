@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,135 +15,116 @@
       min-height: 100vh;
       margin: 0;
       color: #333;
-    }
+    }.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 320px;
+}
 
-    .controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 320px;
-    }
+.gradient-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
 
-    .gradient-controls {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
+.ngl-card {
+  width: 320px;
+  min-height: 170px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  position: relative;
+}
 
-    .ngl-card {
-      width: 320px;
-      border-radius: 20px;
-      overflow: hidden;
-      background-color: transparent;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      position: relative;
-    }
+.ngl-header {
+  min-height: 90px;
+  background: linear-gradient(135deg, #ff007a 0%, #f43f5e 50%, #f97316 100%);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 12px;
+  position: relative;
+  z-index: 2;
+}
 
-    .ngl-header {
-      min-height: 80px;
-      background: linear-gradient(135deg, #ff007a 0%, #f43f5e 50%, #f97316 100%);
-      color: white;
-      font-size: 1.1rem;
-      font-weight: 700;
-      line-height: 1.3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0 12px;
-      position: relative;
-      z-index: 2;
-    }
+.ngl-header.background-image {
+  background-size: cover;
+  background-position: center;
+}
 
-    .ngl-header.background-image {
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
+.ngl-body {
+  background-color: white;
+  color: black;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  word-break: break-word;
+}
 
-    .ngl-body {
-      background-color: white;
-      color: black;
-      font-size: 1rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 12px;
-      min-height: 90px;
-      word-wrap: break-word;
-      white-space: pre-wrap;
-    }
+.btn {
+  background-color: #f97316;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+}
 
-    .btn {
-      background-color: #f97316;
-      border: none;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-size: 1rem;
-      cursor: pointer;
-      width: 100%;
-    }
+input[type="color"], input[type="number"], input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
 
-    input[type="color"] {
-      width: 40px;
-      height: 40px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+#bgImageUpload {
+  display: none;
+}
 
-    #inputMsg {
-      width: 100%;
-      padding: 10px;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      box-sizing: border-box;
-    }
+.upload-btn {
+  background: #e2e8f0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 8px;
+}
 
-    .control-group {
-      width: 100%;
-    }
+.control-group {
+  width: 100%;
+}
 
-    .control-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
+.control-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
 
-    #bgImageUpload {
-      display: none;
-    }
-
-    .upload-btn {
-      background: #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    #angleInput {
-      width: 100%;
-      margin-top: 6px;
-      padding: 8px;
-      font-size: 0.9rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
   </style>
 </head>
 <body>
@@ -156,49 +136,63 @@
         <input type="color" id="color2" value="#f43f5e" title="Middle color">
         <input type="color" id="color3" value="#f97316" title="Last color">
       </div>
-      <input type="number" id="angleInput" min="0" max="360" value="135" title="Gradient angle" />
+      <input type="number" id="degree" placeholder="Here goes the Degree of the gradient" value="135">
       <div class="upload-btn" onclick="document.getElementById('bgImageUpload').click()">or Upload Image</div>
       <input type="file" id="bgImageUpload" accept="image/*">
-    </div>
+    </div><input type="text" id="inputMsg" placeholder="u got good taste in music" oninput="updateMessage()">
+<button class="btn" onclick="saveAsImage()">Save as Image</button>
 
-    <input type="text" id="inputMsg" placeholder="Type your message here..." oninput="updateMessage()">
-    <button class="btn" onclick="saveAsImage()">Save as Image</button>
-  </div>
-
-  <div class="ngl-card" id="card">
+  </div>  <div class="ngl-card" id="card">
     <div class="ngl-header" id="nglHeader">send me anonymous<br />messages!</div>
     <div class="ngl-body" id="message">u got good taste in music</div>
-  </div>
-
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-  <script>
+  </div>  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>  <script>
     const colorInputs = document.querySelectorAll('input[type="color"]');
-    const angleInput = document.getElementById('angleInput');
-    
-    colorInputs.forEach(input => {
-      input.addEventListener('input', updateGradient);
-    });
-    angleInput.addEventListener('input', updateGradient);
+    const degreeInput = document.getElementById('degree');
+
+    function saveGradientToStorage() {
+      localStorage.setItem('gradColors', JSON.stringify([
+        document.getElementById('color1').value,
+        document.getElementById('color2').value,
+        document.getElementById('color3').value,
+        document.getElementById('degree').value
+      ]));
+    }
+
+    function loadGradientFromStorage() {
+      const saved = JSON.parse(localStorage.getItem('gradColors'));
+      if (saved && saved.length === 4) {
+        document.getElementById('color1').value = saved[0];
+        document.getElementById('color2').value = saved[1];
+        document.getElementById('color3').value = saved[2];
+        document.getElementById('degree').value = saved[3];
+        updateGradient();
+      }
+    }
 
     function updateGradient() {
       const color1 = document.getElementById('color1').value;
       const color2 = document.getElementById('color2').value;
       const color3 = document.getElementById('color3').value;
-      const angle = angleInput.value || 135;
+      const deg = document.getElementById('degree').value;
 
-      const header = document.getElementById('nglHeader');
-      header.style.background = `linear-gradient(${angle}deg, ${color1} 0%, ${color2} 50%, ${color3} 100%)`;
-      header.classList.remove('background-image');
+      document.getElementById('nglHeader').style.background = 
+        `linear-gradient(${deg}deg, ${color1} 0%, ${color2} 50%, ${color3} 100%)`;
+      document.getElementById('nglHeader').classList.remove('background-image');
+
+      saveGradientToStorage();
     }
+
+    colorInputs.forEach(input => input.addEventListener('input', updateGradient));
+    degreeInput.addEventListener('input', updateGradient);
 
     document.getElementById('bgImageUpload').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(event) {
-          const header = document.getElementById('nglHeader');
-          header.style.background = `url('${event.target.result}')`;
-          header.classList.add('background-image');
+          document.getElementById('nglHeader').style.background = 
+            `url('${event.target.result}') center/cover no-repeat`;
+          document.getElementById('nglHeader').classList.add('background-image');
         };
         reader.readAsDataURL(file);
       }
@@ -227,6 +221,7 @@
         link.click();
       });
     }
-  </script>
-</body>
+
+    loadGradientFromStorage();
+  </script></body>
 </html>
