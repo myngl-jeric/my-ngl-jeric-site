@@ -1,127 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NGL Clone</title>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom NGL Card</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", "Avenir", sans-serif;
       background-color: #1e1e1e;
+      font-family: 'Inter', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 1rem;
-      gap: 1rem;
-    }
-
-    .ngl-card {
-      width: 350px;
-      border-radius: 25px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .ngl-header {
-      background: linear-gradient(135deg, #ff007a, #f43f5e, #f97316);
+      margin: 0;
       color: white;
-      text-align: center;
-      font-size: 1.3rem;
-      font-weight: 700;
-      padding: 20px;
-      flex-shrink: 0;
-    }
+    }.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 20px;
+}
 
-    .ngl-body {
-      background-color: white;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 120px;
-      flex-shrink: 0;
-    }
+.ngl-card {
+  width: 400px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  background-color: white;
+}
 
-    .ngl-body-text {
-      font-size: 1.2rem;
-      font-weight: 500;
-      color: #000;
-      text-align: center;
-      word-break: break-word;
-      max-width: 100%;
-      line-height: 1.5;
-      outline: none;
-    }
+.ngl-header,
+.ngl-body {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+}
 
-    .controls {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+.ngl-header {
+  background: linear-gradient(135deg, #ff007a, #f43f5e, #f97316);
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
 
-    .button {
-      background-color: #f97316;
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.ngl-body {
+  background-color: white;
+  color: black;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
 
-    input[type="color"] {
-      width: 40px;
-      height: 40px;
-      border: none;
-      cursor: pointer;
-    }
+.btn {
+  background-color: #f97316;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+input[type="color"] {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
   </style>
 </head>
 <body>
   <div class="controls">
-    <label style="color:white;">Background:</label>
-    <input type="color" id="bgPicker" value="#1e1e1e">
-    <button class="button" onclick="saveAsImage()">Save as Image</button>
-  </div>
-
-  <div class="ngl-card" id="card">
-    <div class="ngl-header">
-      send me anonymous<br />messages!
-    </div>
-    <div class="ngl-body">
-      <div class="ngl-body-text" contenteditable="true">
-        u got good taste in music
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const bgPicker = document.getElementById("bgPicker");
-    bgPicker.addEventListener("input", function () {
-      document.body.style.backgroundColor = bgPicker.value;
+    <label for="bgColor">Background:</label>
+    <input type="color" id="bgColor" value="#1e1e1e" />
+    <button class="btn" onclick="saveAsImage()">Save as Image</button>
+  </div>  <div class="ngl-card" id="card">
+    <div class="ngl-header">send me anonymous<br />messages!</div>
+    <div class="ngl-body" id="message">u got good taste in music</div>
+  </div>  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>  <script>
+    document.getElementById('bgColor').addEventListener('input', function (e) {
+      document.body.style.backgroundColor = e.target.value;
     });
 
     function saveAsImage() {
-      const card = document.getElementById("card");
-      html2canvas(card).then(canvas => {
-        const link = document.createElement("a");
-        link.download = "ngl-card.png";
+      html2canvas(document.querySelector("#card")).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'ngl-card.png';
         link.href = canvas.toDataURL();
         link.click();
       });
     }
-  </script>
-</body>
+  </script></body>
 </html>
