@@ -2,284 +2,178 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Custom NGL Card</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGL-Inspired Card Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
-    body {
-      background-color: #f0f0f0;
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      color: #333;
-    }
-
-    .controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 320px;
-    }
-
-    .gradient-controls {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .ngl-card {
-      width: 320px;
-      min-height: 170px;
-      border-radius: 20px;
-      overflow: hidden;
-      background-color: transparent;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      position: relative;
-    }
-
-    .ngl-header {
-      background: linear-gradient(135deg, #ff007a 0%, #f43f5e 50%, #f97316 100%);
-      color: white;
-      font-size: 1.12rem;
-      font-weight: 800;
-      line-height: 1.3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0 12px;
-      position: relative;
-      z-index: 2;
-      height: 85px;
-      margin-bottom: 0; /* Ensure no gap between header and body */
-    }
-
-    .ngl-header.background-image {
-      background-size: cover;
-      background-position: center;
-    }
-
-    .ngl-body {
-      flex: 1;
-      background-color: white;
-      color: black;
-      font-size: 1rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 12px;
-      word-break: break-word;
-    }
-
-    .btn {
-      background-color: #f97316;
-      border: none;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-size: 1rem;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    input[type="color"], input[type="number"], input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      border: 1px solid #ddd;
+    * {
       box-sizing: border-box;
     }
-
-    .control-group {
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f0f0f0;
+    }
+    .card {
+      position: relative;
+      width: 320px;
+      height: 480px;
+      background: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
+      border-radius: 1rem;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin: auto;
+    }
+    .header {
+      height: 160px;
+      background: #ff9a9e;
+    }
+    .message {
+      padding: 1rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .controls {
+      margin: 1rem auto;
+      max-width: 320px;
+    }
+    .controls textarea,
+    .controls select,
+    .controls input[type="file"] {
       width: 100%;
+      margin-bottom: 0.5rem;
     }
-
-    .control-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-
-    #bgImageUpload {
-      display: none;
-    }
-
-    .upload-btn {
-      background: #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    #cropContainer {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      align-items: center;
-      margin-top: 12px;
-    }
-
-    #cropImage {
+    .crop-container {
       max-width: 100%;
-      max-height: 300px;
+      margin-top: 1rem;
     }
-
-    .crop-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .crop-actions button {
-      padding: 6px 12px;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .apply-btn {
-      background-color: #4ade80;
-      color: white;
-    }
-
-    .cancel-btn {
-      background-color: #f87171;
-      color: white;
+    #preview {
+      max-width: 100%;
+      max-height: 200px;
+      display: block;
+      margin: auto;
     }
   </style>
 </head>
 <body>
-  <div class="controls">
-    <div class="control-group">
-      <label>Header Background</label>
-      <div class="gradient-controls">
-        <input type="color" id="color1" value="#ff007a">
-        <input type="color" id="color2" value="#f43f5e">
-        <input type="color" id="color3" value="#f97316">
-      </div>
-      <input type="number" id="degree" placeholder="Here goes the Degree of the gradient" value="135" />
-      <div class="upload-btn" onclick="document.getElementById('bgImageUpload').click()">or Upload Image</div>
-      <input type="file" id="bgImageUpload" accept="image/*">
-    </div>
-
-    <input type="text" id="inputMsg" placeholder="u got good taste in music" oninput="updateMessage()">
-    <button class="btn" onclick="saveAsImage()">Save as Image</button>
-
-    <div id="cropContainer">
-      <img id="cropImage">
-      <div class="crop-actions">
-        <button class="apply-btn" onclick="applyCrop()">Apply Crop</button>
-        <button class="cancel-btn" onclick="cancelCrop()">Cancel</button>
-      </div>
-    </div>
+  <div class="card" id="card">
+    <div class="header" id="header"></div>
+    <div class="message" id="message">u got good taste in music</div>
   </div>
 
-  <div class="ngl-card" id="card">
-    <div class="ngl-header" id="nglHeader">send me anonymous<br />messages!</div>
-    <div class="ngl-body" id="message">u got good taste in music</div>
+  <div class="controls">
+    <textarea id="inputMsg" placeholder="Type your message..."></textarea>
+    <button onclick="updateMessage()">Update Message</button>
+
+    <input type="file" id="upload" accept="image/*" />
+    <div>
+      <label for="aspectRatioSelect">Aspect Ratio:</label>
+      <select id="aspectRatioSelect">
+        <option value="1">Instagram (1:1)</option>
+        <option value="1.91">Facebook (1.91:1)</option>
+        <option value="custom">NGL (320x85)</option>
+      </select>
+    </div>
+    <div>
+      <label for="zoomRange">Zoom:</label>
+      <input type="range" id="zoomRange" min="0.1" max="3" step="0.1" value="1" />
+    </div>
+    <div>
+      <label for="rotateRange">Rotate:</label>
+      <input type="range" id="rotateRange" min="-180" max="180" step="1" value="0" />
+    </div>
+    <div>
+      <label><input type="checkbox" id="noBackgroundToggle" /> No Background</label>
+    </div>
+    <button onclick="saveAsImage()">Download Image</button>
+  </div>
+
+  <div class="crop-container">
+    <img id="preview" />
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
     let cropper;
-    const header = document.getElementById('nglHeader');
-    const cropContainer = document.getElementById('cropContainer');
-    const cropImage = document.getElementById('cropImage');
 
-    document.querySelectorAll('input[type="color"], #degree').forEach(input => {
-      input.addEventListener('input', updateGradient);
-    });
-
-    function updateGradient() {
-      const color1 = document.getElementById('color1').value;
-      const color2 = document.getElementById('color2').value;
-      const color3 = document.getElementById('color3').value;
-      const degree = document.getElementById('degree').value || 135;
-      header.style.background = `linear-gradient(${degree}deg, ${color1} 0%, ${color2} 50%, ${color3} 100%)`;
-      header.classList.remove('background-image');
-    }
-
-    document.getElementById('bgImageUpload').addEventListener('change', function(e) {
+    document.getElementById('upload').addEventListener('change', function (e) {
       const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          cropImage.src = event.target.result;
-          cropContainer.style.display = 'flex';
-          cropper = new Cropper(cropImage, {
-            aspectRatio: 320 / 85,
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = document.getElementById('preview');
+        img.src = event.target.result;
+        img.onload = () => {
+          if (cropper) {
+            cropper.destroy();
+          }
+          cropper = new Cropper(img, {
             viewMode: 1,
+            aspectRatio: 1,
+            autoCropArea: 1,
+            crop(event) {
+              const canvas = cropper.getCroppedCanvas({ width: 320, height: 85 });
+              document.getElementById('header').style.backgroundImage = `url(${canvas.toDataURL()})`;
+              document.getElementById('header').style.backgroundSize = 'cover';
+            }
           });
         };
-        reader.readAsDataURL(file);
-      }
+      };
+      reader.readAsDataURL(file);
     });
-
-    function applyCrop() {
-      if (cropper) {
-        const canvas = cropper.getCroppedCanvas({
-          width: 320,
-          height: 85,
-        });
-        header.style.background = `url('${canvas.toDataURL()}') center/cover`;
-        header.classList.add('background-image');
-        cropper.destroy();
-        cropper = null;
-        cropContainer.style.display = 'none';
-      }
-    }
-
-    function cancelCrop() {
-      if (cropper) {
-        cropper.destroy();
-        cropper = null;
-      }
-      cropContainer.style.display = 'none';
-    }
 
     function updateMessage() {
       const msg = document.getElementById('inputMsg').value;
-      document.getElementById('message').innerText = msg;
+      document.getElementById('message').innerText = msg || 'u got good taste in music';
     }
 
     function saveAsImage() {
-      const card = document.querySelector("#card");
-      const originalBg = document.body.style.backgroundColor;
-      document.body.style.backgroundColor = 'transparent';
+      const noBg = document.getElementById('noBackgroundToggle').checked;
+      const card = document.getElementById('card');
 
-      html2canvas(card, {
-        backgroundColor: null,
-        scale: 2,
-        logging: false,
-        useCORS: true
-      }).then(canvas => {
-        document.body.style.backgroundColor = originalBg;
-        const link = document.createElement('a');
-        link.download = 'ngl-card.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      });
+      if (noBg) {
+        const originalBg = card.style.backgroundColor;
+        card.style.backgroundColor = 'transparent';
+
+        html2canvas(card, { backgroundColor: null }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = 'ngl_card.png';
+          link.href = canvas.toDataURL();
+          link.click();
+          card.style.backgroundColor = originalBg;
+        });
+      } else {
+        html2canvas(card).then(canvas => {
+          const link = document.createElement('a');
+          link.download = 'ngl_card.png';
+          link.href = canvas.toDataURL();
+          link.click();
+        });
+      }
     }
+
+    document.getElementById('aspectRatioSelect').addEventListener('change', (e) => {
+      const ratio = e.target.value;
+      if (cropper) {
+        cropper.setAspectRatio(ratio === 'custom' ? 320 / 85 : parseFloat(ratio));
+      }
+    });
+
+    document.getElementById('zoomRange').addEventListener('input', (e) => {
+      if (cropper) {
+        const zoom = parseFloat(e.target.value);
+        cropper.zoomTo(zoom);
+      }
+    });
+
+    document.getElementById('rotateRange').addEventListener('input', (e) => {
+      if (cropper) {
+        const rotate = parseInt(e.target.value, 10);
+        cropper.rotateTo(rotate);
+      }
+    });
   </script>
 </body>
 </html>
