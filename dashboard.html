@@ -519,19 +519,22 @@
         const containerWidth = canvasContainer.offsetWidth;
         const containerHeight = canvasContainer.offsetHeight;
         
-        let newWidth, newHeight;
-        
-        if (aspectRatio > containerWidth / containerHeight) {
-          newHeight = containerHeight;
-          newWidth = newHeight * aspectRatio;
+        // Calculate dimensions to maintain aspect ratio without stretching
+        let bgWidth, bgHeight;
+        if (containerWidth / containerHeight > aspectRatio) {
+          // Container is wider than needed
+          bgHeight = containerHeight;
+          bgWidth = bgHeight * aspectRatio;
         } else {
-          newWidth = containerWidth;
-          newHeight = newWidth / aspectRatio;
+          // Container is taller than needed
+          bgWidth = containerWidth;
+          bgHeight = bgWidth / aspectRatio;
         }
         
         canvasContainer.style.backgroundImage = `url(${backgroundImage})`;
-        canvasContainer.style.backgroundSize = `${newWidth}px ${newHeight}px`;
+        canvasContainer.style.backgroundSize = `${bgWidth}px ${bgHeight}px`;
         canvasContainer.style.backgroundPosition = 'center';
+        canvasContainer.style.backgroundRepeat = 'no-repeat';
       }
     }
 
@@ -646,41 +649,57 @@
 
     // Export functions
     function saveWithBackground() {
-      // Calculate required canvas size
+      // Calculate proper canvas dimensions to fit rotated card
       const cardRect = card.getBoundingClientRect();
       const containerRect = canvasContainer.getBoundingClientRect();
       
-      // Create temporary container
+      // Calculate rotated card dimensions
+      const absRotation = Math.abs(currentRotation);
+      const rad = absRotation * Math.PI / 180;
+      const cardWidth = cardRect.width * currentScale;
+      const cardHeight = cardRect.height * currentScale;
+      
+      const rotatedWidth = Math.abs(cardWidth * Math.cos(rad)) + Math.abs(cardHeight * Math.sin(rad));
+      const rotatedHeight = Math.abs(cardWidth * Math.sin(rad)) + Math.abs(cardHeight * Math.cos(rad));
+      
+      // Create temporary container with proper dimensions
       const exportContainer = document.createElement('div');
       exportContainer.style.position = 'absolute';
       exportContainer.style.left = '-9999px';
       exportContainer.style.width = `${containerRect.width}px`;
       exportContainer.style.height = `${containerRect.height}px`;
       
-      // Clone elements
+      // Clone background
       const bgClone = canvasContainer.cloneNode();
       bgClone.style.width = '100%';
       bgClone.style.height = '100%';
       bgClone.style.margin = '0';
       bgClone.style.border = 'none';
       
+      // Clone card and position it
       const cardClone = card.cloneNode(true);
       cardClone.style.position = 'absolute';
       cardClone.style.left = `${cardRect.left - containerRect.left}px`;
       cardClone.style.top = `${cardRect.top - containerRect.top}px`;
-      cardClone.style.transform = card.style.transform;
+      cardClone.style.transform = `rotate(${currentRotation}deg) scale(${currentScale})`;
       
       exportContainer.appendChild(bgClone);
       exportContainer.appendChild(cardClone);
       document.body.appendChild(exportContainer);
+      
+      // Calculate proper canvas size to fit everything
+      const canvasWidth = Math.max(containerRect.width, rotatedWidth + 40);
+      const canvasHeight = Math.max(containerRect.height, rotatedHeight + 40);
       
       html2canvas(exportContainer, {
         scale: 2,
         logging: false,
         useCORS: true,
         backgroundColor: null,
-        width: containerRect.width,
-        height: containerRect.height
+        width: canvasWidth,
+        height: canvasHeight,
+        windowWidth: canvasWidth,
+        windowHeight: canvasHeight
       }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'ngl-card-with-bg.png';
@@ -698,10 +717,24 @@
       cardClone.style.transform = `rotate(${currentRotation}deg) scale(${currentScale})`;
       cardClone.style.boxShadow = 'none';
       
+      // Calculate rotated card dimensions
+      const absRotation = Math.abs(currentRotation);
+      const rad = absRotation * Math.PI / 180;
+      const cardWidth = card.offsetWidth * currentScale;
+      const cardHeight = card.offsetHeight * currentScale;
+      
+      const rotatedWidth = Math.abs(cardWidth * Math.cos(rad)) + Math.abs(cardHeight * Math.sin(rad));
+      const rotatedHeight = Math.abs(cardWidth * Math.sin(rad)) + Math.abs(cardHeight * Math.cos(rad));
+      
       const tempContainer = document.createElement('div');
       tempContainer.style.position = 'absolute';
       tempContainer.style.left = '-9999px';
       tempContainer.style.backgroundColor = 'transparent';
+      tempContainer.style.width = `${rotatedWidth + 20}px`;
+      tempContainer.style.height = `${rotatedHeight + 20}px`;
+      tempContainer.style.display = 'flex';
+      tempContainer.style.justifyContent = 'center';
+      tempContainer.style.alignItems = 'center';
       tempContainer.appendChild(cardClone);
       document.body.appendChild(tempContainer);
       
@@ -709,7 +742,9 @@
         scale: 2,
         logging: false,
         useCORS: true,
-        backgroundColor: null
+        backgroundColor: null,
+        width: rotatedWidth,
+        height: rotatedHeight
       }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'ngl-card.png';
