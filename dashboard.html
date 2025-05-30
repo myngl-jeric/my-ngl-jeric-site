@@ -93,427 +93,14 @@
       background-color: white;
       color: black;
       font-size: 1rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 12px;
-      word-break: break-word;
+      font-weight: 7transform(-50%, -50%) rotate(${currentRotation}deg) scale(${currentScale})`;
     }
 
-    .btn {
-      background-color: #f97316;
-      border: none;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-size: 1rem;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    input[type="color"], input[type="number"], input[type="text"], select {
-      width: 100%;
-      padding: 10px;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      box-sizing: border-box;
-    }
-
-    .control-group {
-      width: 100%;
-    }
-
-    .control-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-
-    #bgImageUpload, #headerImageUpload {
-      display: none;
-    }
-
-    .upload-btn {
-      background: #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    #cropContainer, #headerCropContainer {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      align-items: center;
-      margin-top: 12px;
-    }
-
-    #cropImage, #headerCropImage {
-      max-width: 100%;
-      max-height: 300px;
-    }
-
-    .crop-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .crop-actions button {
-      padding: 6px 12px;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .apply-btn {
-      background-color: #4ade80;
-      color: white;
-    }
-
-    .cancel-btn {
-      background-color: #f87171;
-      color: white;
-    }
-
-    .rotate-btn {
-      background-color: #60a5fa;
-      color: white;
-    }
-
-    .scale-slider {
-      width: 100%;
-      margin: 10px 0;
-    }
-
-    .canvas-container {
-      width: 100%;
-      height: 500px;
-      position: relative;
-      border: 1px solid #ddd;
-      margin-bottom: 20px;
-      overflow: hidden;
-      background-color: #f5f5f5;
-    }
-
-    .transform-controls {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .transform-control {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .transform-control label {
-      font-size: 0.8rem;
-      margin-bottom: 4px;
-    }
-
-    .background-options {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .background-option {
-      flex: 1;
-      text-align: center;
-      padding: 8px;
-      border-radius: 8px;
-      background: #e2e8f0;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    .background-option.active {
-      background: #f97316;
-      color: white;
-    }
-  </style>
-</head>
-<body>
-  <div class="controls">
-    <!-- Header Background Options -->
-    <div class="control-group">
-      <label>Header Background</label>
-      <div class="background-options">
-        <div class="background-option active" onclick="setHeaderBackgroundType('gradient')">Gradient</div>
-        <div class="background-option" onclick="setHeaderBackgroundType('image')">Image</div>
-        <div class="background-option" onclick="setHeaderBackgroundType('color')">Color</div>
-      </div>
-    </div>
-
-    <div class="control-group" id="gradientControls">
-      <label>Gradient Colors</label>
-      <div class="gradient-controls">
-        <input type="color" id="color1" value="#ff007a">
-        <input type="color" id="color2" value="#f43f5e">
-        <input type="color" id="color3" value="#f97316">
-      </div>
-      <input type="number" id="degree" placeholder="Gradient angle (degrees)" value="135">
-    </div>
-
-    <div class="control-group" id="colorControls" style="display: none;">
-      <label>Solid Color</label>
-      <input type="color" id="solidColor" value="#ff007a">
-    </div>
-
-    <div class="control-group" id="imageControls" style="display: none;">
-      <label>Header Image</label>
-      <div class="upload-btn" onclick="document.getElementById('headerImageUpload').click()">Upload Image</div>
-      <input type="file" id="headerImageUpload" accept="image/*">
-    </div>
-
-    <!-- Background Canvas Options -->
-    <div class="control-group">
-      <label>Background Type</label>
-      <div class="background-options">
-        <div class="background-option active" onclick="setBackgroundType('color')">Color</div>
-        <div class="background-option" onclick="setBackgroundType('image')">Image</div>
-      </div>
-    </div>
-
-    <div class="control-group" id="bgColorControl">
-      <label>Background Color</label>
-      <input type="color" id="bgColor" value="#f0f0f0">
-    </div>
-
-    <div class="control-group" id="bgImageControl" style="display: none;">
-      <label>Background Image</label>
-      <div class="upload-btn" onclick="document.getElementById('bgImageUpload').click()">Upload Image</div>
-      <input type="file" id="bgImageUpload" accept="image/*">
-      <select id="bgAspectRatio" onchange="updateBackgroundAspect()" style="margin-top: 8px;">
-        <option value="0.5625">Instagram Story (9:16)</option>
-        <option value="1.91">Facebook Story (1.91:1)</option>
-      </select>
-    </div>
-
-    <!-- Card Content -->
-    <div class="control-group">
-      <label>NGL Card Message</label>
-      <input type="text" id="inputMsg" placeholder="u got good taste in music" oninput="updateMessage()">
-    </div>
-
-    <!-- Card Transform Controls -->
-    <div class="control-group transform-controls">
-      <div class="transform-control">
-        <label>Scale</label>
-        <input type="range" id="scaleSlider" min="0.3" max="2" step="0.1" value="1" oninput="updateCardTransform()" class="scale-slider">
-      </div>
-      <div class="transform-control">
-        <label>Rotation</label>
-        <input type="range" id="rotateSlider" min="-180" max="180" step="1" value="0" oninput="updateCardTransform()" class="scale-slider">
-      </div>
-    </div>
-
-    <button class="btn" onclick="saveAsImage()">Save as Image</button>
-
-    <!-- Background Image Crop Container -->
-    <div id="cropContainer">
-      <img id="cropImage">
-      <div class="crop-actions">
-        <button class="rotate-btn" onclick="rotateBackground(-90)">↺ 90°</button>
-        <button class="rotate-btn" onclick="rotateBackground(90)">↻ 90°</button>
-        <button class="apply-btn" onclick="applyCrop()">Apply</button>
-        <button class="cancel-btn" onclick="cancelCrop()">Cancel</button>
-      </div>
-    </div>
-
-    <!-- Header Image Crop Container -->
-    <div id="headerCropContainer">
-      <img id="headerCropImage">
-      <div class="crop-actions">
-        <button class="rotate-btn" onclick="rotateHeader(-90)">↺ 90°</button>
-        <button class="rotate-btn" onclick="rotateHeader(90)">↻ 90°</button>
-        <button class="apply-btn" onclick="applyHeaderCrop()">Apply</button>
-        <button class="cancel-btn" onclick="cancelHeaderCrop()">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="canvas-container" id="canvasContainer">
-    <div class="ngl-card" id="card">
-      <div class="ngl-header" id="nglHeader">send me anonymous<br />messages!</div>
-      <div class="ngl-body" id="message">u got good taste in music</div>
-    </div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-  <script>
-    let bgCropper;
-    let headerCropper;
-    let isDragging = false;
-    let startX, startY;
-    let cardX = 0, cardY = 0;
-    let backgroundImage = null;
-    let headerBackgroundImage = null;
-    let currentRotation = 0;
-    let currentScale = 1;
-    let headerBackgroundType = 'gradient';
-    let backgroundType = 'color';
-
-    const canvasContainer = document.getElementById('canvasContainer');
-    const card = document.getElementById('card');
-    const header = document.getElementById('nglHeader');
-    const cropContainer = document.getElementById('cropContainer');
-    const cropImage = document.getElementById('cropImage');
-    const headerCropContainer = document.getElementById('headerCropContainer');
-    const headerCropImage = document.getElementById('headerCropImage');
-    const bgImageUpload = document.getElementById('bgImageUpload');
-    const headerImageUpload = document.getElementById('headerImageUpload');
-
-    // Initialize draggable card
-    card.addEventListener('mousedown', startDrag);
-    card.addEventListener('touchstart', startDrag, { passive: false });
-    document.addEventListener('mousemove', dragCard);
-    document.addEventListener('touchmove', dragCard, { passive: false });
-    document.addEventListener('mouseup', endDrag);
-    document.addEventListener('touchend', endDrag);
-
-    // Initialize event listeners
-    document.querySelectorAll('#color1, #color2, #color3, #degree').forEach(input => {
-      input.addEventListener('input', updateHeaderGradient);
+    document.querySelectorAll('input[type="color"], #degree').forEach(input => {
+      input.addEventListener('input', updateHeaderBackground);
     });
 
-    document.getElementById('solidColor').addEventListener('input', function() {
-      if (headerBackgroundType === 'color') {
-        header.style.background = this.value;
-        header.classList.remove('background-image');
-      }
-    });
-
-    document.getElementById('bgColor').addEventListener('input', function() {
-      if (backgroundType === 'color') {
-        canvasContainer.style.background = this.value;
-        canvasContainer.style.backgroundImage = 'none';
-      }
-    });
-
-    function startDrag(e) {
-      isDragging = true;
-      const clientX = e.clientX || e.touches[0].clientX;
-      const clientY = e.clientY || e.touches[0].clientY;
-      
-      // Get current position
-      const rect = card.getBoundingClientRect();
-      cardX = rect.left - canvasContainer.getBoundingClientRect().left;
-      cardY = rect.top - canvasContainer.getBoundingClientRect().top;
-      
-      startX = clientX;
-      startY = clientY;
-      
-      e.preventDefault();
-    }
-
-    function dragCard(e) {
-      if (!isDragging) return;
-      
-      const clientX = e.clientX || e.touches[0].clientX;
-      const clientY = e.clientY || e.touches[0].clientY;
-      
-      const dx = clientX - startX;
-      const dy = clientY - startY;
-      
-      // Update position
-      const newX = cardX + dx;
-      const newY = cardY + dy;
-      
-      // Apply transformation with scaling
-      card.style.left = `${newX}px`;
-      card.style.top = `${newY}px`;
-      card.style.transform = `rotate(${currentRotation}deg) scale(${currentScale})`;
-      
-      e.preventDefault();
-    }
-
-    function endDrag() {
-      isDragging = false;
-      
-      // Update stored position
-      const rect = card.getBoundingClientRect();
-      cardX = rect.left - canvasContainer.getBoundingClientRect().left;
-      cardY = rect.top - canvasContainer.getBoundingClientRect().top;
-    }
-
-    function updateCardTransform() {
-      currentScale = parseFloat(document.getElementById('scaleSlider').value);
-      currentRotation = parseInt(document.getElementById('rotateSlider').value);
-      
-      card.style.transform = `rotate(${currentRotation}deg) scale(${currentScale})`;
-    }
-
-    function setHeaderBackgroundType(type) {
-      headerBackgroundType = type;
-      document.querySelectorAll('#gradientControls, #colorControls, #imageControls').forEach(el => {
-        el.style.display = 'none';
-      });
-      
-      // Update active tab
-      document.querySelectorAll('.control-group:nth-child(1) .background-option').forEach((el, index) => {
-        el.classList.remove('active');
-        if ((type === 'gradient' && index === 0) || 
-            (type === 'image' && index === 1) || 
-            (type === 'color' && index === 2)) {
-          el.classList.add('active');
-        }
-      });
-
-      if (type === 'gradient') {
-        document.getElementById('gradientControls').style.display = 'block';
-        updateHeaderGradient();
-      } else if (type === 'color') {
-        document.getElementById('colorControls').style.display = 'block';
-        header.style.background = document.getElementById('solidColor').value;
-        header.classList.remove('background-image');
-      } else if (type === 'image') {
-        document.getElementById('imageControls').style.display = 'block';
-      }
-    }
-
-    function setBackgroundType(type) {
-      backgroundType = type;
-      document.querySelectorAll('#bgColorControl, #bgImageControl').forEach(el => {
-        el.style.display = 'none';
-      });
-      
-      // Update active tab
-      document.querySelectorAll('.control-group:nth-child(6) .background-option').forEach((el, index) => {
-        el.classList.remove('active');
-        if ((type === 'color' && index === 0) || 
-            (type === 'image' && index === 1)) {
-          el.classList.add('active');
-        }
-      });
-
-      if (type === 'color') {
-        document.getElementById('bgColorControl').style.display = 'block';
-        canvasContainer.style.background = document.getElementById('bgColor').value;
-        canvasContainer.style.backgroundImage = 'none';
-      } else if (type === 'image') {
-        document.getElementById('bgImageControl').style.display = 'block';
-        if (backgroundImage) {
-          updateBackground();
-        }
-      }
-    }
-
-    function updateHeaderGradient() {
-      if (headerBackgroundType !== 'gradient') return;
-      
+    function updateHeaderBackground() {
       const color1 = document.getElementById('color1').value;
       const color2 = document.getElementById('color2').value;
       const color3 = document.getElementById('color3').value;
@@ -522,156 +109,42 @@
       header.classList.remove('background-image');
     }
 
-    function updateBackground() {
-      if (backgroundType === 'image' && backgroundImage) {
-        const aspectRatio = parseFloat(document.getElementById('bgAspectRatio').value);
-        const containerWidth = canvasContainer.offsetWidth;
-        const containerHeight = canvasContainer.offsetHeight;
-        
-        // Calculate new dimensions based on aspect ratio
-        let newWidth, newHeight;
-        
-        if (aspectRatio > containerWidth / containerHeight) {
-          // Tall image (like 9:16)
-          newHeight = containerHeight;
-          newWidth = newHeight * aspectRatio;
-        } else {
-          // Wide image (like 1.91:1)
-          newWidth = containerWidth;
-          newHeight = newWidth / aspectRatio;
-        }
-        
-        // Center the background
-        canvasContainer.style.backgroundImage = `url(${backgroundImage})`;
-        canvasContainer.style.backgroundSize = `${newWidth}px ${newHeight}px`;
-        canvasContainer.style.backgroundPosition = 'center';
-        canvasContainer.style.backgroundRepeat = 'no-repeat';
-      }
-    }
-
-    function updateBackgroundAspect() {
-      if (backgroundType === 'image' && backgroundImage) {
-        updateBackground();
-      }
-    }
-
-    // Background Image Upload Handler
-    bgImageUpload.addEventListener('change', function(e) {
+    document.getElementById('bgImageUpload').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(event) {
           cropImage.src = event.target.result;
           cropContainer.style.display = 'flex';
-          
-          bgCropper = new Cropper(cropImage, {
-            viewMode: 1,
-            autoCropArea: 1,
-            responsive: true,
-            restore: true,
-            guides: true,
-            center: true,
-            highlight: true,
-            cropBoxMovable: true,
-            cropBoxResizable: true,
-            toggleDragModeOnDblclick: true,
-            zoomable: true,
-            rotatable: true,
-            scalable: true,
-          });
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // Header Image Upload Handler
-    headerImageUpload.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          headerCropImage.src = event.target.result;
-          headerCropContainer.style.display = 'flex';
-          
-          headerCropper = new Cropper(headerCropImage, {
+          cropper = new Cropper(cropImage, {
             aspectRatio: 320 / 85,
             viewMode: 1,
-            autoCropArea: 1,
-            responsive: true,
-            restore: true,
-            guides: true,
-            center: true,
-            highlight: true,
-            cropBoxMovable: true,
-            cropBoxResizable: true,
-            toggleDragModeOnDblclick: true,
-            zoomable: true,
-            rotatable: true,
-            scalable: true,
           });
         };
         reader.readAsDataURL(file);
       }
     });
 
-    function rotateBackground(degrees) {
-      if (bgCropper) {
-        bgCropper.rotate(degrees);
-      }
-    }
-
-    function rotateHeader(degrees) {
-      if (headerCropper) {
-        headerCropper.rotate(degrees);
-      }
-    }
-
     function applyCrop() {
-      if (bgCropper) {
-        const canvas = bgCropper.getCroppedCanvas();
-        backgroundImage = canvas.toDataURL();
-        setBackgroundType('image');
-        updateBackground();
-        
-        bgCropper.destroy();
-        bgCropper = null;
+      if (cropper) {
+        const canvas = cropper.getCroppedCanvas({
+          width: 320,
+          height: 85,
+        });
+        header.style.background = `url('${canvas.toDataURL()}') center/cover`;
+        header.classList.add('background-image');
+        cropper.destroy();
+        cropper = null;
         cropContainer.style.display = 'none';
       }
     }
 
-    function applyHeaderCrop() {
-      if (headerCropper) {
-        const canvas = headerCropper.getCroppedCanvas({
-          width: 320,
-          height: 85,
-        });
-        headerBackgroundImage = canvas.toDataURL();
-        header.style.background = `url(${headerBackgroundImage}) center/cover no-repeat`;
-        header.classList.add('background-image');
-        
-        headerCropper.destroy();
-        headerCropper = null;
-        headerCropContainer.style.display = 'none';
-        setHeaderBackgroundType('image');
-      }
-    }
-
     function cancelCrop() {
-      if (bgCropper) {
-        bgCropper.destroy();
-        bgCropper = null;
+      if (cropper) {
+        cropper.destroy();
+        cropper = null;
       }
       cropContainer.style.display = 'none';
-      document.getElementById('bgImageUpload').value = '';
-    }
-
-    function cancelHeaderCrop() {
-      if (headerCropper) {
-        headerCropper.destroy();
-        headerCropper = null;
-      }
-      headerCropContainer.style.display = 'none';
-      document.getElementById('headerImageUpload').value = '';
     }
 
     function updateMessage() {
@@ -679,67 +152,51 @@
       document.getElementById('message').innerText = msg;
     }
 
-    function saveAsImage() {
-      // Calculate the required canvas size to include the entire card
-      const cardRect = card.getBoundingClientRect();
-      const containerRect = canvasContainer.getBoundingClientRect();
-      
-      // Calculate card position relative to container
-      const cardLeft = cardRect.left - containerRect.left;
-      const cardTop = cardRect.top - containerRect.top;
-      const cardRight = cardLeft + cardRect.width * currentScale;
-      const cardBottom = cardTop + cardRect.height * currentScale;
-      
-      // Calculate expanded canvas dimensions
-      const padding = 20; // Extra padding around the card
-      const canvasWidth = Math.max(containerRect.width, cardRight + padding, -cardLeft + padding);
-      const canvasHeight = Math.max(containerRect.height, cardBottom + padding, -cardTop + padding);
-      
-      // Create a temporary container for export
-      const exportContainer = document.createElement('div');
-      exportContainer.style.width = `${canvasWidth}px`;
-      exportContainer.style.height = `${canvasHeight}px`;
-      exportContainer.style.position = 'relative';
-      exportContainer.style.overflow = 'hidden';
-      
-      // Clone the background
-      const bgClone = canvasContainer.cloneNode();
-      bgClone.style.width = '100%';
-      bgClone.style.height = '100%';
-      bgClone.style.margin = '0';
-      bgClone.style.border = 'none';
-      
-      // Clone the card and position it centered
-      const cardClone = card.cloneNode(true);
-      cardClone.style.position = 'absolute';
-      cardClone.style.left = `${canvasWidth/2 - cardRect.width/2}px`;
-      cardClone.style.top = `${canvasHeight/2 - cardRect.height/2}px`;
-      cardClone.style.transform = `rotate(${currentRotation}deg) scale(${currentScale})`;
-      
-      exportContainer.appendChild(bgClone);
-      exportContainer.appendChild(cardClone);
-      document.body.appendChild(exportContainer);
-      
-      html2canvas(exportContainer, {
+    function saveAsImageWithBackground() {
+      const card = document.querySelector("#card");
+      const originalBg = document.body.style.backgroundColor;
+      document.body.style.backgroundColor = 'transparent';
+
+      html2canvas(card, {
+        backgroundColor: null,
         scale: 2,
         logging: false,
-        useCORS: true,
-        backgroundColor: null,
-        width: canvasWidth,
-        height: canvasHeight
+        useCORS: true
       }).then(canvas => {
+        document.body.style.backgroundColor = originalBg;
         const link = document.createElement('a');
         link.download = 'ngl-card-with-bg.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
-        document.body.removeChild(exportContainer);
+      });
+    }
+
+    function saveAsImageWithoutBackground() {
+      const card = document.querySelector("#card");
+      const originalBg = document.body.style.backgroundColor;
+      document.body.style.backgroundColor = 'transparent';
+
+      // Clone the card and set background to transparent
+      const cardClone = card.cloneNode(true);
+      cardClone.style.background = 'transparent';
+      cardClone.style.boxShadow = 'none';
+
+      html2canvas(cardClone, {
+        backgroundColor: null,
+        scale: 2,
+        logging: false,
+        useCORS: true
+      }).then(canvas => {
+        document.body.style.backgroundColor = originalBg;
+        const link = document.createElement('a');
+        link.download = 'ngl-card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
       });
     }
 
     // Initialize
-    setHeaderBackgroundType('gradient');
-    setBackgroundType('color');
-    updateHeaderGradient();
+    updateHeaderBackground();
   </script>
 </body>
 </html>
