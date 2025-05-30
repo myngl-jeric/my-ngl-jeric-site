@@ -6,274 +6,216 @@
   <title>Custom NGL Card</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
-    body {
-      background-color: #f0f0f0;
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      color: #333;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;7transform(-50%, -50%) rotate(${currentRotation}deg) scale(${currentScale})`;
     }
 
-    .controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 320px;
+    function setHeaderBackgroundType(type) {
+      headerBackgroundType = type;
+      document.querySelectorAll('#gradientControls, #colorControls, #imageControls').forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      document.querySelectorAll('.control-group:nth-child(1) .background-option').forEach((el, index) => {
+        el.classList.remove('active');
+        if ((type === 'gradient' && index === 0) || 
+            (type === 'image' && index === 1) || 
+            (type === 'color' && index === 2)) {
+          el.classList.add('active');
+        }
+      });
+
+      if (type === 'gradient') {
+        document.getElementById('gradientControls').style.display = 'block';
+        updateHeaderGradient();
+      } else if (type === 'color') {
+        document.getElementById('colorControls').style.display = 'block';
+        header.style.background = document.getElementById('solidColor').value;
+        header.classList.remove('background-image');
+      } else if (type === 'image') {
+        document.getElementById('imageControls').style.display = 'block';
+      }
     }
 
-    .gradient-controls {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
+    function setBackgroundType(type) {
+      backgroundType = type;
+      document.querySelectorAll('#bgColorControl, #bgImageControl').forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      document.querySelectorAll('.control-group:nth-child(6) .background-option').forEach((el, index) => {
+        el.classList.remove('active');
+        if ((type === 'color' && index === 0) || 
+            (type === 'image' && index === 1) ||
+            (type === 'transparent' && index === 2)) {
+          el.classList.add('active');
+        }
+      });
+
+      if (type === 'color') {
+        document.getElementById('bgColorControl').style.display = 'block';
+        canvasContainer.style.background = document.getElementById('bgColor').value;
+        canvasContainer.style.backgroundImage = 'none';
+      } else if (type === 'image') {
+        document.getElementById('bgImageControl').style.display = 'block';
+        if (backgroundImage) updateBackground();
+      } else if (type === 'transparent') {
+        canvasContainer.style.background = 'transparent';
+        canvasContainer.style.backgroundImage = 'none';
+      }
     }
 
-    .canvas-container {
-      width: 100%;
-      height: 500px;
-      position: relative;
-      margin-bottom: 20px;
-      overflow: hidden;
-      background-color: #f5f5f5;
+    function updateHeaderGradient() {
+      if (headerBackgroundType !== 'gradient') return;
+      const color1 = document.getElementById('color1').value;
+      const color2 = document.getElementById('color2').value;
+      const color3 = document.getElementById('color3').value;
+      const degree = document.getElementById('degree').value || 135;
+      header.style.background = `linear-gradient(${degree}deg, ${color1} 0%, ${color2} 50%, ${color3} 100%)`;
+      header.classList.remove('background-image');
     }
 
-    .ngl-card {
-      width: 320px;
-      min-height: 170px;
-      border-radius: 20px;
-      overflow: hidden;
-      background-color: transparent;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      cursor: move;
-      user-select: none;
+    function updateBackground() {
+      if (backgroundType === 'image' && backgroundImage) {
+        const aspectRatio = parseFloat(document.getElementById('bgAspectRatio').value);
+        const containerWidth = canvasContainer.offsetWidth;
+        const containerHeight = canvasContainer.offsetHeight;
+        
+        canvasContainer.style.backgroundImage = `url(${backgroundImage})`;
+        
+        if (containerWidth / containerHeight > aspectRatio) {
+          // Fit to height
+          canvasContainer.style.backgroundSize = `auto 100%`;
+        } else {
+          // Fit to width
+          canvasContainer.style.backgroundSize = `100% auto`;
+        }
+        
+        canvasContainer.style.backgroundPosition = 'center';
+        canvasContainer.style.backgroundRepeat = 'no-repeat';
+      }
     }
 
-    .ngl-header {
-      background: linear-gradient(135deg, #ff007a 0%, #f43f5e 50%, #f97316 100%);
-      color: white;
-      font-size: 1.12rem;
-      font-weight: 800;
-      line-height: 1.3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0 12px;
-      height: 85px;
+    function updateBackgroundAspect() {
+      if (backgroundType === 'image' && backgroundImage) {
+        updateBackground();
+      }
     }
 
-    .ngl-header.background-image {
-      background-size: cover;
-      background-position: center;
+    // Image upload handlers
+    bgImageUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          cropImage.src = event.target.result;
+          cropContainer.style.display = 'flex';
+          
+          bgCropper = new Cropper(cropImage, {
+            viewMode: 1,
+            autoCropArea: 1,
+            responsive: true,
+            zoomable: true,
+            rotatable: true,
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    headerImageUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          headerCropImage.src = event.target.result;
+          headerCropContainer.style.display = 'flex';
+          
+          headerCropper = new Cropper(headerCropImage, {
+            aspectRatio: 320 / 85,
+            viewMode: 1,
+            autoCropArea: 1,
+            responsive: true,
+            zoomable: true,
+            rotatable: true,
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Crop functions
+    function rotateBackground(degrees) {
+      if (bgCropper) bgCropper.rotate(degrees);
     }
 
-    .ngl-body {
-      flex: 1;
-      background-color: white;
-      color: black;
-      font-size: 1rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 12px;
-      word-break: break-word;
+    function rotateHeader(degrees) {
+      if (headerCropper) headerCropper.rotate(degrees);
     }
 
-    .btn {
-      background-color: #f97316;
-      border: none;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-size: 1rem;
-      cursor: pointer;
-      width: 100%;
+    function applyCrop() {
+      if (bgCropper) {
+        const canvas = bgCropper.getCroppedCanvas();
+        backgroundImage = canvas.toDataURL();
+        setBackgroundType('image');
+        updateBackground();
+        
+        bgCropper.destroy();
+        bgCropper = null;
+        cropContainer.style.display = 'none';
+      }
     }
 
-    .btn-outline {
-      background: white;
-      border: 1px solid #f97316;
-      color: #f97316;
+    function applyHeaderCrop() {
+      if (headerCropper) {
+        const canvas = headerCropper.getCroppedCanvas({
+          width: 320,
+          height: 85,
+        });
+        headerBackgroundImage = canvas.toDataURL();
+        header.style.background = `url(${headerBackgroundImage}) center/cover no-repeat`;
+        header.classList.add('background-image');
+        
+        headerCropper.destroy();
+        headerCropper = null;
+        headerCropContainer.style.display = 'none';
+        setHeaderBackgroundType('image');
+      }
     }
 
-    input[type="color"], input[type="number"], input[type="text"], select {
-      width: 100%;
-      padding: 10px;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      box-sizing: border-box;
+    function cancelCrop() {
+      if (bgCropper) {
+        bgCropper.destroy();
+        bgCropper = null;
+      }
+      cropContainer.style.display = 'none';
+      document.getElementById('bgImageUpload').value = '';
     }
 
-    .control-group {
-      width: 100%;
+    function cancelHeaderCrop() {
+      if (headerCropper) {
+        headerCropper.destroy();
+        headerCropper = null;
+      }
+      headerCropContainer.style.display = 'none';
+      document.getElementById('headerImageUpload').value = '';
     }
 
-    .control-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 500;
+    function updateMessage() {
+      document.getElementById('message').innerText = document.getElementById('inputMsg').value;
     }
 
-    #bgImageUpload, #headerImageUpload {
-      display: none;
-    }
-
-    .upload-btn {
-      background: #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    #cropContainer, #headerCropContainer {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      align-items: center;
-      margin-top: 12px;
-    }
-
-    #cropImage, #headerCropImage {
-      max-width: 100%;
-      max-height: 300px;
-    }
-
-    .crop-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .crop-actions button {
-      padding: 6px 12px;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .apply-btn {
-      background-color: #4ade80;
-      color: white;
-    }
-
-    .cancel-btn {
-      background-color: #f87171;
-      color: white;
-    }
-
-    .rotate-btn {
-      background-color: #60a5fa;
-      color: white;
-    }
-
-    .scale-slider {
-      width: 100%;
-      margin: 10px 0;
-    }
-
-    .transform-controls {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .transform-control {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .transform-control label {
-      font-size: 0.8rem;
-      margin-bottom: 4px;
-    }
-
-    .background-options {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .background-option {
-      flex: 1;
-      text-align: center;
-      padding: 8px;
-      border-radius: 8px;
-      background: #e2e8f0;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    .background-option.active {
-      background: #f97316;
-      color: white;
-    }
-
-    /* Remove borders from canvas container */
-    .canvas-container {
-      border: none !important;
-    }
-  </style>
-</head>
-<body>
-  <!-- [Previous HTML content remains exactly the same] -->
-  <div class="controls">
-    <!-- [All control groups remain exactly the same] -->
-  </div>
-
-  <div class="canvas-container" id="canvasContainer">
-    <div class="ngl-card" id="card">
-      <div class="ngl-header" id="nglHeader">send me anonymous<br />messages!</div>
-      <div class="ngl-body" id="message">u got good taste in music</div>
-    </div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-  <script>
-    // [Previous JavaScript variable declarations remain the same]
-
-    // Updated saveWithBackground function
     function saveWithBackground() {
       const aspectRatio = parseFloat(document.getElementById('bgAspectRatio').value);
       let exportWidth, exportHeight;
       
       if (aspectRatio > 1) {
-        // Landscape (Facebook)
         exportWidth = 1200;
         exportHeight = Math.round(exportWidth / aspectRatio);
       } else {
-        // Portrait (Instagram)
         exportHeight = 1200;
         exportWidth = Math.round(exportHeight * aspectRatio);
       }
 
-      // Create a temporary container with the correct aspect ratio
       const exportContainer = document.createElement('div');
       exportContainer.style.position = 'absolute';
       exportContainer.style.left = '-9999px';
@@ -282,7 +224,6 @@
       exportContainer.style.overflow = 'hidden';
       exportContainer.style.backgroundColor = 'transparent';
       
-      // Clone the background
       const bgClone = document.createElement('div');
       bgClone.style.width = '100%';
       bgClone.style.height = '100%';
@@ -295,7 +236,6 @@
       } else if (backgroundType === 'image' && backgroundImage) {
         bgClone.style.backgroundImage = `url(${backgroundImage})`;
         
-        // Calculate proper background sizing
         const containerRatio = exportWidth / exportHeight;
         const bgRatio = aspectRatio;
         
@@ -308,21 +248,17 @@
         bgClone.style.backgroundColor = 'transparent';
       }
       
-      // Clone the card and position it
       const cardClone = card.cloneNode(true);
       cardClone.style.position = 'absolute';
       
-      // Calculate center position
       const cardWidth = 320 * currentScale;
       const cardHeight = 170 * currentScale;
       
-      // Calculate rotated dimensions
       const absRotation = Math.abs(currentRotation);
       const rad = absRotation * Math.PI / 180;
       const rotatedWidth = Math.abs(cardWidth * Math.cos(rad)) + Math.abs(cardHeight * Math.sin(rad));
       const rotatedHeight = Math.abs(cardWidth * Math.sin(rad)) + Math.abs(cardHeight * Math.cos(rad));
       
-      // Position card in center with padding
       cardClone.style.left = `${(exportWidth - rotatedWidth) / 2}px`;
       cardClone.style.top = `${(exportHeight - rotatedHeight) / 2}px`;
       cardClone.style.transform = `rotate(${currentRotation}deg) scale(${currentScale})`;
@@ -350,9 +286,7 @@
       });
     }
 
-    // Updated saveWithoutBackground function
     function saveWithoutBackground() {
-      // Calculate rotated card dimensions
       const absRotation = Math.abs(currentRotation);
       const rad = absRotation * Math.PI / 180;
       const cardWidth = 320 * currentScale;
@@ -361,7 +295,6 @@
       const rotatedWidth = Math.abs(cardWidth * Math.cos(rad)) + Math.abs(cardHeight * Math.sin(rad));
       const rotatedHeight = Math.abs(cardWidth * Math.sin(rad)) + Math.abs(cardHeight * Math.cos(rad));
       
-      // Create temporary container with padding
       const tempContainer = document.createElement('div');
       tempContainer.style.position = 'absolute';
       tempContainer.style.left = '-9999px';
@@ -398,30 +331,10 @@
       });
     }
 
-    // Updated updateBackground function to prevent stretching
-    function updateBackground() {
-      if (backgroundType === 'image' && backgroundImage) {
-        const aspectRatio = parseFloat(document.getElementById('bgAspectRatio').value);
-        const containerWidth = canvasContainer.offsetWidth;
-        const containerHeight = canvasContainer.offsetHeight;
-        
-        // Calculate dimensions to maintain aspect ratio without stretching
-        canvasContainer.style.backgroundImage = `url(${backgroundImage})`;
-        
-        if (containerWidth / containerHeight > aspectRatio) {
-          // Container is wider than needed - fit to height
-          canvasContainer.style.backgroundSize = `auto 100%`;
-        } else {
-          // Container is taller than needed - fit to width
-          canvasContainer.style.backgroundSize = `100% auto`;
-        }
-        
-        canvasContainer.style.backgroundPosition = 'center';
-        canvasContainer.style.backgroundRepeat = 'no-repeat';
-      }
-    }
-
-    // [Rest of the JavaScript remains the same]
+    // Initialize
+    setHeaderBackgroundType('gradient');
+    setBackgroundType('color');
+    updateHeaderGradient();
   </script>
 </body>
 </html>
