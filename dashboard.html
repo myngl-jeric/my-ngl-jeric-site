@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Custom NGL Card</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
   <style>
-    @import url('极速赛车开奖直播 极速赛车开奖结果 极速赛车开奖记录 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
     body {
       background-color: #f0f0f0;
       font-family: 'Inter', sans-serif;
@@ -15,7 +15,7 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      margin: 极速赛车开奖直播 极速赛车开奖结果 极速赛车开奖记录 0;
+      margin: 0;
       color: #333;
     }
 
@@ -101,7 +101,7 @@
       background-color: #f97316;
       border: none;
       color: white;
-      padding: 10极速赛车开奖直播 极速赛车开奖结果 极速赛车开奖记录 px 16px;
+      padding: 10px 16px;
       border-radius: 12px;
       font-size: 1rem;
       cursor: pointer;
@@ -273,12 +273,12 @@
       <label>Canvas Background</label>
       <div class="background-options">
         <div class="background-option active" onclick="setBackgroundType('color')">Color</div>
-        <div class="background-option" onclick="极速赛车开奖直播 极速赛车开奖结果 极速赛车开奖记录 setBackgroundType('image')">Image</div>
+        <div class="background-option" onclick="setBackgroundType('image')">Image</div>
         <div class="background-option" onclick="setBackgroundType('transparent')">None</div>
       </div>
     </div>
 
-    <div class="control-group" id极速赛车开奖直播 极速赛车开奖结果 极速赛车开奖记录 ="bgColorControl">
+    <div class="control-group" id="bgColorControl">
       <label>Background Color</label>
       <input type="color" id="bgColor" value="#f0f0f0">
     </div>
@@ -331,14 +331,14 @@
       <div class="crop-actions">
         <button class="rotate-btn" onclick="rotateHeader(-90)">↺ 90°</button>
         <button class="rotate-btn" onclick="rotateHeader(90)">↻ 90°</button>
-        <button class="apply-btn" onclick="applyHeaderCrop()">极速赛车开奖直播 极速赛车开奖结果 极速赛车开奖记录 Apply</button>
+        <button class="apply-btn" onclick="applyHeaderCrop()">Apply</button>
         <button class="cancel-btn" onclick="cancelHeaderCrop()">Cancel</button>
       </div>
     </div>
   </div>
 
   <div class="canvas-container" id="canvasContainer">
-    <div class="ng极速赛车开奖直播 极速赛车开奖结果 极速赛车开奖记录 l-card" id="card">
+    <div class="ngl-card" id="card">
       <div class="ngl-header" id="nglHeader">send me anonymous<br />messages!</div>
       <div class="ngl-body" id="message">u got good taste in music</div>
     </div>
@@ -494,7 +494,7 @@
         canvasContainer.style.background = document.getElementById('bgColor').value;
         canvasContainer.style.backgroundImage = 'none';
       } else if (type === 'image') {
-        document.getElementById('bg极速赛车开奖直播 极速赛车开奖结果 极速赛车开奖记录 ImageControl').style.display = 'block';
+        document.getElementById('bgImageControl').style.display = 'block';
         if (backgroundImage) updateBackground();
       } else if (type === 'transparent') {
         canvasContainer.style.background = 'transparent';
@@ -521,8 +521,10 @@
         canvasContainer.style.backgroundImage = `url(${backgroundImage})`;
         
         if (containerWidth / containerHeight > aspectRatio) {
+          // Fit to height
           canvasContainer.style.backgroundSize = `auto 100%`;
         } else {
+          // Fit to width
           canvasContainer.style.backgroundSize = `100% auto`;
         }
         
@@ -652,34 +654,18 @@
         exportWidth = Math.round(exportHeight * aspectRatio);
       }
 
-      // Calculate rotated card dimensions
-      const cardWidth = 320 * currentScale;
-      const cardHeight = 170 * currentScale;
-      const absRotation = Math.abs(currentRotation);
-      const rad = absRotation * Math.PI / 180;
-      const rotatedWidth = Math.abs(cardWidth * Math.cos(rad)) + Math.abs(cardHeight * Math.sin(rad));
-      const rotatedHeight = Math.abs(cardWidth * Math.sin(rad)) + Math.abs(cardHeight * Math.cos(rad));
-
-      // Create container with extra padding
-      const padding = 100;
-      const containerWidth = Math.max(exportWidth, rotatedWidth + padding);
-      const containerHeight = Math.max(exportHeight, rotatedHeight + padding);
-
       const exportContainer = document.createElement('div');
       exportContainer.style.position = 'absolute';
       exportContainer.style.left = '-9999px';
-      exportContainer.style.width = `${containerWidth}px`;
-      exportContainer.style.height = `${containerHeight}px`;
+      exportContainer.style.width = `${exportWidth}px`;
+      exportContainer.style.height = `${exportHeight}px`;
       exportContainer.style.overflow = 'hidden';
       exportContainer.style.backgroundColor = 'transparent';
       
-      // Create background
       const bgClone = document.createElement('div');
+      bgClone.style.width = '100%';
+      bgClone.style.height = '100%';
       bgClone.style.position = 'absolute';
-      bgClone.style.width = `${exportWidth}px`;
-      bgClone.style.height = `${exportHeight}px`;
-      bgClone.style.left = `${(containerWidth - exportWidth) / 2}px`;
-      bgClone.style.top = `${(containerHeight - exportHeight) / 2}px`;
       bgClone.style.backgroundSize = 'cover';
       bgClone.style.backgroundPosition = 'center';
       
@@ -700,11 +686,19 @@
         bgClone.style.backgroundColor = 'transparent';
       }
       
-      // Create card
       const cardClone = card.cloneNode(true);
       cardClone.style.position = 'absolute';
-      cardClone.style.left = `${(containerWidth - rotatedWidth) / 2}px`;
-      cardClone.style.top = `${(containerHeight - rotatedHeight) / 2极速赛车开奖直播 极速赛车开奖结果 极速赛车开奖记录 }px`;
+      
+      const cardWidth = 320 * currentScale;
+      const cardHeight = 170 * currentScale;
+      
+      const absRotation = Math.abs(currentRotation);
+      const rad = absRotation * Math.PI / 180;
+      const rotatedWidth = Math.abs(cardWidth * Math.cos(rad)) + Math.abs(cardHeight * Math.sin(rad));
+      const rotatedHeight = Math.abs(cardWidth * Math.sin(rad)) + Math.abs(cardHeight * Math.cos(rad));
+      
+      cardClone.style.left = `${(exportWidth - rotatedWidth) / 2}px`;
+      cardClone.style.top = `${(exportHeight - rotatedHeight) / 2}px`;
       cardClone.style.transform = `rotate(${currentRotation}deg) scale(${currentScale})`;
       cardClone.style.boxShadow = '0 8px 16px rgba(0,0,0,0.2)';
       
@@ -717,27 +711,14 @@
         logging: false,
         useCORS: true,
         backgroundColor: null,
-        width: containerWidth,
-        height: containerHeight,
-        windowWidth: containerWidth,
-        windowHeight: containerHeight
+        width: exportWidth,
+        height: exportHeight,
+        windowWidth: exportWidth,
+        windowHeight: exportHeight
       }).then(canvas => {
-        // Crop to the desired aspect ratio
-        const finalCanvas = document.createElement('canvas');
-        finalCanvas.width = exportWidth;
-        finalCanvas.height = exportHeight;
-        const ctx = finalCanvas.getContext('2d');
-        
-        // Calculate center position
-        const offsetX = (canvas.width - exportWidth) / 2;
-        const offsetY = (canvas.height - exportHeight) / 2;
-        
-        // Draw the center portion
-        ctx.drawImage(canvas, offsetX, offsetY, exportWidth, exportHeight, 0, 0, exportWidth, exportHeight);
-        
         const link = document.createElement('a');
         link.download = 'ngl-card-with-bg.png';
-        link.href = finalCanvas.to极速赛车开奖直播 极速赛车开奖结果 极速赛车开奖记录 DataURL('image/png');
+        link.href = canvas.toDataURL('image/png');
         link.click();
         document.body.removeChild(exportContainer);
       });
