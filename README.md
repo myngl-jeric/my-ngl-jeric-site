@@ -1,1 +1,1 @@
-# my-ngl-jeric-site
+# JericAus NGL
