@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NGL Clone</title>
   <style>
-    /* NEW FONTS */
+    /* UPDATED FONTS */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     
     body {
       margin: 0; 
       font-family: 'Inter', Arial, sans-serif; 
-      font-weight: 600; /* Bolder text throughout */
+      font-weight: 700; /* Bolder text */
       background: linear-gradient(135deg, #ff007a 0%, #f43f5e 55%, #f97316 100%); 
       color: #fff; 
       text-align: center; 
       min-height: 100vh;
     }
     
-    /* CHAIN & LOCK OVERLAY */
+    /* IMPROVED CHAIN & LOCK OVERLAY */
     .chain-lock-overlay {
       position: absolute;
       top: 0;
@@ -33,25 +33,72 @@
       opacity: 0.88;
     }
     
-    .chain-lock-text {
+    .chain-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      overflow: hidden;
+    }
+    
+    .chain-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 24px;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+    .chain-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 24px;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+    .chain-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      writing-mode: vertical-lr;
+      text-orientation: mixed;
+      font-size: 24px;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+    .chain-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      writing-mode: vertical-lr;
+      text-orientation: mixed;
+      font-size: 24px;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+    .lock-emoji {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 18px;
-      font-weight: 700;
-      color: #fff;
-      z-index: 11;
-      pointer-events: none;
-      width: 100%;
-      text-align: center;
-    }
-    
-    .lock-emoji {
-      font-size: 28px;
-      position: absolute;
-      top: -10px;
-      right: 10px;
+      font-size: 36px;
       z-index: 12;
       pointer-events: none;
       filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
@@ -67,7 +114,7 @@
       animation: chainShake 0.5s;
     }
     
-    /* DICE TEXT ANIMATION */
+    /* IMPROVED DICE TEXT ANIMATION */
     .dice-text-animation {
       position: absolute;
       top: 0;
@@ -82,6 +129,9 @@
       pointer-events: none;
       opacity: 0;
       transition: opacity 1.2s;
+      text-align: left; /* Left-aligned */
+      display: flex;
+      align-items: center;
     }
     
     .dice-text-visible {
@@ -90,13 +140,13 @@
     
     /* REST OF YOUR CSS (with minor font weight adjustments) */
     .container { padding: 30px 15px; max-width: 420px; margin: auto; }
-    .profile { background: #fff; border-radius: 15px; padding: 20px; color: #000; max-width: 400px; margin: 20px auto 10px; position: relative; font-weight: 600; user-select: none; }
+    .profile { background: #fff; border-radius: 15px; padding: 20px; color: #000; max-width: 400px; margin: 20px auto 10px; position: relative; font-weight: 700; user-select: none; }
     .profile-row { display: flex; align-items: center; gap: 18px; margin-bottom: 8px; }
     .profile-img-container { position: relative; width: 60px; height: 60px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 8px rgba(0,0,0,0.1); background: white; display: flex; justify-content: center; align-items: center; z-index: 2; border: 6px solid #ff007a; }
     .profile-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
     .profile-info { text-align: left; flex: 1; min-width: 0; }
     .username { font-weight: 800; margin-bottom: 4px; font-size: 1.3rem; word-break: break-all; } /* Bolder */
-    .description { font-weight: 500; color: #444; font-size: 0.95rem; margin-bottom: 0; line-height: 1.3; user-select: none; word-break: break-word; } /* Adjusted weight */
+    .description { font-weight: 600; color: #444; font-size: 0.95rem; margin-bottom: 0; line-height: 1.3; user-select: none; word-break: break-word; } /* Adjusted weight */
     .prompt { background: rgba(255,255,255,0.15); color: #000; padding: 22px 25px; border-radius: 15px; margin-top: 10px; font-size: 18px; font-weight: 700; user-select: none; } /* Bolder */
     form { margin-top: 20px; position: relative; }
     input[type="text"].ngl-connect { 
@@ -115,7 +165,7 @@
       margin-right: auto; 
       outline: none; 
       transition: border-color 0.18s; 
-      font-weight: 600; /* Bolder */
+      font-weight: 700; /* Bolder */
     }
     input[type="text"].ngl-connect:focus { border-bottom: 1.5px solid #f43f5e; outline: none; }
     input[type="text"].ngl-connect::placeholder { color: rgba(30,30,30,0.66) !important; font-weight: 500; opacity: 1; }
@@ -156,7 +206,7 @@
     .extra-box { margin: 15px auto 0; padding: 15px 20px; font-size: 18px; border-radius: 30px; width: 80%; max-width: 300px; background: #000; color: #fff; user-select: none; transition: box-shadow 0.2s; box-shadow: 0 4px 18px -8px #f43f5e70; font-weight: 800; letter-spacing: 0.02em; cursor: pointer; position: relative; } /* Bolder */
     .ngl-pop-shake { animation: ngl-pop-shake 2.7s cubic-bezier(.16,1.02,.32,1.08) infinite; will-change: transform; }
     @keyframes ngl-pop-shake {0% {transform: scale(1);}8% {transform: scale(1.11);}18% {transform: scale(1.09);}24% {transform: scale(1.08);}28% {transform: scale(1.11);}33% {transform: scale(1.07);}36% {transform: scale(1.07) translateX(0);}39% {transform: scale(1.07) translateX(-7px) rotate(-5deg);}42% {transform: scale(1.07) translateX(7px) rotate(4deg);}45% {transform: scale(1.07) translateX(-5px) rotate(-3deg);}48% {transform: scale(1.07) translateX(5px) rotate(2deg);}51% {transform: scale(1.07) translateX(0) rotate(0deg);}55% {transform: scale(1);}100% {transform: scale(1);}}
-    .people-tap-count { color: #fff; margin: 10px auto 0; font-size: 18px; max-width: 420px; user-select: none; white-space: nowrap; overflow-x: auto; font-weight: 600; } /* Bolder */
+    .people-tap-count { color: #fff; margin: 10px auto 0; font-size: 18px; max-width: 420px; user-select: none; white-space: nowrap; overflow-x: auto; font-weight: 700; } /* Bolder */
     .fade-out { animation: fadeOut 0.8s ease-out forwards; }
     @keyframes fadeOut {to {opacity: 0; transform: scale(0.95);}}
 
@@ -226,7 +276,7 @@
       user-select: none; 
       white-space: nowrap; 
       overflow-x: auto; 
-      font-weight: 600; /* Bolder */
+      font-weight: 700; /* Bolder */
     }
     .sent-another-message { 
       display: flex; 
@@ -238,7 +288,7 @@
     }
     .send-another-link { 
       font-size: 1rem; 
-      font-weight: 600; 
+      font-weight: 700; 
       text-decoration: underline; 
       color: #fff; 
       margin-bottom: 2px; 
@@ -459,13 +509,18 @@
     </form>
     <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
     
-    <!-- CHAIN & LOCK OVERLAY ADDED -->
+    <!-- IMPROVED CHAIN & LOCK OVERLAY -->
     <div class="extra-box ngl-pop-shake" id="mainQuizBox">
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">
         Do you want to know me even further?
       </a>
       <div class="chain-lock-overlay">
-        <div class="chain-lock-text">🔗🔗🔗🔗🔗🔗🔗</div>
+        <div class="chain-wrapper">
+          <div class="chain-top">🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗</div>
+          <div class="chain-bottom">🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗</div>
+          <div class="chain-left">🔗🔗🔗🔗🔗🔗</div>
+          <div class="chain-right">🔗🔗🔗🔗🔗🔗</div>
+        </div>
         <div class="lock-emoji">🔒</div>
       </div>
     </div>
@@ -504,11 +559,16 @@
     <div class="sent-text">Sent!</div>
     <div class="sent-people-tap" id="sentPeopleTapCount">👇 0 people just tapped this button 😢🥀</div>
     
-    <!-- CHAIN & LOCK OVERLAY ADDED FOR SENT OVERLAY -->
+    <!-- IMPROVED CHAIN & LOCK OVERLAY FOR SENT OVERLAY -->
     <a href="#" class="sent-extra-box ngl-pop-shake" id="sentQuizLink">
       Do you want to know me even further?
       <div class="chain-lock-overlay">
-        <div class="chain-lock-text">🔗🔗🔗🔗🔗🔗🔗</div>
+        <div class="chain-wrapper">
+          <div class="chain-top">🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗</div>
+          <div class="chain-bottom">🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗🔗</div>
+          <div class="chain-left">🔗🔗🔗🔗🔗🔗</div>
+          <div class="chain-right">🔗🔗🔗🔗🔗🔗</div>
+        </div>
         <div class="lock-emoji">🔒</div>
       </div>
     </a>
@@ -623,7 +683,7 @@
       });
     };
 
-    // NEW: RESTRICTED BUTTON HANDLING
+    // RESTRICTED BUTTON HANDLING
     const restrictedModal = document.getElementById('nglRestrictedModal');
     const restrictedCloseBtn = document.getElementById('nglRestrictedCloseBtn');
     
@@ -635,7 +695,7 @@
       e.preventDefault();
       
       // Add chain shake animation
-      const chainElements = document.querySelectorAll('.chain-lock-text');
+      const chainElements = document.querySelectorAll('.chain-top, .chain-bottom, .chain-left, .chain-right');
       chainElements.forEach(el => {
         el.classList.add('chain-shake');
         setTimeout(() => {
@@ -677,18 +737,21 @@
     let diceRolling = false;
     let diceInterval = null;
 
-    // NEW: DICE TEXT ANIMATION SYSTEM
-    function showDicePhraseAnimation() {
-      // Clear any existing interval
-      if (diceInterval) clearInterval(diceInterval);
+    // DICE TEXT ANIMATION SYSTEM WITH IMPROVED HANDLING
+    function startDiceAnimation() {
+      // Only start if not already running and message field is empty
+      if (diceInterval || messageField.value.trim() !== "") return;
       
       // Hide the placeholder
       messageField.placeholder = "";
+      diceTextContainer.style.display = 'block';
       
-      // Start showing phrases
       let currentIndex = -1;
       
       function showNextPhrase() {
+        // Only run if animation is still active
+        if (!diceInterval) return;
+        
         currentIndex = (currentIndex + 1) % phrases.length;
         const phrase = phrases[currentIndex];
         
@@ -708,9 +771,36 @@
       // Set interval for subsequent phrases
       diceInterval = setInterval(showNextPhrase, 3000);
     }
+    
+    function stopDiceAnimation() {
+      if (diceInterval) {
+        clearInterval(diceInterval);
+        diceInterval = null;
+      }
+      diceTextContainer.style.display = 'none';
+      messageField.placeholder = "Send me anonymous messages...";
+    }
 
+    // Start animation on page load
+    document.addEventListener('DOMContentLoaded', startDiceAnimation);
+    
+    // Stop animation when user interacts with message field
+    messageField.addEventListener('focus', stopDiceAnimation);
+    messageField.addEventListener('input', function() {
+      if (this.value.trim() === "") {
+        startDiceAnimation();
+      } else {
+        stopDiceAnimation();
+      }
+    });
+    
+    // Handle dice button click
     diceButton.addEventListener('click', () => {
       if (diceRolling || rollClasses.some(cls => diceButton.classList.contains(cls))) return;
+      
+      // Stop animation
+      stopDiceAnimation();
+      
       diceRolling = true;
       diceButton.disabled = true;
       const randomRoll = rollClasses[Math.floor(Math.random() * rollClasses.length)];
@@ -724,9 +814,6 @@
         diceButton.classList.remove(...rollClasses);
         diceButton.disabled = false;
         diceRolling = false;
-        
-        // NEW: Start the dice text animation
-        showDicePhraseAnimation();
       }, 550);
     });
 
@@ -841,7 +928,7 @@
     }
 
     function validateForm(name, message) {
-      // NEW: STRONGER NAME VALIDATION
+      // STRONGER NAME VALIDATION
       const nameRegex = /^[A-Za-z\u00C0-\u024F\s]{4,20}$/;
       if (!isBypassName(name) && !nameRegex.test(name)) {
         alert('Name must be 4-20 letters only (no numbers, symbols or emojis)');
@@ -967,37 +1054,6 @@
         document.getElementById('peopleTapCount').textContent;
     }
 
-    // Quiz page navigation
-    document.getElementById('quiz-link').addEventListener('click', (e) => {
-      e.preventDefault();
-      const nameInput = document.getElementById('name').value.trim();
-      goToQuizPage(nameInput);
-    });
-
-    document.getElementById('sentQuizLink').addEventListener('click', function(e) {
-      e.preventDefault();
-      const nameValue = window._lastSubmittedName || '';
-      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
-        alert('Please enter your name between 4 and 20 characters before proceeding.');
-        document.getElementById('sentOverlay').style.display = 'none';
-        document.getElementById('fadeContainer').classList.remove('fade-out');
-        return false;
-      }
-      const encodedName = encodeURIComponent(nameValue);
-      window.location.href = `quiz.html?name=${encodedName}`;
-    });
-
-    function goToQuizPage(nameValue) {
-      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
-        alert('Please enter your name between 4 and 20 characters before proceeding.');
-        document.getElementById('name').focus();
-        return false;
-      }
-      const encodedName = encodeURIComponent(nameValue);
-      window.location.href = `quiz.html?name=${encodedName}`;
-      return false;
-    }
-
     // Send another message handler
     document.getElementById('sendAnotherLink').addEventListener('click', function(e) {
       reZeroSound.currentTime = 0;
@@ -1013,6 +1069,9 @@
       document.getElementById('fadeContainer').classList.remove('fade-out');
       document.getElementById('name').value = nameValue;
       document.getElementById('message').focus();
+      
+      // Restart dice animation if field is empty
+      setTimeout(startDiceAnimation, 100);
     });
 
     // Initialize form
