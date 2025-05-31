@@ -6,7 +6,9 @@
   <title>NGL Clone</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
-    body { margin: 0; font-family: 'Montserrat', Arial, sans-serif; background: linear-gradient(135deg, #ff007a 0%, #f43f5e 55%, #f97316 100%); color: #fff; text-align: center; min-height: 100vh; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    body { margin: 0; font-family: 'Inter', 'Montserrat', Arial, sans-serif; background: linear-gradient(135deg, #ff007a 0%, #f43f5e 55%, #f97316 100%); color: #fff; text-align: center; min-height: 100vh; }
     .container { padding: 30px 15px; max-width: 420px; margin: auto; }
     .profile { background: #fff; border-radius: 15px; padding: 20px; color: #000; max-width: 400px; margin: 20px auto 10px; position: relative; font-weight: 600; user-select: none; }
     .profile-row { display: flex; align-items: center; gap: 18px; margin-bottom: 8px; }
@@ -21,7 +23,7 @@
     input[type="text"].ngl-connect:focus { border-bottom: 1.5px solid #f43f5e; outline: none; }
     input[type="text"].ngl-connect::placeholder { color: rgba(30,30,30,0.66) !important; font-weight: 500; opacity: 1; }
     .textarea-dice-wrap { position: relative; width: 80%; max-width: 300px; margin: 0 auto 12px auto; }
-    textarea.ngl-glassy { background: rgba(255,255,255,0.54); border-radius: 0 0 10px 10px; border: none; box-shadow: 0 8px 32px 0 rgba(244,63,94,0.08); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); margin-top: 0; width: 100%; padding: 10px 15px; font-size: 16px; box-sizing: border-box; display: block; height: 100px; resize: none; color: #222; margin-bottom: 0; outline: none; }
+    textarea.ngl-glassy { background: rgba(255,255,255,0.54); border-radius: 0 0 10px 10px; border: none; box-shadow: 0 8px 32px 0 rgba(244,63,94,0.08); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); margin-top: 0; width: 100%; padding: 10px 15px; font-size: 16px; box-sizing: border-box; display: block; height: 100px; resize: none; color: #222; margin-bottom: 0; outline: none; font-family: 'Inter', sans-serif; transition: all 0.5s ease; }
     textarea.ngl-glassy:focus { box-shadow: 0 4px 18px 0 #f43f5e33; outline: none; }
     textarea.ngl-glassy::placeholder { color: rgba(30,30,30,0.66) !important; font-weight: 500; opacity: 1; }
     .dice-bg { position: absolute; bottom: 10px; right: 10px; width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.85); box-shadow: 0 0 12px 2px rgba(255,0,122,0.10), 0 1px 8px 0 rgba(0,0,0,0.04); backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px); z-index: 1; pointer-events: none; }
@@ -41,6 +43,12 @@
     .people-tap-count { color: #fff; margin: 10px auto 0; font-size: 18px; max-width: 420px; user-select: none; white-space: nowrap; overflow-x: auto; }
     .fade-out { animation: fadeOut 0.8s ease-out forwards; }
     @keyframes fadeOut {to {opacity: 0; transform: scale(0.95);}}
+    .fade-in { animation: fadeIn 0.5s ease-in forwards; }
+    @keyframes fadeIn {from {opacity: 0;} to {opacity: 1;}}
+    .fade-out-text { animation: fadeOutText 0.5s ease-out forwards; }
+    @keyframes fadeOutText {to {opacity: 0; transform: translateY(10px);}}
+    .fade-in-text { animation: fadeInText 0.5s ease-in forwards; }
+    @keyframes fadeInText {from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);}}
 
     /* UPDATED SENT OVERLAY WITH PROPER CHECKMARK */
     #sentOverlay { 
@@ -73,7 +81,7 @@
     }
     .sent-text { 
       color: #fff; 
-      font-family: 'Montserrat', Arial, sans-serif; 
+      font-family: 'Inter', 'Montserrat', Arial, sans-serif; 
       font-size: 2.2rem; 
       font-weight: 700; 
       letter-spacing: 0.01em; 
@@ -219,7 +227,7 @@
     .ngl-spinner-label { 
       color: #f43f5e; 
       font-size: 1.13rem; 
-      font-family: 'Montserrat', Arial, sans-serif; 
+      font-family: 'Inter', 'Montserrat', Arial, sans-serif; 
       font-weight: 700; 
       letter-spacing: 0.01em; 
       text-shadow: 0 1px 4px rgba(244,63,94,0.13); 
@@ -447,6 +455,53 @@
     const reZeroSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/Re_Zero.mp3');
     const rollClasses = ['rolling1', 'rolling2', 'rolling3'];
     let diceRolling = false;
+    let phraseSequence = [];
+    let currentSequenceId = 0;
+    let sequenceTimeout = null;
+
+    function stopPhraseSequence() {
+      if (sequenceTimeout) {
+        clearTimeout(sequenceTimeout);
+        sequenceTimeout = null;
+      }
+      messageField.classList.remove('fade-in-text', 'fade-out-text');
+      messageField.style.opacity = '1';
+      currentSequenceId++;
+    }
+
+    function startPhraseSequence(phrases) {
+      stopPhraseSequence();
+      const mySequenceId = ++currentSequenceId;
+      let index = 0;
+      
+      function showNextPhrase() {
+        if (mySequenceId !== currentSequenceId) return;
+        
+        if (index < phrases.length) {
+          // Apply fade-out animation for subsequent phrases
+          if (index > 0) {
+            messageField.classList.add('fade-out-text');
+            setTimeout(() => {
+              if (mySequenceId !== currentSequenceId) return;
+              messageField.value = phrases[index];
+              messageField.classList.remove('fade-out-text');
+              messageField.classList.add('fade-in-text');
+              index++;
+              sequenceTimeout = setTimeout(showNextPhrase, 3000);
+            }, 500);
+          } 
+          // For first phrase, show immediately with fade-in
+          else {
+            messageField.value = phrases[0];
+            messageField.classList.add('fade-in-text');
+            index++;
+            sequenceTimeout = setTimeout(showNextPhrase, 3000);
+          }
+        }
+      }
+      
+      showNextPhrase();
+    }
 
     diceButton.addEventListener('click', () => {
       if (diceRolling || rollClasses.some(cls => diceButton.classList.contains(cls))) return;
@@ -456,14 +511,28 @@
       diceButton.classList.add(randomRoll);
       diceSound.currentTime = 0;
       diceSound.play();
+      
       setTimeout(() => {
-        const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-        messageField.value = randomPhrase;
+        const sequenceLength = Math.floor(Math.random() * 3) + 3; // 3-5 phrases
+        phraseSequence = [];
+        
+        for (let i = 0; i < sequenceLength; i++) {
+          let phrase;
+          do {
+            phrase = phrases[Math.floor(Math.random() * phrases.length)];
+          } while (i > 0 && phrase === phraseSequence[i-1]);
+          phraseSequence.push(phrase);
+        }
+        
+        startPhraseSequence(phraseSequence);
         diceButton.classList.remove(...rollClasses);
         diceButton.disabled = false;
         diceRolling = false;
       }, 550);
     });
+
+    // Stop sequence when user focuses the textarea
+    messageField.addEventListener('focus', stopPhraseSequence);
 
     // Message limit system
     const DAILY_LIMIT = 3;
