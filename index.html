@@ -5,23 +5,141 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NGL Clone</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
-    body { margin: 0; font-family: 'Montserrat', Arial, sans-serif; background: linear-gradient(135deg, #ff007a 0%, #f43f5e 55%, #f97316 100%); color: #fff; text-align: center; min-height: 100vh; }
+    /* NEW FONTS */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    body {
+      margin: 0; 
+      font-family: 'Inter', Arial, sans-serif; 
+      font-weight: 600; /* Bolder text throughout */
+      background: linear-gradient(135deg, #ff007a 0%, #f43f5e 55%, #f97316 100%); 
+      color: #fff; 
+      text-align: center; 
+      min-height: 100vh;
+    }
+    
+    /* CHAIN & LOCK OVERLAY */
+    .chain-lock-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      pointer-events: none;
+      opacity: 0.88;
+    }
+    
+    .chain-lock-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      z-index: 11;
+      pointer-events: none;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .lock-emoji {
+      font-size: 28px;
+      position: absolute;
+      top: -10px;
+      right: 10px;
+      z-index: 12;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+    }
+    
+    @keyframes chainShake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .chain-shake {
+      animation: chainShake 0.5s;
+    }
+    
+    /* DICE TEXT ANIMATION */
+    .dice-text-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 10px 15px;
+      box-sizing: border-box;
+      font-family: 'Inter', Arial, sans-serif;
+      font-weight: 500;
+      color: #222;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1.2s;
+    }
+    
+    .dice-text-visible {
+      opacity: 1;
+    }
+    
+    /* REST OF YOUR CSS (with minor font weight adjustments) */
     .container { padding: 30px 15px; max-width: 420px; margin: auto; }
     .profile { background: #fff; border-radius: 15px; padding: 20px; color: #000; max-width: 400px; margin: 20px auto 10px; position: relative; font-weight: 600; user-select: none; }
     .profile-row { display: flex; align-items: center; gap: 18px; margin-bottom: 8px; }
     .profile-img-container { position: relative; width: 60px; height: 60px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 8px rgba(0,0,0,0.1); background: white; display: flex; justify-content: center; align-items: center; z-index: 2; border: 6px solid #ff007a; }
     .profile-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
     .profile-info { text-align: left; flex: 1; min-width: 0; }
-    .username { font-weight: 700; margin-bottom: 4px; font-size: 1.3rem; word-break: break-all; }
-    .description { font-weight: 400; color: #444; font-size: 0.95rem; margin-bottom: 0; line-height: 1.3; user-select: none; word-break: break-word; }
-    .prompt { background: rgba(255,255,255,0.15); color: #000; padding: 22px 25px; border-radius: 15px; margin-top: 10px; font-size: 18px; font-weight: 600; user-select: none; }
+    .username { font-weight: 800; margin-bottom: 4px; font-size: 1.3rem; word-break: break-all; } /* Bolder */
+    .description { font-weight: 500; color: #444; font-size: 0.95rem; margin-bottom: 0; line-height: 1.3; user-select: none; word-break: break-word; } /* Adjusted weight */
+    .prompt { background: rgba(255,255,255,0.15); color: #000; padding: 22px 25px; border-radius: 15px; margin-top: 10px; font-size: 18px; font-weight: 700; user-select: none; } /* Bolder */
     form { margin-top: 20px; position: relative; }
-    input[type="text"].ngl-connect { background: #fff; border-radius: 10px 10px 0 0; border: none; border-bottom: 1.5px solid #ececec; margin-bottom: 0; width: 80%; max-width: 300px; padding: 10px 15px; font-size: 16px; box-sizing: border-box; display: block; margin-left: auto; margin-right: auto; outline: none; transition: border-color 0.18s; }
+    input[type="text"].ngl-connect { 
+      background: #fff; 
+      border-radius: 10px 10px 0 0; 
+      border: none; 
+      border-bottom: 1.5px solid #ececec; 
+      margin-bottom: 0; 
+      width: 80%; 
+      max-width: 300px; 
+      padding: 10px 15px; 
+      font-size: 16px; 
+      box-sizing: border-box; 
+      display: block; 
+      margin-left: auto; 
+      margin-right: auto; 
+      outline: none; 
+      transition: border-color 0.18s; 
+      font-weight: 600; /* Bolder */
+    }
     input[type="text"].ngl-connect:focus { border-bottom: 1.5px solid #f43f5e; outline: none; }
     input[type="text"].ngl-connect::placeholder { color: rgba(30,30,30,0.66) !important; font-weight: 500; opacity: 1; }
     .textarea-dice-wrap { position: relative; width: 80%; max-width: 300px; margin: 0 auto 12px auto; }
-    textarea.ngl-glassy { background: rgba(255,255,255,0.54); border-radius: 0 0 10px 10px; border: none; box-shadow: 0 8px 32px 0 rgba(244,63,94,0.08); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); margin-top: 0; width: 100%; padding: 10px 15px; font-size: 16px; box-sizing: border-box; display: block; height: 100px; resize: none; color: #222; margin-bottom: 0; outline: none; }
+    textarea.ngl-glassy { 
+      background: rgba(255,255,255,0.54); 
+      border-radius: 0 0 10px 10px; 
+      border: none; 
+      box-shadow: 0 8px 32px 0 rgba(244,63,94,0.08); 
+      backdrop-filter: blur(7px); 
+      -webkit-backdrop-filter: blur(7px); 
+      margin-top: 0; 
+      width: 100%; 
+      padding: 10px 15px; 
+      font-size: 16px; 
+      box-sizing: border-box; 
+      display: block; 
+      height: 100px; 
+      resize: none; 
+      color: #222; 
+      margin-bottom: 0; 
+      outline: none; 
+      font-weight: 600; /* Bolder */
+    }
     textarea.ngl-glassy:focus { box-shadow: 0 4px 18px 0 #f43f5e33; outline: none; }
     textarea.ngl-glassy::placeholder { color: rgba(30,30,30,0.66) !important; font-weight: 500; opacity: 1; }
     .dice-bg { position: absolute; bottom: 10px; right: 10px; width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.85); box-shadow: 0 0 12px 2px rgba(255,0,122,0.10), 0 1px 8px 0 rgba(0,0,0,0.04); backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px); z-index: 1; pointer-events: none; }
@@ -34,11 +152,11 @@
     .dice-button.rolling1 { animation: diceRoll1 0.55s cubic-bezier(.53,1.32,.72,1) forwards; }
     .dice-button.rolling2 { animation: diceRoll2 0.55s cubic-bezier(.53,1.32,.72,1) forwards; }
     .dice-button.rolling3 { animation: diceRoll3 0.55s cubic-bezier(.53,1.32,.72,1) forwards; }
-    .send-button { margin: 20px auto 0; padding: 15px 20px; font-size: 18px; border: none; border-radius: 30px; width: 80%; max-width: 300px; background: #000; color: #fff; cursor: pointer; font-weight: 600; user-select: none; box-sizing: border-box; }
-    .extra-box { margin: 15px auto 0; padding: 15px 20px; font-size: 18px; border-radius: 30px; width: 80%; max-width: 300px; background: #000; color: #fff; user-select: none; transition: box-shadow 0.2s; box-shadow: 0 4px 18px -8px #f43f5e70; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; }
+    .send-button { margin: 20px auto 0; padding: 15px 20px; font-size: 18px; border: none; border-radius: 30px; width: 80%; max-width: 300px; background: #000; color: #fff; cursor: pointer; font-weight: 700; user-select: none; box-sizing: border-box; } /* Bolder */
+    .extra-box { margin: 15px auto 0; padding: 15px 20px; font-size: 18px; border-radius: 30px; width: 80%; max-width: 300px; background: #000; color: #fff; user-select: none; transition: box-shadow 0.2s; box-shadow: 0 4px 18px -8px #f43f5e70; font-weight: 800; letter-spacing: 0.02em; cursor: pointer; position: relative; } /* Bolder */
     .ngl-pop-shake { animation: ngl-pop-shake 2.7s cubic-bezier(.16,1.02,.32,1.08) infinite; will-change: transform; }
     @keyframes ngl-pop-shake {0% {transform: scale(1);}8% {transform: scale(1.11);}18% {transform: scale(1.09);}24% {transform: scale(1.08);}28% {transform: scale(1.11);}33% {transform: scale(1.07);}36% {transform: scale(1.07) translateX(0);}39% {transform: scale(1.07) translateX(-7px) rotate(-5deg);}42% {transform: scale(1.07) translateX(7px) rotate(4deg);}45% {transform: scale(1.07) translateX(-5px) rotate(-3deg);}48% {transform: scale(1.07) translateX(5px) rotate(2deg);}51% {transform: scale(1.07) translateX(0) rotate(0deg);}55% {transform: scale(1);}100% {transform: scale(1);}}
-    .people-tap-count { color: #fff; margin: 10px auto 0; font-size: 18px; max-width: 420px; user-select: none; white-space: nowrap; overflow-x: auto; }
+    .people-tap-count { color: #fff; margin: 10px auto 0; font-size: 18px; max-width: 420px; user-select: none; white-space: nowrap; overflow-x: auto; font-weight: 600; } /* Bolder */
     .fade-out { animation: fadeOut 0.8s ease-out forwards; }
     @keyframes fadeOut {to {opacity: 0; transform: scale(0.95);}}
 
@@ -73,9 +191,9 @@
     }
     .sent-text { 
       color: #fff; 
-      font-family: 'Montserrat', Arial, sans-serif; 
+      font-family: 'Inter', Arial, sans-serif; 
       font-size: 2.2rem; 
-      font-weight: 700; 
+      font-weight: 800; 
       letter-spacing: 0.01em; 
       text-shadow: 0 2px 8px rgba(0,0,0,0.16); 
       user-select: none; 
@@ -90,7 +208,7 @@
       background: #000; 
       color: #fff; 
       user-select: none; 
-      font-weight: 700; 
+      font-weight: 800; 
       letter-spacing: 0.02em; 
       transition: box-shadow 0.2s; 
       box-shadow: 0 4px 18px -8px #f43f5e70; 
@@ -98,6 +216,7 @@
       text-align: center; 
       text-decoration: none; 
       display: block; 
+      position: relative;
     }
     .sent-people-tap { 
       color: #fff; 
@@ -107,6 +226,7 @@
       user-select: none; 
       white-space: nowrap; 
       overflow-x: auto; 
+      font-weight: 600; /* Bolder */
     }
     .sent-another-message { 
       display: flex; 
@@ -118,7 +238,7 @@
     }
     .send-another-link { 
       font-size: 1rem; 
-      font-weight: 500; 
+      font-weight: 600; 
       text-decoration: underline; 
       color: #fff; 
       margin-bottom: 2px; 
@@ -139,7 +259,7 @@
       text-align: center; 
       margin: 0; 
       margin-bottom: 0; 
-      font-weight: 400; 
+      font-weight: 500; 
       line-height: 1.25; 
       max-width: 95vw; 
       word-break: keep-all; 
@@ -219,7 +339,7 @@
     .ngl-spinner-label { 
       color: #f43f5e; 
       font-size: 1.13rem; 
-      font-family: 'Montserrat', Arial, sans-serif; 
+      font-family: 'Inter', Arial, sans-serif; 
       font-weight: 700; 
       letter-spacing: 0.01em; 
       text-shadow: 0 1px 4px rgba(244,63,94,0.13); 
@@ -252,7 +372,7 @@
     }
     .ngl-modal-btn { 
       font-size: 1.08rem; 
-      font-weight: 600; 
+      font-weight: 700; 
       padding: 10px 26px; 
       background: linear-gradient(90deg, #ff007a 0%, #f43f5e 70%, #f97316 100%); 
       color: #fff; 
@@ -270,6 +390,45 @@
     .denial-help h4 { margin-top: 0; color: #f43f5e; }
     .denial-help ol { padding-left: 20px; }
     .denial-help li { margin-bottom: 8px; }
+    
+    /* NEW MODAL FOR RESTRICTED BUTTON */
+    #nglRestrictedModal { 
+      display: none; 
+      position: fixed; 
+      z-index: 10000; 
+      inset: 0; 
+      background: rgba(0,0,0,0.7); 
+      align-items: center; 
+      justify-content: center; 
+      transition: opacity 0.3s; 
+    }
+    .restricted-modal-inner { 
+      background: #fff; 
+      color: #222; 
+      border-radius: 22px; 
+      box-shadow: 0 4px 40px #f43f5e55; 
+      padding: 38px 28px 34px 28px; 
+      max-width: 340px; 
+      text-align: center; 
+      position: relative; 
+    }
+    .restricted-modal-inner b { 
+      color: #ff007a; 
+      font-weight: 700; 
+    }
+    .restricted-modal-btn { 
+      font-size: 1.08rem; 
+      font-weight: 700; 
+      padding: 10px 26px; 
+      background: #ff007a; 
+      color: #fff; 
+      border-radius: 18px; 
+      border: none; 
+      cursor: pointer; 
+      margin-top: 18px; 
+      transition: background 0.18s; 
+      box-shadow: 0 2px 8px #ff007a33; 
+    }
   </style>
 </head>
 <body>
@@ -289,17 +448,26 @@
       <div class="prompt">send me anonymous messages...</div>
     </div>
     <form id="messageForm">
-      <input type="text" name="name" id="name" class="ngl-connect" placeholder="Your name (4-20 characters)" minlength="4" maxlength="20" pattern=".{4,20}|TEST0004|Jebmama3" title="Name must be between 4 and 20 characters." autocomplete="off" required />
+      <input type="text" name="name" id="name" class="ngl-connect" placeholder="Your name (4-20 letters)" minlength="4" maxlength="20" pattern="[A-Za-z\u00C0-\u024F\s]{4,20}" title="Name must be 4-20 letters only (no numbers, symbols or emojis)" autocomplete="off" required />
       <div class="textarea-dice-wrap">
         <textarea name="message" id="message" class="ngl-glassy" placeholder="Send me anonymous messages..." required spellcheck="false"></textarea>
+        <div id="diceTextContainer" class="dice-text-animation"></div>
         <div class="dice-bg"></div>
         <button type="button" class="dice-button" id="dice" aria-label="Roll dice">🎲</button>
       </div>
       <button type="submit" class="send-button">Send!</button>
     </form>
     <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
+    
+    <!-- CHAIN & LOCK OVERLAY ADDED -->
     <div class="extra-box ngl-pop-shake" id="mainQuizBox">
-      <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
+      <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">
+        Do you want to know me even further?
+      </a>
+      <div class="chain-lock-overlay">
+        <div class="chain-lock-text">🔗🔗🔗🔗🔗🔗🔗</div>
+        <div class="lock-emoji">🔒</div>
+      </div>
     </div>
   </div>
 
@@ -335,12 +503,41 @@
     </div>
     <div class="sent-text">Sent!</div>
     <div class="sent-people-tap" id="sentPeopleTapCount">👇 0 people just tapped this button 😢🥀</div>
-    <a href="#" class="sent-extra-box ngl-pop-shake" id="sentQuizLink">Do you want to know me even further?</a>
+    
+    <!-- CHAIN & LOCK OVERLAY ADDED FOR SENT OVERLAY -->
+    <a href="#" class="sent-extra-box ngl-pop-shake" id="sentQuizLink">
+      Do you want to know me even further?
+      <div class="chain-lock-overlay">
+        <div class="chain-lock-text">🔗🔗🔗🔗🔗🔗🔗</div>
+        <div class="lock-emoji">🔒</div>
+      </div>
+    </a>
+    
     <div class="sent-another-message">
       <a href="#" id="sendAnotherLink" class="send-another-link">Send me Another message?</a>
       <div id="messagesLeftText" class="messages-left-text">
         You have <span id="messagesLeftNum">3</span> more <b>DAILY</b> messages to send
       </div>
+    </div>
+  </div>
+
+  <!-- NEW RESTRICTED MODAL -->
+  <div id="nglRestrictedModal" class="ngl-modal-outer">
+    <div class="restricted-modal-inner">
+      <div style="font-size:2.1rem; font-weight:700; margin-bottom:20px; color:#ff007a;">
+        🔒 Coming Soon!
+      </div>
+      <div style="font-size:1.15rem; margin-bottom:14px;">
+        This button isn't available just yet<br>
+        <span style="color:#f43f5e; font-weight:600;">
+          Please wait until June 16
+        </span>
+        <div style="margin-top:12px; font-size:1rem; color:#444;">
+          I'm still working on the quiz feature<br>
+          Check back later!
+        </div>
+      </div>
+      <button class="restricted-modal-btn" id="nglRestrictedCloseBtn">Got it!</button>
     </div>
   </div>
 
@@ -426,6 +623,36 @@
       });
     };
 
+    // NEW: RESTRICTED BUTTON HANDLING
+    const restrictedModal = document.getElementById('nglRestrictedModal');
+    const restrictedCloseBtn = document.getElementById('nglRestrictedCloseBtn');
+    
+    // Add event listeners to both quiz buttons
+    document.getElementById('quiz-link').addEventListener('click', handleRestrictedButton);
+    document.getElementById('sentQuizLink').addEventListener('click', handleRestrictedButton);
+    
+    function handleRestrictedButton(e) {
+      e.preventDefault();
+      
+      // Add chain shake animation
+      const chainElements = document.querySelectorAll('.chain-lock-text');
+      chainElements.forEach(el => {
+        el.classList.add('chain-shake');
+        setTimeout(() => {
+          el.classList.remove('chain-shake');
+        }, 500);
+      });
+      
+      // Show modal after short delay
+      setTimeout(() => {
+        restrictedModal.style.display = 'flex';
+      }, 300);
+    }
+    
+    restrictedCloseBtn.onclick = function() {
+      restrictedModal.style.display = 'none';
+    };
+
     // Dice functionality
     const phrases = [
       "I like u, do u like me too?",
@@ -442,11 +669,45 @@
 
     const diceButton = document.getElementById('dice');
     const messageField = document.getElementById('message');
+    const diceTextContainer = document.getElementById('diceTextContainer');
     const diceSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/dice.mp3');
     const tuturuSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/Tuturu.mp3');
     const reZeroSound = new Audio('https://raw.githubusercontent.com/myngl-jeric/my-ngl-jeric-site/main/Re_Zero.mp3');
     const rollClasses = ['rolling1', 'rolling2', 'rolling3'];
     let diceRolling = false;
+    let diceInterval = null;
+
+    // NEW: DICE TEXT ANIMATION SYSTEM
+    function showDicePhraseAnimation() {
+      // Clear any existing interval
+      if (diceInterval) clearInterval(diceInterval);
+      
+      // Hide the placeholder
+      messageField.placeholder = "";
+      
+      // Start showing phrases
+      let currentIndex = -1;
+      
+      function showNextPhrase() {
+        currentIndex = (currentIndex + 1) % phrases.length;
+        const phrase = phrases[currentIndex];
+        
+        // Fade out current text
+        diceTextContainer.classList.remove('dice-text-visible');
+        
+        // After fade out, update text and fade in
+        setTimeout(() => {
+          diceTextContainer.textContent = phrase;
+          diceTextContainer.classList.add('dice-text-visible');
+        }, 600);
+      }
+      
+      // Show first phrase immediately
+      showNextPhrase();
+      
+      // Set interval for subsequent phrases
+      diceInterval = setInterval(showNextPhrase, 3000);
+    }
 
     diceButton.addEventListener('click', () => {
       if (diceRolling || rollClasses.some(cls => diceButton.classList.contains(cls))) return;
@@ -456,12 +717,16 @@
       diceButton.classList.add(randomRoll);
       diceSound.currentTime = 0;
       diceSound.play();
+      
       setTimeout(() => {
         const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
         messageField.value = randomPhrase;
         diceButton.classList.remove(...rollClasses);
         diceButton.disabled = false;
         diceRolling = false;
+        
+        // NEW: Start the dice text animation
+        showDicePhraseAnimation();
       }, 550);
     });
 
@@ -576,8 +841,10 @@
     }
 
     function validateForm(name, message) {
-      if (!isBypassName(name) && (name.length < 4 || name.length > 20)) {
-        alert('Please enter your name between 4 and 20 characters before proceeding.');
+      // NEW: STRONGER NAME VALIDATION
+      const nameRegex = /^[A-Za-z\u00C0-\u024F\s]{4,20}$/;
+      if (!isBypassName(name) && !nameRegex.test(name)) {
+        alert('Name must be 4-20 letters only (no numbers, symbols or emojis)');
         document.getElementById('name').focus();
         return false;
       }
@@ -692,6 +959,7 @@
       updateSentOverlayTapCount();
       updateMessagesLeftUI(name);
       document.getElementById('sentOverlay').style.display = "flex";
+      window._lastSubmittedName = name;
     }
 
     function updateSentOverlayTapCount() {
