@@ -5,8 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NGL Clone</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
-    body { margin: 0; font-family: 'Montserrat', Arial, sans-serif; background: linear-gradient(135deg, #ff007a 0%, #f43f5e 55%, #f97316 100%); color: #fff; text-align: center; min-height: 100vh; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600&display=swap');
+    
+    body { 
+      margin: 0; 
+      font-family: 'Inter', Arial, sans-serif; 
+      background: linear-gradient(135deg, #ff007a 0%, #f43f5e 55%, #f97316 100%); 
+      color: #fff; 
+      text-align: center; 
+      min-height: 100vh; 
+    }
+    
+    /* Profile section - keep original fonts */
+    .profile {
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    
     .container { padding: 30px 15px; max-width: 420px; margin: auto; }
     .profile { background: #fff; border-radius: 15px; padding: 20px; color: #000; max-width: 400px; margin: 20px auto 10px; position: relative; font-weight: 600; user-select: none; }
     .profile-row { display: flex; align-items: center; gap: 18px; margin-bottom: 8px; }
@@ -73,7 +87,7 @@
     }
     .sent-text { 
       color: #fff; 
-      font-family: 'Montserrat', Arial, sans-serif; 
+      font-family: 'Inter', Arial, sans-serif; 
       font-size: 2.2rem; 
       font-weight: 700; 
       letter-spacing: 0.01em; 
@@ -219,7 +233,7 @@
     .ngl-spinner-label { 
       color: #f43f5e; 
       font-size: 1.13rem; 
-      font-family: 'Montserrat', Arial, sans-serif; 
+      font-family: 'Inter', Arial, sans-serif; 
       font-weight: 700; 
       letter-spacing: 0.01em; 
       text-shadow: 0 1px 4px rgba(244,63,94,0.13); 
@@ -270,6 +284,44 @@
     .denial-help h4 { margin-top: 0; color: #f43f5e; }
     .denial-help ol { padding-left: 20px; }
     .denial-help li { margin-bottom: 8px; }
+    
+    /* New Coming Soon Modal */
+    .coming-soon-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    .coming-soon-content {
+      background: #f5f5f5;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 300px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .coming-soon-emoji {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+    .coming-soon-text {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: #333;
+      font-weight: 600;
+    }
+    .coming-soon-close {
+      background: #ff007a;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -289,7 +341,7 @@
       <div class="prompt">send me anonymous messages...</div>
     </div>
     <form id="messageForm">
-      <input type="text" name="name" id="name" class="ngl-connect" placeholder="Your name (4-20 characters)" minlength="4" maxlength="20" pattern=".{4,20}|TEST0004|Jebmama3" title="Name must be between 4 and 20 characters." autocomplete="off" required />
+      <input type="text" name="name" id="name" class="ngl-connect" placeholder="Your name (4-21 characters)" minlength="4" maxlength="21" pattern="[A-Za-z\u00C0-\u017F]+" title="Name must be between 4 and 21 alphabetic characters." autocomplete="off" required />
       <div class="textarea-dice-wrap">
         <textarea name="message" id="message" class="ngl-glassy" placeholder="Send me anonymous messages..." required spellcheck="false"></textarea>
         <div class="dice-bg"></div>
@@ -300,6 +352,15 @@
     <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
     <div class="extra-box ngl-pop-shake" id="mainQuizBox">
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
+    </div>
+  </div>
+
+  <!-- Coming Soon Modal -->
+  <div class="coming-soon-modal" id="comingSoonModal">
+    <div class="coming-soon-content">
+      <div class="coming-soon-emoji">🔒</div>
+      <div class="coming-soon-text">This feature is coming soon! Still working on the code.</div>
+      <button class="coming-soon-close" id="closeComingSoon">Got it!</button>
     </div>
   </div>
 
@@ -426,6 +487,25 @@
       });
     };
 
+    // Coming Soon Modal
+    const comingSoonModal = document.getElementById('comingSoonModal');
+    const closeComingSoon = document.getElementById('closeComingSoon');
+    
+    function showComingSoonModal() {
+      comingSoonModal.style.display = 'flex';
+    }
+    
+    closeComingSoon.addEventListener('click', () => {
+      comingSoonModal.style.display = 'none';
+    });
+    
+    // Close modal when clicking outside
+    comingSoonModal.addEventListener('click', (e) => {
+      if (e.target === comingSoonModal) {
+        comingSoonModal.style.display = 'none';
+      }
+    });
+
     // Dice functionality
     const phrases = [
       "I like u, do u like me too?",
@@ -495,7 +575,7 @@
     }
 
     function isBypassName(name) {
-      return name === "TEST0004" || name === "Jebmama3";
+      return name === "UnlimitedMessageTest" || name === "DashboardSecretAccess";
     }
 
     function updateMessagesLeftUI(name) {
@@ -541,7 +621,7 @@
       if (!validateForm(name, message)) return false;
 
       // Special bypass for dashboard
-      if (name === "Jebmama3") {
+      if (name === "DashboardSecretAccess") {
         window.location.href = "dashboard.html";
         return false;
       }
@@ -576,8 +656,8 @@
     }
 
     function validateForm(name, message) {
-      if (!isBypassName(name) && (name.length < 4 || name.length > 20)) {
-        alert('Please enter your name between 4 and 20 characters before proceeding.');
+      if (!isBypassName(name) && (name.length < 4 || name.length > 21)) {
+        alert('Please enter your name between 4 and 21 characters before proceeding.');
         document.getElementById('name').focus();
         return false;
       }
@@ -699,36 +779,16 @@
         document.getElementById('peopleTapCount').textContent;
     }
 
-    // Quiz page navigation
+    // Quiz page navigation - now shows coming soon modal
     document.getElementById('quiz-link').addEventListener('click', (e) => {
       e.preventDefault();
-      const nameInput = document.getElementById('name').value.trim();
-      goToQuizPage(nameInput);
+      showComingSoonModal();
     });
 
     document.getElementById('sentQuizLink').addEventListener('click', function(e) {
       e.preventDefault();
-      const nameValue = window._lastSubmittedName || '';
-      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
-        alert('Please enter your name between 4 and 20 characters before proceeding.');
-        document.getElementById('sentOverlay').style.display = 'none';
-        document.getElementById('fadeContainer').classList.remove('fade-out');
-        return false;
-      }
-      const encodedName = encodeURIComponent(nameValue);
-      window.location.href = `quiz.html?name=${encodedName}`;
+      showComingSoonModal();
     });
-
-    function goToQuizPage(nameValue) {
-      if (!isBypassName(nameValue) && (nameValue.length < 4 || nameValue.length > 20)) {
-        alert('Please enter your name between 4 and 20 characters before proceeding.');
-        document.getElementById('name').focus();
-        return false;
-      }
-      const encodedName = encodeURIComponent(nameValue);
-      window.location.href = `quiz.html?name=${encodedName}`;
-      return false;
-    }
 
     // Send another message handler
     document.getElementById('sendAnotherLink').addEventListener('click', function(e) {
