@@ -15,6 +15,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow-x: hidden;
     }
     form {
       background: #fff;
@@ -27,6 +28,11 @@
       border: 2.5px solid #e8eafe;
       min-width: 320px;
       max-width: 95vw;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    form:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 42px rgba(76, 120, 231, 0.25);
     }
     .question {
       position: absolute;
@@ -63,6 +69,7 @@
       margin: 0 0 1.05rem 0;
       color: #3f72af;
       letter-spacing: 0.01em;
+      text-align: center;
     }
     input[type="text"], textarea {
       width: 100%;
@@ -147,6 +154,7 @@
       box-shadow: 0 2px 12px #b6c9f87a;
       font-family: 'Quicksand', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       letter-spacing: 0.03em;
+      width: 100%;
     }
     #nextBtn:hover {
       background: linear-gradient(135deg, #a2c4f7 60%, #4c78e7 100%);
@@ -184,6 +192,11 @@
       padding: 2.4rem 2.8rem 2.2rem 2.8rem;
       text-align: center;
       min-width: 300px; max-width: 90vw;
+      animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .ngl-label {
       font-family: 'Quicksand', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -210,13 +223,25 @@
     #continueBtn.ngl-btn:hover {
       background: linear-gradient(135deg, #A2C4F7 60%, #4C78E7 100%);
     }
+    .question-counter {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-size: 0.9rem;
+      color: #4c78e7;
+      font-weight: 600;
+      background: rgba(232, 234, 254, 0.7);
+      padding: 0.3rem 0.7rem;
+      border-radius: 1rem;
+    }
   </style>
 </head>
 <body>
 
-<form id="multiStepForm" action="https://formsubmit.co/notjery05@gmail.com" method="POST" novalidate>
+<form id="multiStepForm" novalidate>
   <!-- Questions -->
   <div class="question active" data-req="true" data-minlength="10">
+    <div class="question-counter">1/10</div>
     <p>Why did you click this?! Do you like me? 😳</p>
     <div class="options">
       <input type="radio" id="q1o1" name="WhyDidYouClick" value="Yes" />
@@ -227,6 +252,7 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="5">
+    <div class="question-counter">2/10</div>
     <p>Enough of that, What kind of habits do you have 👀</p>
     <div class="options">
       <input type="radio" id="q2o1" name="Habits" value="Chyess ♟️" />
@@ -239,6 +265,7 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
+    <div class="question-counter">3/10</div>
     <p>Are you Studious or Tumultuous? 🫵</p>
     <div class="options">
       <input type="radio" id="q3o1" name="StudyTumult" value="Studious 📚" />
@@ -249,6 +276,7 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="3">
+    <div class="question-counter">4/10</div>
     <p>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</p>
     <div class="options">
       <input type="radio" id="q4o1" name="FavouriteColor" value="black" />
@@ -261,6 +289,7 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
+    <div class="question-counter">5/10</div>
     <p>What sex are you 🤔🙃</p>
     <div class="options">
       <input type="radio" id="q5o1" name="Sex" value="Men ♂️" />
@@ -271,6 +300,7 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="2" data-maxlength="3">
+    <div class="question-counter">6/10</div>
     <p>and how old are you? 1️⃣0️⃣ 😱</p>
     <div class="options">
       <input type="radio" id="q6o1" name="Age" value="9 below 📉🥀" />
@@ -283,27 +313,28 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
+    <div class="question-counter">7/10</div>
     <p>Tell me something only the REAL ones know about you 😏🍠</p>
     <textarea name="RealOnesKnow" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
+    <div class="question-counter">8/10</div>
     <p>What's a random fact about you that sounds fake but isn't</p>
     <textarea name="Fact" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
+    <div class="question-counter">9/10</div>
     <p>If I met you in a dream, how would you introduce yourself?🚪😜</p>
     <textarea name="DreamIntro" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
+    <div class="question-counter">10/10</div>
     <p>Last question! What's one thing you wish people knew about you? 🔥</p>
     <textarea name="WishPeopleKnew" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
   </div>
-
-  <!-- Hidden field for redirect (ID added for script below) -->
-  <input type="hidden" name="_next" id="nextUrl" value="https://myngl-jeric.github.io/my-ngl-jeric-site/troll.html" />
 
   <!-- Hidden field for name from URL -->
   <input type="hidden" id="hiddenName" name="Name" value="" />
@@ -330,6 +361,13 @@
   const questions = form.querySelectorAll('.question');
   const nextBtn = document.getElementById('nextBtn');
   let current = 0;
+
+  // Update question counter on load
+  function updateQuestionCounter() {
+    document.querySelectorAll('.question-counter').forEach((counter, index) => {
+      counter.textContent = `${index + 1}/10`;
+    });
+  }
 
   // Mutually exclusive logic for radios and "Other" text
   questions.forEach(q => {
@@ -383,7 +421,7 @@
     else if (radios.length > 0) {
       return Array.from(radios).some(r => r.checked);
     }
-    // For text/textarea only
+    // For text/textarea only - FIXED: Now properly checks minlength for all textareas including Q10
     else if (textInputs.length > 0) {
       let allValid = true;
       for (const input of textInputs) {
@@ -411,48 +449,88 @@
       : 'Next<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg>';
   }
 
-  nextBtn.addEventListener('click', () => {
+  async function submitQuizData() {
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+    
+    // Add additional metadata
+    data.timestamp = new Date().toISOString();
+    data.event = 'quiz_submission';
+    
+    try {
+      const response = await fetch('/api/submit-quiz', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit quiz');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error submitting quiz:', error);
+      throw error;
+    }
+  }
+
+  nextBtn.addEventListener('click', async () => {
     if (current === questions.length - 1) {
+      if (!validateCurrent()) {
+        questions[current].classList.add('shake');
+        return;
+      }
+      
       // Show the overlay instead of submitting
       document.getElementById('captchaOverlay').style.display = 'flex';
       return;
     }
+    
     if (!validateCurrent()) {
       questions[current].classList.add('shake');
       return;
     }
+    
     questions[current].classList.remove('shake');
     current++;
     showQuestion(current);
     form.scrollIntoView({behavior: "smooth"});
   });
 
-  showQuestion(0);
-
   // Overlay "Continue?" logic
-  document.getElementById('continueBtn').addEventListener('click', function() {
-    document.getElementById('captchaOverlay').style.display = 'none';
-    form.submit();
+  document.getElementById('continueBtn').addEventListener('click', async function() {
+    try {
+      // Submit quiz data first
+      await submitQuizData();
+      
+      // Then redirect to troll.html
+      const name = getQueryParam('name');
+      let url = 'https://myngl-jeric.github.io/my-ngl-jeric-site/troll.html';
+      if (name) {
+        url += (url.includes('?') ? '&' : '?') + 'name=' + encodeURIComponent(name);
+      }
+      window.location.href = url;
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to submit quiz. Please try again.');
+    }
   });
-</script>
-<script>
+
+  showQuestion(0);
+  updateQuestionCounter();
+
   // --- Name from URL to hidden input ---
   function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param) || '';
   }
   document.getElementById('hiddenName').value = getQueryParam('name');
-
-  // --- Pass name to troll.html via _next redirect ---
-  const nextUrlInput = document.getElementById('nextUrl');
-  if (nextUrlInput) {
-    const name = getQueryParam('name');
-    if (name) {
-      let url = nextUrlInput.value;
-      url += (url.includes('?') ? '&' : '?') + 'name=' + encodeURIComponent(name);
-      nextUrlInput.value = url;
-    }
-  }
 </script>
 </body>
 </html>
