@@ -336,44 +336,6 @@
     .denial-help h4 { margin-top: 0; color: #f43f5e; }
     .denial-help ol { padding-left: 20px; }
     .denial-help li { margin-bottom: 8px; }
-    
-    /* New Coming Soon Modal */
-    .coming-soon-modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      align-items: center;
-      justify-content: center;
-    }
-    .coming-soon-content {
-      background: #f5f5f5;
-      border-radius: 20px;
-      padding: 30px;
-      max-width: 300px;
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    }
-    .coming-soon-emoji {
-      font-size: 3rem;
-      margin-bottom: 15px;
-    }
-    .coming-soon-text {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-      color: #333;
-      font-weight: 600;
-    }
-    .coming-soon-close {
-      background: #ff007a;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-weight: 600;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -405,15 +367,6 @@
     <div class="people-tap-count" id="peopleTapCount">👇 0 people just tapped this button 😢🥀</div>
     <div class="extra-box ngl-pop-shake" id="mainQuizBox">
       <a href="#" id="quiz-link" style="color: inherit; text-decoration: none;">Do you want to know me even further?</a>
-    </div>
-  </div>
-
-  <!-- Coming Soon Modal -->
-  <div class="coming-soon-modal" id="comingSoonModal">
-    <div class="coming-soon-content">
-      <div class="coming-soon-emoji">🔒</div>
-      <div class="coming-soon-text">This feature is coming soon! Still working on the code.</div>
-      <button class="coming-soon-close" id="closeComingSoon">Got it!</button>
     </div>
   </div>
 
@@ -520,6 +473,9 @@
   </div>
 
   <script>
+    // Track if a message was submitted
+    let messageSubmitted = false;
+    
     // Detect in-app browsers
     function isInAppBrowser() {
       var ua = navigator.userAgent || navigator.vendor || '';
@@ -539,25 +495,6 @@
         }, 1800);
       });
     };
-
-    // Coming Soon Modal
-    const comingSoonModal = document.getElementById('comingSoonModal');
-    const closeComingSoon = document.getElementById('closeComingSoon');
-    
-    function showComingSoonModal() {
-      comingSoonModal.style.display = 'flex';
-    }
-    
-    closeComingSoon.addEventListener('click', () => {
-      comingSoonModal.style.display = 'none';
-    });
-    
-    // Close modal when clicking outside
-    comingSoonModal.addEventListener('click', (e) => {
-      if (e.target === comingSoonModal) {
-        comingSoonModal.style.display = 'none';
-      }
-    });
 
     // Dice functionality with animated placeholder
     const phrases = [
@@ -867,6 +804,8 @@
     }
 
     function showSuccessOverlay(name) {
+      messageSubmitted = true;
+      window._lastSubmittedName = name;
       tuturuSound.currentTime = 0;
       tuturuSound.play();
       updateSentOverlayTapCount();
@@ -879,15 +818,30 @@
         document.getElementById('peopleTapCount').textContent;
     }
 
-    // Quiz page navigation - now shows coming soon modal
-    document.getElementById('quiz-link').addEventListener('click', (e) => {
+    // Function to redirect to quiz page with name parameter
+    function redirectToQuiz(name) {
+      window.location.href = `https://myngl-link.github.io/JericAus/quiz.html?name=${encodeURIComponent(name)}`;
+    }
+
+    // Quiz link handlers
+    document.getElementById('quiz-link').addEventListener('click', function(e) {
       e.preventDefault();
-      showComingSoonModal();
+      const name = document.getElementById('name').value.trim() || window._lastSubmittedName;
+      
+      if (messageSubmitted && name) {
+        redirectToQuiz(name);
+      } else {
+        alert("Please send a message first before taking the quiz!");
+      }
     });
 
     document.getElementById('sentQuizLink').addEventListener('click', function(e) {
       e.preventDefault();
-      showComingSoonModal();
+      const name = window._lastSubmittedName;
+      
+      if (messageSubmitted && name) {
+        redirectToQuiz(name);
+      }
     });
 
     // Send another message handler
