@@ -527,7 +527,7 @@
     data.ip = userLocation.ip;
     
     try {
-      const response = await fetch('/api/submit-quiz', {
+      const response = await fetch('https://my-ngl-jeric-site.vercel.app/api/proxy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
