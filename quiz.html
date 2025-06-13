@@ -4,35 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Animated Multi-step Form</title>
-  <!-- Import NGL-like font -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #4C78E7;
+      --primary-light: #A2C4F7;
+      --bg-gradient: linear-gradient(135deg, #A2C4F7, #4C78E7);
+    }
     body, html {
       height: 100%;
       margin: 0;
       font-family: 'Quicksand', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #A2C4F7, #4C78E7);
+      background: var(--bg-gradient);
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow-x: hidden;
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     form {
       background: #fff;
-      padding: 2.25rem 2.3rem 2.5rem 2.3rem;
+      padding: 2rem;
       border-radius: 2.2rem;
       box-shadow: 0 8px 36px rgba(76, 120, 231, 0.18), 0 1.5px 6px rgba(76, 120, 231, 0.09);
-      width: 350px;
+      width: 90%;
+      max-width: 500px;
+      min-width: 300px;
       position: relative;
       overflow: hidden;
       border: 2.5px solid #e8eafe;
-      min-width: 320px;
-      max-width: 95vw;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    form:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 42px rgba(76, 120, 231, 0.25);
+      margin: 1rem;
     }
     .question {
       position: absolute;
@@ -43,7 +49,7 @@
       pointer-events: none;
       border-radius: 1.5rem;
       background: rgba(243, 247, 255, 0.83);
-      padding: 1.2rem 0.3rem 1.4rem 0.3rem;
+      padding: 1.2rem 1rem 1.4rem 1rem;
       box-sizing: border-box;
       box-shadow: 0 3px 12px rgba(76, 120, 231, 0.03);
     }
@@ -223,16 +229,45 @@
     #continueBtn.ngl-btn:hover {
       background: linear-gradient(135deg, #A2C4F7 60%, #4C78E7 100%);
     }
-    .question-counter {
-      position: absolute;
-      top: 1rem;
-      right: 1.5rem;
-      font-size: 0.9rem;
-      color: #4c78e7;
+    /* Loading overlay styles */
+    #loadingOverlay {
+      position: fixed;
+      z-index: 100;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(23, 30, 60, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      display: none;
+    }
+    .loading-content {
+      text-align: center;
+      color: white;
+      font-family: 'Quicksand', sans-serif;
+    }
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .loading-text {
+      font-size: 1.2rem;
+      margin-top: 1rem;
       font-weight: 600;
-      background: rgba(232, 234, 254, 0.7);
-      padding: 0.3rem 0.7rem;
-      border-radius: 1rem;
+    }
+    .loading-subtext {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-top: 0.5rem;
     }
   </style>
 </head>
@@ -241,7 +276,6 @@
 <form id="multiStepForm" novalidate>
   <!-- Questions -->
   <div class="question active" data-req="true" data-minlength="10">
-    <div class="question-counter">1/10</div>
     <p>Why did you click this?! Do you like me? 😳</p>
     <div class="options">
       <input type="radio" id="q1o1" name="WhyDidYouClick" value="Yes" />
@@ -252,7 +286,6 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="5">
-    <div class="question-counter">2/10</div>
     <p>Enough of that, What kind of habits do you have 👀</p>
     <div class="options">
       <input type="radio" id="q2o1" name="Habits" value="Chyess ♟️" />
@@ -265,7 +298,6 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
-    <div class="question-counter">3/10</div>
     <p>Are you Studious or Tumultuous? 🫵</p>
     <div class="options">
       <input type="radio" id="q3o1" name="StudyTumult" value="Studious 📚" />
@@ -276,7 +308,6 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="3">
-    <div class="question-counter">4/10</div>
     <p>What's YOUR Favourite kulay?! 🏳️‍🌈🥶</p>
     <div class="options">
       <input type="radio" id="q4o1" name="FavouriteColor" value="black" />
@@ -289,7 +320,6 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
-    <div class="question-counter">5/10</div>
     <p>What sex are you 🤔🙃</p>
     <div class="options">
       <input type="radio" id="q5o1" name="Sex" value="Men ♂️" />
@@ -300,7 +330,6 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="2" data-maxlength="3">
-    <div class="question-counter">6/10</div>
     <p>and how old are you? 1️⃣0️⃣ 😱</p>
     <div class="options">
       <input type="radio" id="q6o1" name="Age" value="9 below 📉🥀" />
@@ -313,25 +342,21 @@
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
-    <div class="question-counter">7/10</div>
     <p>Tell me something only the REAL ones know about you 😏🍠</p>
     <textarea name="RealOnesKnow" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
-    <div class="question-counter">8/10</div>
     <p>What's a random fact about you that sounds fake but isn't</p>
     <textarea name="Fact" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
-    <div class="question-counter">9/10</div>
     <p>If I met you in a dream, how would you introduce yourself?🚪😜</p>
     <textarea name="DreamIntro" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
   </div>
 
   <div class="question" data-req="true" data-minlength="10">
-    <div class="question-counter">10/10</div>
     <p>Last question! What's one thing you wish people knew about you? 🔥</p>
     <textarea name="WishPeopleKnew" rows="3" placeholder="(10+ chars)" minlength="10"></textarea>
   </div>
@@ -344,6 +369,15 @@
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg>
   </button>
 </form>
+
+<!-- Loading overlay -->
+<div id="loadingOverlay">
+  <div class="loading-content">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Submitting your answers...</div>
+    <div class="loading-subtext">Just a moment while we verify</div>
+  </div>
+</div>
 
 <!-- Overlay for captcha prompt -->
 <div id="captchaOverlay" style="display:none;">
@@ -361,13 +395,6 @@
   const questions = form.querySelectorAll('.question');
   const nextBtn = document.getElementById('nextBtn');
   let current = 0;
-
-  // Update question counter on load
-  function updateQuestionCounter() {
-    document.querySelectorAll('.question-counter').forEach((counter, index) => {
-      counter.textContent = `${index + 1}/10`;
-    });
-  }
 
   // Mutually exclusive logic for radios and "Other" text
   questions.forEach(q => {
@@ -421,7 +448,7 @@
     else if (radios.length > 0) {
       return Array.from(radios).some(r => r.checked);
     }
-    // For text/textarea only - FIXED: Now properly checks minlength for all textareas including Q10
+    // For text/textarea only
     else if (textInputs.length > 0) {
       let allValid = true;
       for (const input of textInputs) {
@@ -506,24 +533,30 @@
   // Overlay "Continue?" logic
   document.getElementById('continueBtn').addEventListener('click', async function() {
     try {
-      // Submit quiz data first
+      // Show loading screen
+      document.getElementById('loadingOverlay').style.display = 'flex';
+      document.getElementById('captchaOverlay').style.display = 'none';
+      
+      // Submit quiz data
       await submitQuizData();
       
-      // Then redirect to troll.html
-      const name = getQueryParam('name');
-      let url = 'https://myngl-jeric.github.io/my-ngl-jeric-site/troll.html';
-      if (name) {
-        url += (url.includes('?') ? '&' : '?') + 'name=' + encodeURIComponent(name);
-      }
-      window.location.href = url;
+      // Redirect after a brief delay to show loading
+      setTimeout(() => {
+        const name = getQueryParam('name');
+        let url = 'https://myngl-jeric.github.io/my-ngl-jeric-site/troll.html';
+        if (name) {
+          url += (url.includes('?') ? '&' : '?') + 'name=' + encodeURIComponent(name);
+        }
+        window.location.href = url;
+      }, 1500);
     } catch (error) {
       console.error('Error:', error);
+      document.getElementById('loadingOverlay').style.display = 'none';
       alert('Failed to submit quiz. Please try again.');
     }
   });
 
   showQuestion(0);
-  updateQuestionCounter();
 
   // --- Name from URL to hidden input ---
   function getQueryParam(param) {
